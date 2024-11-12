@@ -46,7 +46,7 @@ public abstract class LevelParent {
 		this.userProjectiles = new ArrayList<>();
 		this.enemyProjectiles = new ArrayList<>();
 
-		this.background = new ImageView(new Image(getClass().getResource(backgroundImageName).toExternalForm()));
+		this.background = new ImageView(new Image(Objects.requireNonNull(getClass().getResource(backgroundImageName)).toExternalForm()));
 		this.screenHeight = screenHeight;
 		this.screenWidth = screenWidth;
 		this.enemyMaximumYPosition = screenHeight - SCREEN_HEIGHT_ADJUSTMENT;
@@ -63,6 +63,8 @@ public abstract class LevelParent {
 	protected abstract void spawnEnemyUnits();
 
 	protected abstract LevelView instantiateLevelView();
+
+	protected abstract void misc();
 
 	public Scene initializeScene() {
 		initializeBackground();
@@ -99,6 +101,7 @@ public abstract class LevelParent {
 		updateKillCount();
 		updateLevelView();
 		checkIfGameOver();
+		misc();
 	}
 
 	private void initializeTimeline() {
