@@ -11,7 +11,7 @@ import javafx.scene.image.*;
 import javafx.scene.input.*;
 import javafx.util.Duration;
 
-public abstract class LevelParent {
+public abstract class LevelParent extends Observable {
 
 	private static final double SCREEN_HEIGHT_ADJUSTMENT = 150;
 	private static final int MILLISECOND_DELAY = 50;
@@ -33,8 +33,6 @@ public abstract class LevelParent {
 	private final LevelView levelView;
 
 	private int currentNumberOfEnemies;
-
-	private LevelWinObserver levelWinObserver;
 
 	public LevelParent(String backgroundImageName, double screenHeight, double screenWidth, int playerInitialHealth) {
 		this.root = new Group();
@@ -79,13 +77,7 @@ public abstract class LevelParent {
 	}
 
 	public void goToNextLevel(String levelName) {
-		if (levelWinObserver != null) {
-			levelWinObserver.onLevelWin(levelName);
-		}
-	}
-
-	public void setLevelWinObserver(LevelWinObserver levelWinObserver) {
-		this.levelWinObserver = levelWinObserver;
+		notifyObservers(levelName);
 	}
 
 	private void updateScene() {
