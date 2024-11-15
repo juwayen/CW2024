@@ -5,20 +5,24 @@ import java.util.*;
 public class Boss extends FighterPlane {
 
 	private static final String IMAGE_NAME = "bossplane.png";
-	private static final double INITIAL_X_POSITION = 1000.0;
-	private static final double INITIAL_Y_POSITION = 400;
-	private static final double PROJECTILE_Y_POSITION_OFFSET = 75.0;
-	private static final double BOSS_FIRE_RATE = .04;
-	private static final double BOSS_SHIELD_PROBABILITY = .002;
-	private static final int IMAGE_HEIGHT = 300;
+	private static final double INITIAL_X_POSITION = 1040;
+	private static final double INITIAL_Y_POSITION = 300;
+	private static final double PROJECTILE_Y_POSITION_OFFSET = 0.0;
+	private static final double BOSS_SHIELD_PROBABILITY = .25;
+	private static final int IMAGE_HEIGHT = 80;
 	private static final int VERTICAL_VELOCITY = 8;
-	private static final int HEALTH = 100;
+	private static final int HEALTH = 50;
 	private static final int MOVE_FREQUENCY_PER_CYCLE = 5;
 	private static final int ZERO = 0;
 	private static final int MAX_FRAMES_WITH_SAME_MOVE = 10;
-	private static final int Y_POSITION_UPPER_BOUND = -100;
-	private static final int Y_POSITION_LOWER_BOUND = 475;
-	private static final int MAX_FRAMES_WITH_SHIELD = 150;
+	private static final int MIN_FRAMES_PER_FIRE = 60;
+	private static final int MAX_FRAMES_PER_FIRE = 150;
+	private static final int Y_POSITION_UPPER_BOUND = 0;
+	private static final int Y_POSITION_LOWER_BOUND = 600;
+	private static final int FRAMES_PER_SHIELD_CHANCE = 300;
+	private static final int MAX_FRAMES_WITH_SHIELD = 90;
+	private int framesBeforeNextShot = 0;
+	private int framesBeforeNextShieldChance = 0;
 	private final List<Integer> movePattern;
 	private boolean isShielded;
 	private int consecutiveMovesInSameDirection;
@@ -73,13 +77,18 @@ public class Boss extends FighterPlane {
 			movePattern.add(-VERTICAL_VELOCITY);
 			movePattern.add(ZERO);
 		}
+
 		Collections.shuffle(movePattern);
 	}
 
 	private void updateShield() {
-		if (isShielded) framesWithShieldActivated++;
-		else if (shieldShouldBeActivated()) activateShield();	
-		if (shieldExhausted()) deactivateShield();
+		if (isShielded)
+			framesWithShieldActivated++;
+		else if (shieldShouldBeActivated())
+			activateShield();
+
+		if (shieldExhausted())
+			deactivateShield();
 	}
 
 	private int getNextMove() {
@@ -97,7 +106,14 @@ public class Boss extends FighterPlane {
 	}
 
 	private boolean bossFiresInCurrentFrame() {
-		return Math.random() < BOSS_FIRE_RATE;
+		if (framesBeforeNextShot <= 0) {
+			framesBeforeNextShot = (int)(Math.random() * (MAX_FRAMES_PER_FIRE - MIN_FRAMES_PER_FIRE + 1)) + MIN_FRAMES_PER_FIRE;
+			return true;
+		}
+
+		framesBeforeNextShot--;
+
+		return false;
 	}
 
 	private double getProjectileInitialPosition() {
@@ -105,11 +121,18 @@ public class Boss extends FighterPlane {
 	}
 
 	private boolean shieldShouldBeActivated() {
-		return Math.random() < BOSS_SHIELD_PROBABILITY;
+		if (framesBeforeNextShieldChance <= 0) {
+			framesBeforeNextShieldChance = FRAMES_PER_SHIELD_CHANCE;
+			return Math.random() < BOSS_SHIELD_PROBABILITY;
+		}
+
+		framesBeforeNextShieldChance--;
+
+		return false;
 	}
 
 	private boolean shieldExhausted() {
-		return framesWithShieldActivated == MAX_FRAMES_WITH_SHIELD;
+		return framesWithShieldActivated >= MAX_FRAMES_WITH_SHIELD;
 	}
 
 	private void activateShield() {

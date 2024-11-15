@@ -34,6 +34,8 @@ public abstract class LevelParent extends Observable {
 
 	private int currentNumberOfEnemies;
 
+	private static final Set<KeyCode> activeKeys = new HashSet<>();
+
 	public LevelParent(String backgroundImageName, double screenHeight, double screenWidth, int playerInitialHealth) {
 		this.root = new Group();
 		this.scene = new Scene(root, screenWidth, screenHeight);
@@ -85,6 +87,7 @@ public abstract class LevelParent extends Observable {
 		updateActors();
 		generateEnemyFire();
 		updateNumberOfEnemies();
+		handleInput();
 		handleEnemyPenetration();
 		handleUserProjectileCollisions();
 		handleEnemyProjectileCollisions();
@@ -106,25 +109,28 @@ public abstract class LevelParent extends Observable {
 		background.setFocusTraversable(true);
 		background.setFitHeight(screenHeight);
 		background.setFitWidth(screenWidth);
+
 		background.setOnKeyPressed(new EventHandler<KeyEvent>() {
 			public void handle(KeyEvent e) {
-				KeyCode kc = e.getCode();
-				if (kc == KeyCode.UP) user.moveUp();
-				if (kc == KeyCode.DOWN) user.moveDown();
-				if (kc == KeyCode.SPACE) fireProjectile();
+				activeKeys.add(e.getCode());
 			}
 		});
+
 		background.setOnKeyReleased(new EventHandler<KeyEvent>() {
 			public void handle(KeyEvent e) {
-				KeyCode kc = e.getCode();
-				if (kc == KeyCode.UP || kc == KeyCode.DOWN) user.stop();
+				activeKeys.remove(e.getCode());
 			}
 		});
+
 		root.getChildren().add(background);
 	}
 
 	private void fireProjectile() {
 		ActiveActorDestructible projectile = user.fireProjectile();
+
+		if (projectile == null)
+			return;
+
 		root.getChildren().add(projectile);
 		userProjectiles.add(projectile);
 	}
@@ -159,6 +165,21 @@ public abstract class LevelParent extends Observable {
 				.collect(Collectors.toList());
 		root.getChildren().removeAll(destroyedActors);
 		actors.removeAll(destroyedActors);
+	}
+
+	private void handleInput() {
+		if (activeKeys.contains(KeyCode.UP))
+			user.moveUp();
+		if (activeKeys.contains(KeyCode.DOWN))
+			user.moveDown();
+		if(activeKeys.contains(KeyCode.SPACE))
+			fireProjectile();
+
+		if (activeKeys.contains(KeyCode.UP) && activeKeys.contains(KeyCode.DOWN))
+			user.stop();
+
+		if (!activeKeys.contains(KeyCode.UP) && !activeKeys.contains(KeyCode.DOWN))
+			user.stop();
 	}
 
 	private void handlePlaneCollisions() {
