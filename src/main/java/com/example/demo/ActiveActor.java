@@ -5,7 +5,6 @@ import javafx.scene.image.*;
 import java.util.Objects;
 
 public abstract class ActiveActor extends ImageView {
-	
 	private static final String IMAGE_LOCATION = "/com/example/demo/images/";
 
 	public ActiveActor(String imageName, int imageHeight, double initialXPos, double initialYPos) {
@@ -25,5 +24,4 @@ public abstract class ActiveActor extends ImageView {
 	protected void moveVertically(double verticalMove) {
 		this.setTranslateY(getTranslateY() + verticalMove);
 	}
-
 }

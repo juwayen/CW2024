@@ -1,53 +1,32 @@
 package com.example.demo.controller;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
-
-import com.example.demo.Observer;
+import com.example.demo.LevelOne;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
 import javafx.stage.Stage;
 import com.example.demo.LevelParent;
 
-public class Controller implements Observer {
-
-	private static final String LEVEL_ONE_CLASS_NAME = "com.example.demo.LevelOne";
+public class Controller {
 	private final Stage stage;
+	private final LevelParent levelOne;
 
-	private LevelParent currentLevel;
-
-	public Controller(Stage stage) {
+    public Controller(Stage stage) {
 		this.stage = stage;
+		levelOne = new LevelOne(stage.getWidth(), stage.getHeight());
 	}
 
-	public void launchGame() throws ClassNotFoundException, NoSuchMethodException, SecurityException,
-			InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException  {
-
+	public void launchGame() {
 		stage.show();
-		goToLevel(LEVEL_ONE_CLASS_NAME);
+		goToLevel(levelOne);
 	}
 
-	private void goToLevel(String className) throws ClassNotFoundException, NoSuchMethodException, SecurityException,
-			InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
-		Class<?> myClass = Class.forName(className);
-		Constructor<?> constructor = myClass.getConstructor(double.class, double.class);
-		currentLevel = (LevelParent) constructor.newInstance(stage.getHeight(), stage.getWidth());
-		currentLevel.addObserver(this);
-		Scene scene = currentLevel.initializeScene();
+	private void goToLevel(LevelParent nextLevel) {
+		nextLevel.levelWinSignal.connect(this, "onLevelWin", LevelParent.class);
+		Scene scene = nextLevel.initializeScene();
 		stage.setScene(scene);
-		currentLevel.startGame();
+		nextLevel.startGame();
 	}
 
-	@Override
-	public void update(String nextLevel) {
-		try {
-			goToLevel(nextLevel);
-		} catch (ClassNotFoundException | NoSuchMethodException | SecurityException | InstantiationException
-				| IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-			Alert alert = new Alert(AlertType.ERROR);
-			alert.setContentText(e.getClass().toString());
-			alert.show();
-		}
+	public void onLevelWin(LevelParent nextLevel) {
+		goToLevel(nextLevel);
 	}
 }

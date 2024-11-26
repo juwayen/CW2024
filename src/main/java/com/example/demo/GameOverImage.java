@@ -6,7 +6,6 @@ import javafx.scene.image.ImageView;
 import java.util.Objects;
 
 public class GameOverImage extends ImageView {
-	
 	private static final String IMAGE_NAME = "/com/example/demo/images/gameover.png";
 
 	public GameOverImage(double xPosition, double yPosition) {
@@ -14,5 +13,4 @@ public class GameOverImage extends ImageView {
 		setLayoutX(xPosition);
 		setLayoutY(yPosition);
 	}
-
 }

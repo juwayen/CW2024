@@ -7,14 +7,13 @@ import javafx.scene.layout.HBox;
 import java.util.Objects;
 
 public class HeartDisplay {
-	
 	private static final String HEART_IMAGE_NAME = "/com/example/demo/images/heart.png";
 	private static final int HEART_HEIGHT = 50;
 	private static final int INDEX_OF_FIRST_ITEM = 0;
+	private final double containerXPosition;
+	private final double containerYPosition;
+	private final int numberOfHeartsToDisplay;
 	private HBox container;
-	private double containerXPosition;
-	private double containerYPosition;
-	private int numberOfHeartsToDisplay;
 	
 	public HeartDisplay(double xPosition, double yPosition, int heartsToDisplay) {
 		this.containerXPosition = xPosition;
@@ -48,5 +47,4 @@ public class HeartDisplay {
 	public HBox getContainer() {
 		return container;
 	}
-
 }

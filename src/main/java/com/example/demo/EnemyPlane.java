@@ -1,7 +1,6 @@
 package com.example.demo;
 
 public class EnemyPlane extends FighterPlane {
-
 	private static final String IMAGE_NAME = "enemyplane.png";
 	private static final int IMAGE_HEIGHT = 50;
 	private static final int HORIZONTAL_VELOCITY = -6;
@@ -10,6 +9,7 @@ public class EnemyPlane extends FighterPlane {
 	private static final int INITIAL_HEALTH = 1;
 	private static final int MIN_FRAMES_PER_FIRE = 60;
 	private static final int MAX_FRAMES_PER_FIRE = 150;
+
 	private int framesBeforeNextShot;
 
 	public EnemyPlane(double initialXPos, double initialYPos) {

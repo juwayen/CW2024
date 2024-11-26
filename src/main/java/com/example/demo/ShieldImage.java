@@ -6,7 +6,6 @@ import javafx.scene.image.ImageView;
 import java.util.Objects;
 
 public class ShieldImage extends ImageView {
-	
 	private static final String IMAGE_NAME = "/com/example/demo/images/shield.png";
 	private static final int SHIELD_SIZE = 200;
 	
@@ -27,5 +26,4 @@ public class ShieldImage extends ImageView {
 	public void hideShield() {
 		this.setVisible(false);
 	}
-
 }

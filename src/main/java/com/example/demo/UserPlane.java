@@ -1,7 +1,6 @@
 package com.example.demo;
 
 public class UserPlane extends FighterPlane {
-
 	private static final String IMAGE_NAME = "userplane.png";
 	private static final double Y_UPPER_BOUND = 0;
 	private static final double Y_LOWER_BOUND = 650;
@@ -12,6 +11,7 @@ public class UserPlane extends FighterPlane {
 	private static final int PROJECTILE_X_POSITION = 110;
 	private static final int PROJECTILE_Y_POSITION_OFFSET = 20;
 	private static final int MIN_FRAMES_PER_FIRE = 5;
+
 	private int framesSinceLastShot = 0;
 	private int velocityMultiplier;
 	private int numberOfKills;
@@ -73,5 +73,4 @@ public class UserPlane extends FighterPlane {
 	public void incrementKillCount() {
 		numberOfKills++;
 	}
-
 }

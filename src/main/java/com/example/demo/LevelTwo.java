@@ -1,14 +1,15 @@
 package com.example.demo;
 
 public class LevelTwo extends LevelParent {
-
 	private static final String BACKGROUND_IMAGE_NAME = "/com/example/demo/images/background2.png";
 	private static final int PLAYER_INITIAL_HEALTH = 5;
+
 	private final Boss boss;
+
 	private LevelViewLevelTwo levelView;
 
-    public LevelTwo(double screenHeight, double screenWidth) {
-		super(BACKGROUND_IMAGE_NAME, screenHeight, screenWidth, PLAYER_INITIAL_HEALTH);
+    public LevelTwo( double screenWidth, double screenHeight) {
+		super(BACKGROUND_IMAGE_NAME, screenWidth, screenHeight, PLAYER_INITIAL_HEALTH);
 		boss = new Boss();
 	}
 

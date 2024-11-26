@@ -1,16 +1,17 @@
 package com.example.demo;
 
 public class LevelOne extends LevelParent {
-	
 	private static final String BACKGROUND_IMAGE_NAME = "/com/example/demo/images/background1.png";
-	private static final String NEXT_LEVEL = "com.example.demo.LevelTwo";
+	private static final int PLAYER_INITIAL_HEALTH = 5;
 	private static final int TOTAL_ENEMIES = 2;
 	private static final int KILLS_TO_ADVANCE = 10;
 	private static final double ENEMY_SPAWN_PROBABILITY = .20;
-	private static final int PLAYER_INITIAL_HEALTH = 5;
 
-	public LevelOne(double screenHeight, double screenWidth) {
-		super(BACKGROUND_IMAGE_NAME, screenHeight, screenWidth, PLAYER_INITIAL_HEALTH);
+	private final LevelParent nextLevel;
+
+	public LevelOne(double screenWidth, double screenHeight) {
+		super(BACKGROUND_IMAGE_NAME, screenWidth, screenHeight, PLAYER_INITIAL_HEALTH);
+		nextLevel = new LevelTwo(screenWidth, screenHeight);
 	}
 
 	@Override
@@ -20,7 +21,7 @@ public class LevelOne extends LevelParent {
 		}
 		else if (userHasReachedKillTarget()) {
 			stopLevel();
-			goToNextLevel(NEXT_LEVEL);
+			goToNextLevel(nextLevel);
 		}
 	}
 
@@ -46,13 +47,12 @@ public class LevelOne extends LevelParent {
 		return new LevelView(getRoot(), PLAYER_INITIAL_HEALTH);
 	}
 
-	private boolean userHasReachedKillTarget() {
-		return getUser().getNumberOfKills() >= KILLS_TO_ADVANCE;
-	}
-
 	@Override
 	protected void misc() {
 
 	}
 
+	private boolean userHasReachedKillTarget() {
+		return getUser().getNumberOfKills() >= KILLS_TO_ADVANCE;
+	}
 }

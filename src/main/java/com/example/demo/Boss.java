@@ -3,7 +3,6 @@ package com.example.demo;
 import java.util.*;
 
 public class Boss extends FighterPlane {
-
 	private static final String IMAGE_NAME = "bossplane.png";
 	private static final double INITIAL_X_POSITION = 1040;
 	private static final double INITIAL_Y_POSITION = 300;
@@ -21,6 +20,7 @@ public class Boss extends FighterPlane {
 	private static final int Y_POSITION_LOWER_BOUND = 600;
 	private static final int FRAMES_PER_SHIELD_CHANCE = 300;
 	private static final int MAX_FRAMES_WITH_SHIELD = 90;
+
 	private int framesBeforeNextShot = 0;
 	private int framesBeforeNextShieldChance = 0;
 	private final List<Integer> movePattern;
@@ -143,5 +143,4 @@ public class Boss extends FighterPlane {
 		isShielded = false;
 		framesWithShieldActivated = 0;
 	}
-
 }
