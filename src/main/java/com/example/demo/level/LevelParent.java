@@ -10,11 +10,9 @@ import javafx.animation.*;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.image.*;
-import javafx.scene.input.*;
 import javafx.util.Duration;
 
 public abstract class LevelParent {
-	private static final Set<KeyCode> activeKeys = new HashSet<>();
 	private static final double SCREEN_HEIGHT_ADJUSTMENT = 150;
 	private static final int MILLISECOND_DELAY = 50;
 	private final double screenHeight;
@@ -32,17 +30,17 @@ public abstract class LevelParent {
 	private final List<EntityDestructible> userProjectiles;
 	private final List<EntityDestructible> enemyProjectiles;
 
-	private final Signal levelWinSignal = new Signal();
-
 	private final LevelView levelView;
 
 	private int currentNumberOfEnemies;
 
-	public LevelParent(String backgroundImageName, double screenWidth, double screenHeight, int playerInitialHealth) {
+	protected final Signal levelWinSignal = new Signal();
+
+	public LevelParent(String backgroundImageName, double screenWidth, double screenHeight) {
 		this.root = new Group();
 		this.scene = new Scene(root, screenWidth, screenHeight);
 		this.timeline = new Timeline();
-		this.user = new UserPlane(playerInitialHealth);
+		this.user = new UserPlane(this);
 		this.friendlyUnits = new ArrayList<>();
 		this.enemyUnits = new ArrayList<>();
 		this.userProjectiles = new ArrayList<>();
@@ -85,16 +83,11 @@ public abstract class LevelParent {
 		timeline.play();
 	}
 
-	public void goToNextLevel(LevelParent nextLevel) {
-		levelWinSignal.emit(nextLevel);
-	}
-
 	private void updateScene() {
 		spawnEnemyUnits();
 		updateEntities();
 		generateEnemyFire();
 		updateNumberOfEnemies();
-		handleInput();
 		handleEnemyPenetration();
 		handleUserProjectileCollisions();
 		handleEnemyProjectileCollisions();
@@ -116,22 +109,7 @@ public abstract class LevelParent {
 		background.setFocusTraversable(true);
 		background.setFitHeight(screenHeight);
 		background.setFitWidth(screenWidth);
-
-		background.setOnKeyPressed(e -> activeKeys.add(e.getCode()));
-
-		background.setOnKeyReleased(e -> activeKeys.remove(e.getCode()));
-
 		root.getChildren().add(background);
-	}
-
-	private void fireProjectile() {
-		EntityDestructible projectile = user.fireProjectile();
-
-		if (projectile == null)
-			return;
-
-		root.getChildren().add(projectile);
-		userProjectiles.add(projectile);
 	}
 
 	private void generateEnemyFire() {
@@ -164,21 +142,6 @@ public abstract class LevelParent {
 				.toList();
 		root.getChildren().removeAll(destroyedEntities);
 		entities.removeAll(destroyedEntities);
-	}
-
-	private void handleInput() {
-		if (activeKeys.contains(KeyCode.UP))
-			user.moveUp();
-		if (activeKeys.contains(KeyCode.DOWN))
-			user.moveDown();
-		if(activeKeys.contains(KeyCode.SPACE))
-			fireProjectile();
-
-		if (activeKeys.contains(KeyCode.UP) && activeKeys.contains(KeyCode.DOWN))
-			user.stop();
-
-		if (!activeKeys.contains(KeyCode.UP) && !activeKeys.contains(KeyCode.DOWN))
-			user.stop();
 	}
 
 	private void handlePlaneCollisions() {
@@ -245,8 +208,12 @@ public abstract class LevelParent {
 		return user;
 	}
 
-	protected Group getRoot() {
+	public Group getRoot() {
 		return root;
+	}
+
+	public List<EntityDestructible> getUserProjectiles() {
+		return userProjectiles;
 	}
 
 	protected int getCurrentNumberOfEnemies() {

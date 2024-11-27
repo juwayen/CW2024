@@ -13,9 +13,9 @@ public abstract class FighterPlane extends EntityDestructible {
 	@Override
 	public void takeDamage() {
 		health--;
-		if (healthAtZero()) {
+
+		if (healthAtZero())
 			this.destroy();
-		}
 	}
 
 	protected double getProjectileXPosition(double xPositionOffset) {

@@ -5,7 +5,6 @@ import com.example.demo.entity.EnemyPlane;
 
 public class LevelOne extends LevelParent {
 	private static final String BACKGROUND_IMAGE_NAME = "/com/example/demo/images/background1.png";
-	private static final int PLAYER_INITIAL_HEALTH = 5;
 	private static final int TOTAL_ENEMIES = 2;
 	private static final int KILLS_TO_ADVANCE = 10;
 	private static final double ENEMY_SPAWN_PROBABILITY = .20;
@@ -13,7 +12,7 @@ public class LevelOne extends LevelParent {
 	private final LevelParent nextLevel;
 
 	public LevelOne(double screenWidth, double screenHeight) {
-		super(BACKGROUND_IMAGE_NAME, screenWidth, screenHeight, PLAYER_INITIAL_HEALTH);
+		super(BACKGROUND_IMAGE_NAME, screenWidth, screenHeight);
 		nextLevel = new LevelTwo(screenWidth, screenHeight);
 	}
 
@@ -24,7 +23,7 @@ public class LevelOne extends LevelParent {
 		}
 		else if (userHasReachedKillTarget()) {
 			stopLevel();
-			goToNextLevel(nextLevel);
+			levelWinSignal.emit(nextLevel);
 		}
 	}
 
@@ -47,7 +46,7 @@ public class LevelOne extends LevelParent {
 
 	@Override
 	protected LevelView instantiateLevelView() {
-		return new LevelView(getRoot(), PLAYER_INITIAL_HEALTH);
+		return new LevelView(getRoot(), getUser().getHealth());
 	}
 
 	@Override

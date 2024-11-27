@@ -1,4 +1,4 @@
-package com.example.demo.controller;
+package com.example.demo.manager;
 
 import com.example.demo.level.LevelOne;
 import com.example.demo.signal.Signal;
@@ -6,11 +6,12 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import com.example.demo.level.LevelParent;
 
-public class GameController {
+public class GameManager {
 	private final Stage stage;
 	private final LevelParent levelOne;
+	private final InputManager inputManager = InputManager.getInstance();
 
-    public GameController(Stage stage) {
+    public GameManager(Stage stage) {
 		this.stage = stage;
 		levelOne = new LevelOne(stage.getWidth(), stage.getHeight());
 	}
@@ -24,6 +25,7 @@ public class GameController {
 		Signal levelWinSignal = nextLevel.getLevelWinSignal();
 		levelWinSignal.connect(this, "onLevelWin", LevelParent.class);
 		Scene scene = nextLevel.initializeScene();
+		inputManager.setScene(scene);
 		stage.setScene(scene);
 		nextLevel.startGame();
 	}

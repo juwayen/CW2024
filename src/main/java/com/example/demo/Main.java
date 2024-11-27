@@ -1,6 +1,6 @@
 package com.example.demo;
 
-import com.example.demo.controller.GameController;
+import com.example.demo.manager.GameManager;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
@@ -16,8 +16,9 @@ public class Main extends Application {
 		stage.setResizable(false);
 		stage.setWidth(SCREEN_WIDTH);
 		stage.setHeight(SCREEN_HEIGHT);
-        GameController gameController = new GameController(stage);
-		gameController.launchGame();
+
+		GameManager gameManager = new GameManager(stage);
+		gameManager.launchGame();
 	}
 
 	public static void main(String[] args) {

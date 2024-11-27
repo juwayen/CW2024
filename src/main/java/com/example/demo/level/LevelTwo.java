@@ -4,14 +4,13 @@ import com.example.demo.entity.Boss;
 
 public class LevelTwo extends LevelParent {
 	private static final String BACKGROUND_IMAGE_NAME = "/com/example/demo/images/background2.png";
-	private static final int PLAYER_INITIAL_HEALTH = 5;
 
 	private final Boss boss;
 
-	private LevelViewLevelTwo levelView;
+	private LevelTwoView levelView;
 
     public LevelTwo( double screenWidth, double screenHeight) {
-		super(BACKGROUND_IMAGE_NAME, screenWidth, screenHeight, PLAYER_INITIAL_HEALTH);
+		super(BACKGROUND_IMAGE_NAME, screenWidth, screenHeight);
 		boss = new Boss();
 	}
 
@@ -39,7 +38,7 @@ public class LevelTwo extends LevelParent {
 
 	@Override
 	protected LevelView instantiateLevelView() {
-		levelView = new LevelViewLevelTwo(getRoot(), PLAYER_INITIAL_HEALTH);
+		levelView = new LevelTwoView(getRoot(), getUser().getHealth());
         return levelView;
 	}
 

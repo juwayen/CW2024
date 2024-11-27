@@ -6,7 +6,7 @@ import javafx.scene.image.ImageView;
 
 import java.util.Objects;
 
-public class ImageParent extends ImageView {
+public abstract class ImageParent extends ImageView {
     private static final String IMAGE_PATH = "/com/example/demo/images/";
 
     public ImageParent(String imageName, int height, double xPosition, double yPosition) {
