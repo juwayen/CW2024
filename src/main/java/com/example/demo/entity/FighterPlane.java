@@ -1,6 +1,6 @@
-package com.example.demo;
+package com.example.demo.entity;
 
-public abstract class FighterPlane extends ActiveActorDestructible {
+public abstract class FighterPlane extends EntityDestructible {
 	private int health;
 
 	public FighterPlane(String imageName, int imageHeight, double initialXPos, double initialYPos, int health) {
@@ -8,7 +8,7 @@ public abstract class FighterPlane extends ActiveActorDestructible {
 		this.health = health;
 	}
 
-	public abstract ActiveActorDestructible fireProjectile();
+	public abstract EntityDestructible fireProjectile();
 	
 	@Override
 	public void takeDamage() {

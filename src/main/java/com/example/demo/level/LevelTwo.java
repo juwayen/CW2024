@@ -1,4 +1,6 @@
-package com.example.demo;
+package com.example.demo.level;
+
+import com.example.demo.entity.Boss;
 
 public class LevelTwo extends LevelParent {
 	private static final String BACKGROUND_IMAGE_NAME = "/com/example/demo/images/background2.png";

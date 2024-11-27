@@ -1,4 +1,4 @@
-package com.example.demo;
+package com.example.demo.entity;
 
 public class EnemyProjectile extends Projectile {
 	private static final String IMAGE_NAME = "enemyFire.png";
@@ -15,7 +15,7 @@ public class EnemyProjectile extends Projectile {
 	}
 
 	@Override
-	public void updateActor() {
+	public void updateEntity() {
 		updatePosition();
 	}
 }

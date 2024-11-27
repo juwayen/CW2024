@@ -1,4 +1,4 @@
-package com.example.demo;
+package com.example.demo.entity;
 
 import java.util.*;
 
@@ -7,7 +7,7 @@ public class Boss extends FighterPlane {
 	private static final double INITIAL_X_POSITION = 1040;
 	private static final double INITIAL_Y_POSITION = 300;
 	private static final double PROJECTILE_Y_POSITION_OFFSET = 0.0;
-	private static final double BOSS_SHIELD_PROBABILITY = .25;
+	private static final double BOSS_SHIELD_PROBABILITY = 0.25;
 	private static final int IMAGE_HEIGHT = 80;
 	private static final int VERTICAL_VELOCITY = 8;
 	private static final int HEALTH = 50;
@@ -54,13 +54,13 @@ public class Boss extends FighterPlane {
 	}
 	
 	@Override
-	public void updateActor() {
+	public void updateEntity() {
 		updatePosition();
 		updateShield();
 	}
 
 	@Override
-	public ActiveActorDestructible fireProjectile() {
+	public EntityDestructible fireProjectile() {
 		return bossFiresInCurrentFrame() ? new BossProjectile(getProjectileInitialPosition()) : null;
 	}
 	

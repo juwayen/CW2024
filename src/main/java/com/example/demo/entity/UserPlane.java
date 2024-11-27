@@ -1,4 +1,4 @@
-package com.example.demo;
+package com.example.demo.entity;
 
 public class UserPlane extends FighterPlane {
 	private static final String IMAGE_NAME = "userplane.png";
@@ -13,12 +13,11 @@ public class UserPlane extends FighterPlane {
 	private static final int MIN_FRAMES_PER_FIRE = 5;
 
 	private int framesSinceLastShot = 0;
-	private int velocityMultiplier;
+	private int velocityMultiplier = 0;
 	private int numberOfKills;
 
 	public UserPlane(int initialHealth) {
 		super(IMAGE_NAME, IMAGE_HEIGHT, INITIAL_X_POSITION, INITIAL_Y_POSITION, initialHealth);
-		velocityMultiplier = 0;
 	}
 	
 	@Override
@@ -34,12 +33,12 @@ public class UserPlane extends FighterPlane {
 	}
 	
 	@Override
-	public void updateActor() {
+	public void updateEntity() {
 		updatePosition();
 	}
 	
 	@Override
-	public ActiveActorDestructible fireProjectile() {
+	public EntityDestructible fireProjectile() {
 		if (framesSinceLastShot >= MIN_FRAMES_PER_FIRE) {
 			framesSinceLastShot = 0;
 			return new UserProjectile(PROJECTILE_X_POSITION, getProjectileYPosition(PROJECTILE_Y_POSITION_OFFSET));

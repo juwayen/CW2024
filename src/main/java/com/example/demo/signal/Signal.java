@@ -1,4 +1,4 @@
-package com.example.demo;
+package com.example.demo.signal;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;

@@ -1,4 +1,4 @@
-package com.example.demo;
+package com.example.demo.entity;
 
 public interface Destructible {
 	void takeDamage();

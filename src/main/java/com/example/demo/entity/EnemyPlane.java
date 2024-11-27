@@ -1,4 +1,4 @@
-package com.example.demo;
+package com.example.demo.entity;
 
 public class EnemyPlane extends FighterPlane {
 	private static final String IMAGE_NAME = "enemyplane.png";
@@ -22,12 +22,12 @@ public class EnemyPlane extends FighterPlane {
 	}
 
 	@Override
-	public ActiveActorDestructible fireProjectile() {
+	public EntityDestructible fireProjectile() {
 		if (framesBeforeNextShot <= 0) {
 			framesBeforeNextShot = (int)(Math.random() * (MAX_FRAMES_PER_FIRE - MIN_FRAMES_PER_FIRE + 1)) + MIN_FRAMES_PER_FIRE;
 			double projectileXPosition = getProjectileXPosition(PROJECTILE_X_POSITION_OFFSET);
-			double projectileYPostion = getProjectileYPosition(PROJECTILE_Y_POSITION_OFFSET);
-			return new EnemyProjectile(projectileXPosition, projectileYPostion);
+			double projectileYPosition = getProjectileYPosition(PROJECTILE_Y_POSITION_OFFSET);
+			return new EnemyProjectile(projectileXPosition, projectileYPosition);
 		}
 
 		framesBeforeNextShot--;
@@ -36,7 +36,7 @@ public class EnemyPlane extends FighterPlane {
 	}
 
 	@Override
-	public void updateActor() {
+	public void updateEntity() {
 		updatePosition();
 	}
 }
