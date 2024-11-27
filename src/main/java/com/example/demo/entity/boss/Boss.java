@@ -1,9 +1,12 @@
-package com.example.demo.entity;
+package com.example.demo.entity.boss;
+
+import com.example.demo.entity.EntityDestructible;
+import com.example.demo.entity.FighterPlane;
 
 import java.util.*;
 
 public class Boss extends FighterPlane {
-	private static final String IMAGE_NAME = "bossplane.png";
+	private static final String IMAGE_NAME = "boss_plane.png";
 	private static final double INITIAL_X_POSITION = 1040;
 	private static final double INITIAL_Y_POSITION = 300;
 	private static final double PROJECTILE_Y_POSITION_OFFSET = 0.0;

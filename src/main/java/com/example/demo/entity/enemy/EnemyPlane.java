@@ -1,7 +1,10 @@
-package com.example.demo.entity;
+package com.example.demo.entity.enemy;
+
+import com.example.demo.entity.EntityDestructible;
+import com.example.demo.entity.FighterPlane;
 
 public class EnemyPlane extends FighterPlane {
-	private static final String IMAGE_NAME = "enemyplane.png";
+	private static final String IMAGE_NAME = "enemy_plane.png";
 	private static final int IMAGE_HEIGHT = 50;
 	private static final int HORIZONTAL_VELOCITY = -6;
 	private static final double PROJECTILE_X_POSITION_OFFSET = -75.0;

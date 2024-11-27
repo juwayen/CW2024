@@ -1,11 +1,13 @@
-package com.example.demo.entity;
+package com.example.demo.entity.player;
 
-public class UserProjectile extends Projectile {
-	private static final String IMAGE_NAME = "userfire.png";
+import com.example.demo.entity.Projectile;
+
+public class PlayerProjectile extends Projectile {
+	private static final String IMAGE_NAME = "player_projectile.png";
 	private static final int IMAGE_HEIGHT = 5;
 	private static final int HORIZONTAL_VELOCITY = 20;
 
-	public UserProjectile(double initialXPos, double initialYPos) {
+	public PlayerProjectile(double initialXPos, double initialYPos) {
 		super(IMAGE_NAME, IMAGE_HEIGHT, initialXPos, initialYPos);
 	}
 

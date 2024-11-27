@@ -1,11 +1,12 @@
-package com.example.demo.entity;
+package com.example.demo.entity.player;
 
+import com.example.demo.entity.EntityDestructible;
+import com.example.demo.entity.FighterPlane;
 import com.example.demo.level.LevelParent;
 import com.example.demo.manager.InputManager;
-import javafx.scene.Group;
 
-public class UserPlane extends FighterPlane {
-	private static final String IMAGE_NAME = "userplane.png";
+public class PlayerPlane extends FighterPlane {
+	private static final String IMAGE_NAME = "player_plane.png";
 	private static final double Y_UPPER_BOUND = -280;
 	private static final double Y_LOWER_BOUND = 340;
 	private static final double INITIAL_X_POSITION = 5.0;
@@ -17,7 +18,7 @@ public class UserPlane extends FighterPlane {
 	private static final int MIN_FRAMES_PER_FIRE = 5;
 	private static final int INITIAL_HEALTH = 10;
 
-	private static int userHealth = INITIAL_HEALTH;
+	private static int playerHealth = INITIAL_HEALTH;
 
 	private final InputManager inputManager = InputManager.getInstance();
 	private final LevelParent levelParent;
@@ -25,8 +26,8 @@ public class UserPlane extends FighterPlane {
 	private int framesSinceLastShot = 0;
 	private int numberOfKills;
 
-	public UserPlane(LevelParent levelParent) {
-		super(IMAGE_NAME, IMAGE_HEIGHT, INITIAL_X_POSITION, INITIAL_Y_POSITION, userHealth);
+	public PlayerPlane(LevelParent levelParent) {
+		super(IMAGE_NAME, IMAGE_HEIGHT, INITIAL_X_POSITION, INITIAL_Y_POSITION, playerHealth);
 		this.levelParent = levelParent;
 	}
 	
@@ -57,34 +58,34 @@ public class UserPlane extends FighterPlane {
 
     @Override
 	public void takeDamage() {
-		userHealth--;
+		playerHealth--;
 
-		if (userHealth <= 0)
+		if (playerHealth <= 0)
 			this.destroy();
 	}
 
 	@Override
 	public int getHealth() {
-		return userHealth;
+		return playerHealth;
 	}
 
-	private void fireUserProjectile() {
-		EntityDestructible projectile = new UserProjectile(PROJECTILE_X_POSITION, getProjectileYPosition(PROJECTILE_Y_POSITION_OFFSET));
+	private void firePlayerProjectile() {
+		EntityDestructible projectile = new PlayerProjectile(PROJECTILE_X_POSITION, getProjectileYPosition(PROJECTILE_Y_POSITION_OFFSET));
 
 		levelParent.getRoot().getChildren().add(projectile);
-		levelParent.getUserProjectiles().add(projectile);
+		levelParent.getPlayerProjectiles().add(projectile);
 
 		framesSinceLastShot = 0;
 	}
 
 	private void updateFire() {
-		boolean canFireUserProjectile = framesSinceLastShot >= MIN_FRAMES_PER_FIRE;
+		boolean canFirePlayerProjectile = framesSinceLastShot >= MIN_FRAMES_PER_FIRE;
 
 		framesSinceLastShot++;
 
 		if (inputManager.isFireActive()) {
-			if (canFireUserProjectile)
-				fireUserProjectile();
+			if (canFirePlayerProjectile)
+				firePlayerProjectile();
 		}
 	}
 

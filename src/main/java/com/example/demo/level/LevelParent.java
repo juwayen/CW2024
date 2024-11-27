@@ -3,7 +3,7 @@ package com.example.demo.level;
 import java.util.*;
 
 import com.example.demo.signal.Signal;
-import com.example.demo.entity.UserPlane;
+import com.example.demo.entity.player.PlayerPlane;
 import com.example.demo.entity.EntityDestructible;
 import com.example.demo.entity.FighterPlane;
 import javafx.animation.*;
@@ -13,21 +13,23 @@ import javafx.scene.image.*;
 import javafx.util.Duration;
 
 public abstract class LevelParent {
+	private static final String IMAGE_PATH = "/com/example/demo/images/";
 	private static final double SCREEN_HEIGHT_ADJUSTMENT = 150;
 	private static final int MILLISECOND_DELAY = 50;
+
 	private final double screenHeight;
 	private final double screenWidth;
 	private final double enemyMaximumYPosition;
 
 	private final Group root;
 	private final Timeline timeline;
-	private final UserPlane user;
+	private final PlayerPlane player;
 	private final Scene scene;
 	private final ImageView background;
 
 	private final List<EntityDestructible> friendlyUnits;
 	private final List<EntityDestructible> enemyUnits;
-	private final List<EntityDestructible> userProjectiles;
+	private final List<EntityDestructible> playerProjectiles;
 	private final List<EntityDestructible> enemyProjectiles;
 
 	private final LevelView levelView;
@@ -40,20 +42,20 @@ public abstract class LevelParent {
 		this.root = new Group();
 		this.scene = new Scene(root, screenWidth, screenHeight);
 		this.timeline = new Timeline();
-		this.user = new UserPlane(this);
+		this.player = new PlayerPlane(this);
 		this.friendlyUnits = new ArrayList<>();
 		this.enemyUnits = new ArrayList<>();
-		this.userProjectiles = new ArrayList<>();
+		this.playerProjectiles = new ArrayList<>();
 		this.enemyProjectiles = new ArrayList<>();
 
-		this.background = new ImageView(new Image(Objects.requireNonNull(getClass().getResource(backgroundImageName)).toExternalForm()));
+		this.background = new ImageView(new Image(Objects.requireNonNull(getClass().getResource(IMAGE_PATH + backgroundImageName)).toExternalForm()));
 		this.screenHeight = screenHeight;
 		this.screenWidth = screenWidth;
 		this.enemyMaximumYPosition = screenHeight - SCREEN_HEIGHT_ADJUSTMENT;
 		this.levelView = instantiateLevelView();
 		this.currentNumberOfEnemies = 0;
 		initializeTimeline();
-		friendlyUnits.add(user);
+		friendlyUnits.add(player);
 	}
 
 	public Signal getLevelWinSignal() {
@@ -68,8 +70,6 @@ public abstract class LevelParent {
 
 	protected abstract LevelView instantiateLevelView();
 
-	protected abstract void misc();
-
 	public Scene initializeScene() {
 		initializeBackground();
 		initializeFriendlyUnits();
@@ -83,20 +83,19 @@ public abstract class LevelParent {
 		timeline.play();
 	}
 
-	private void updateScene() {
+	protected void updateScene() {
 		spawnEnemyUnits();
 		updateEntities();
 		generateEnemyFire();
 		updateNumberOfEnemies();
 		handleEnemyPenetration();
-		handleUserProjectileCollisions();
+		handlePlayerProjectileCollisions();
 		handleEnemyProjectileCollisions();
 		handlePlaneCollisions();
 		removeAllDestroyedEntities();
 		updateKillCount();
 		updateLevelView();
 		checkIfGameOver();
-		misc();
 	}
 
 	private void initializeTimeline() {
@@ -126,14 +125,14 @@ public abstract class LevelParent {
 	private void updateEntities() {
 		friendlyUnits.forEach(EntityDestructible::updateEntity);
 		enemyUnits.forEach(EntityDestructible::updateEntity);
-		userProjectiles.forEach(EntityDestructible::updateEntity);
+		playerProjectiles.forEach(EntityDestructible::updateEntity);
 		enemyProjectiles.forEach(EntityDestructible::updateEntity);
 	}
 
 	private void removeAllDestroyedEntities() {
 		removeDestroyedEntities(friendlyUnits);
 		removeDestroyedEntities(enemyUnits);
-		removeDestroyedEntities(userProjectiles);
+		removeDestroyedEntities(playerProjectiles);
 		removeDestroyedEntities(enemyProjectiles);
 	}
 
@@ -148,8 +147,8 @@ public abstract class LevelParent {
 		handleCollisions(friendlyUnits, enemyUnits);
 	}
 
-	private void handleUserProjectileCollisions() {
-		handleCollisions(userProjectiles, enemyUnits);
+	private void handlePlayerProjectileCollisions() {
+		handleCollisions(playerProjectiles, enemyUnits);
 	}
 
 	private void handleEnemyProjectileCollisions() {
@@ -170,19 +169,19 @@ public abstract class LevelParent {
 	private void handleEnemyPenetration() {
 		for (EntityDestructible enemy : enemyUnits) {
 			if (enemyHasPenetratedDefenses(enemy)) {
-				user.takeDamage();
+				player.takeDamage();
 				enemy.destroy();
 			}
 		}
 	}
 
 	private void updateLevelView() {
-		levelView.removeHearts(user.getHealth());
+		levelView.removeHearts(player.getHealth());
 	}
 
 	private void updateKillCount() {
 		for (int i = 0; i < currentNumberOfEnemies - enemyUnits.size(); i++) {
-			user.incrementKillCount();
+			player.incrementKillCount();
 		}
 	}
 
@@ -204,16 +203,16 @@ public abstract class LevelParent {
 		timeline.stop();
 	}
 
-	protected UserPlane getUser() {
-		return user;
+	protected PlayerPlane getPlayer() {
+		return player;
 	}
 
 	public Group getRoot() {
 		return root;
 	}
 
-	public List<EntityDestructible> getUserProjectiles() {
-		return userProjectiles;
+	public List<EntityDestructible> getPlayerProjectiles() {
+		return playerProjectiles;
 	}
 
 	protected int getCurrentNumberOfEnemies() {
@@ -233,8 +232,8 @@ public abstract class LevelParent {
 		return screenWidth;
 	}
 
-	protected boolean userIsDestroyed() {
-		return user.isDestroyed();
+	protected boolean isPlayerDestroyed() {
+		return player.isDestroyed();
 	}
 
 	private void updateNumberOfEnemies() {

@@ -1,35 +1,32 @@
 package com.example.demo.level;
 
 import com.example.demo.entity.EntityDestructible;
-import com.example.demo.entity.EnemyPlane;
+import com.example.demo.entity.enemy.EnemyPlane;
 
 public class LevelOne extends LevelParent {
-	private static final String BACKGROUND_IMAGE_NAME = "/com/example/demo/images/background1.png";
+	private static final String BACKGROUND_IMAGE_NAME = "background_1.png";
 	private static final int TOTAL_ENEMIES = 2;
 	private static final int KILLS_TO_ADVANCE = 10;
 	private static final double ENEMY_SPAWN_PROBABILITY = .20;
 
-	private final LevelParent nextLevel;
-
 	public LevelOne(double screenWidth, double screenHeight) {
 		super(BACKGROUND_IMAGE_NAME, screenWidth, screenHeight);
-		nextLevel = new LevelTwo(screenWidth, screenHeight);
 	}
 
 	@Override
 	protected void checkIfGameOver() {
-		if (userIsDestroyed()) {
+		if (isPlayerDestroyed()) {
 			loseGame();
 		}
-		else if (userHasReachedKillTarget()) {
+		else if (isKillTargetReached()) {
 			stopLevel();
-			levelWinSignal.emit(nextLevel);
+			levelWinSignal.emit();
 		}
 	}
 
 	@Override
 	protected void initializeFriendlyUnits() {
-		getRoot().getChildren().add(getUser());
+		getRoot().getChildren().add(getPlayer());
 	}
 
 	@Override
@@ -46,15 +43,10 @@ public class LevelOne extends LevelParent {
 
 	@Override
 	protected LevelView instantiateLevelView() {
-		return new LevelView(getRoot(), getUser().getHealth());
+		return new LevelView(getRoot(), getPlayer().getHealth());
 	}
 
-	@Override
-	protected void misc() {
-
-	}
-
-	private boolean userHasReachedKillTarget() {
-		return getUser().getNumberOfKills() >= KILLS_TO_ADVANCE;
+	private boolean isKillTargetReached() {
+		return getPlayer().getNumberOfKills() >= KILLS_TO_ADVANCE;
 	}
 }

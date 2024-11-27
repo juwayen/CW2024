@@ -16,6 +16,7 @@ public abstract class ImageParent extends ImageView {
         setFitHeight(height);
         setLayoutX(xPosition);
         setLayoutY(yPosition);
+        setViewOrder(-1);
     }
 
     public void show() {
@@ -24,10 +25,6 @@ public abstract class ImageParent extends ImageView {
 
     public void hide() {
         setVisible(false);
-    }
-
-    public void bringToFront() {
-        toFront();
     }
 
     public void moveToCenter() {

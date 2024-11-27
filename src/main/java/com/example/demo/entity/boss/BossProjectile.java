@@ -1,4 +1,6 @@
-package com.example.demo.entity;
+package com.example.demo.entity.boss;
+
+import com.example.demo.entity.Projectile;
 
 public class BossProjectile extends Projectile {
 	private static final String IMAGE_NAME = "fireball.png";

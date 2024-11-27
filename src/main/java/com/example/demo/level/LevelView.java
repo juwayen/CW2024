@@ -35,12 +35,10 @@ public class LevelView {
 
 	public void showWinImage() {
 		winImage.show();
-		winImage.bringToFront();
 	}
 	
 	public void showGameOverImage() {
 		gameOverImage.show();
-		gameOverImage.bringToFront();
 	}
 	
 	public void removeHearts(int heartsRemaining) {

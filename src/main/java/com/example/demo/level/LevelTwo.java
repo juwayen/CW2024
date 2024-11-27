@@ -1,9 +1,9 @@
 package com.example.demo.level;
 
-import com.example.demo.entity.Boss;
+import com.example.demo.entity.boss.Boss;
 
 public class LevelTwo extends LevelParent {
-	private static final String BACKGROUND_IMAGE_NAME = "/com/example/demo/images/background2.png";
+	private static final String BACKGROUND_IMAGE_NAME = "background_2.png";
 
 	private final Boss boss;
 
@@ -15,13 +15,19 @@ public class LevelTwo extends LevelParent {
 	}
 
 	@Override
+	protected void updateScene() {
+		super.updateScene();
+		updateShieldImage();
+	}
+
+	@Override
 	protected void initializeFriendlyUnits() {
-		getRoot().getChildren().add(getUser());
+		getRoot().getChildren().add(getPlayer());
 	}
 
 	@Override
 	protected void checkIfGameOver() {
-		if (userIsDestroyed()) {
+		if (isPlayerDestroyed()) {
 			loseGame();
 		}
 		else if (boss.isDestroyed()) {
@@ -38,7 +44,7 @@ public class LevelTwo extends LevelParent {
 
 	@Override
 	protected LevelView instantiateLevelView() {
-		levelView = new LevelTwoView(getRoot(), getUser().getHealth());
+		levelView = new LevelTwoView(getRoot(), getPlayer().getHealth());
         return levelView;
 	}
 
@@ -48,10 +54,5 @@ public class LevelTwo extends LevelParent {
 		} else {
 			levelView.hideShield();
 		}
-	}
-
-	@Override
-	protected void misc() {
-		updateShieldImage();
 	}
 }

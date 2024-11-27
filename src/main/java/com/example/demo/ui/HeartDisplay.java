@@ -26,7 +26,8 @@ public class HeartDisplay {
 	private void initializeContainer() {
 		container = new HBox();
 		container.setLayoutX(containerXPosition);
-		container.setLayoutY(containerYPosition);		
+		container.setLayoutY(containerYPosition);
+		container.setViewOrder(-1);
 	}
 	
 	private void initializeHearts() {

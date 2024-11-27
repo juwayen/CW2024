@@ -23,7 +23,6 @@ public class LevelTwoView extends LevelView {
 	
 	public void showShield() {
 		shieldImage.show();
-		shieldImage.toFront();
 	}
 
 	public void hideShield() {
