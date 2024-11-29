@@ -1,58 +1,40 @@
 package com.example.demo.level;
 
-import com.example.demo.entity.boss.Boss;
+import com.example.demo.controller.GameController;
+import com.example.demo.entity.boss.BossPlane;
 
 public class LevelTwo extends LevelParent {
 	private static final String BACKGROUND_IMAGE_NAME = "background_2.png";
 
-	private final Boss boss;
+	private final BossPlane boss;
 
-	private LevelTwoView levelView;
+    public LevelTwo(GameController gameController) {
+		super(gameController, BACKGROUND_IMAGE_NAME);
 
-    public LevelTwo( double screenWidth, double screenHeight) {
-		super(BACKGROUND_IMAGE_NAME, screenWidth, screenHeight);
-		boss = new Boss();
+		this.boss = new BossPlane(gameController);
+
+		initialize();
 	}
 
-	@Override
-	protected void updateScene() {
-		super.updateScene();
-		updateShieldImage();
+	private void initialize() {
+		connectSignals();
 	}
 
-	@Override
-	protected void initializeFriendlyUnits() {
-		getRoot().getChildren().add(getPlayer());
+	private void connectSignals() {
+		boss.getPlaneDestroyedSignal().connect(this, "onBossPlaneDestroyed");
 	}
 
-	@Override
-	protected void checkIfGameOver() {
-		if (isPlayerDestroyed()) {
-			loseGame();
-		}
-		else if (boss.isDestroyed()) {
-			winGame();
-		}
+	public void onBossPlaneDestroyed() {
+		winLevel();
 	}
 
 	@Override
 	protected void spawnEnemyUnits() {
-		if (getCurrentNumberOfEnemies() == 0) {
-			addEnemyUnit(boss);
-		}
-	}
+		int enemyCount = getEnemyCount();
 
-	@Override
-	protected LevelView instantiateLevelView() {
-		levelView = new LevelTwoView(getRoot(), getPlayer().getHealth());
-        return levelView;
-	}
-
-	private void updateShieldImage() {
-		if (boss.getIsShielded()) {
-			levelView.showShield();
-		} else {
-			levelView.hideShield();
+		if (enemyCount == 0) {
+			boss.addToScene();
+			setEnemyCount(enemyCount + 1);
 		}
 	}
 }

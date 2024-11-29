@@ -6,46 +6,41 @@ import javafx.scene.layout.HBox;
 
 import java.util.Objects;
 
-public class HeartDisplay {
-	private static final String HEART_IMAGE_NAME = "/com/example/demo/images/heart.png";
+import static com.example.demo.Main.IMAGE_PATH;
+
+public class HeartDisplay extends HBox {
+	private static final String HEART_IMAGE_NAME = "heart.png";
 	private static final int HEART_HEIGHT = 50;
-	private static final int INDEX_OF_FIRST_ITEM = 0;
-	private final double containerXPosition;
-	private final double containerYPosition;
+
 	private final int numberOfHeartsToDisplay;
-	private HBox container;
+	private final Image heartImage;
 	
 	public HeartDisplay(double xPosition, double yPosition, int heartsToDisplay) {
-		this.containerXPosition = xPosition;
-		this.containerYPosition = yPosition;
 		this.numberOfHeartsToDisplay = heartsToDisplay;
-		initializeContainer();
-		initializeHearts();
+		this.heartImage = new Image(Objects.requireNonNull(getClass().getResource(IMAGE_PATH + HEART_IMAGE_NAME)).toExternalForm());
+
+		relocate(xPosition, yPosition);
+
+		initialize();
 	}
 	
-	private void initializeContainer() {
-		container = new HBox();
-		container.setLayoutX(containerXPosition);
-		container.setLayoutY(containerYPosition);
-		container.setViewOrder(-1);
-	}
-	
-	private void initializeHearts() {
+	private void initialize() {
 		for (int i = 0; i < numberOfHeartsToDisplay; i++) {
-			ImageView heart = new ImageView(new Image(Objects.requireNonNull(getClass().getResource(HEART_IMAGE_NAME)).toExternalForm()));
+			ImageView heart = new ImageView(heartImage);
 
 			heart.setFitHeight(HEART_HEIGHT);
 			heart.setPreserveRatio(true);
-			container.getChildren().add(heart);
+			getChildren().add(heart);
 		}
 	}
 	
 	public void removeHeart() {
-		if (!container.getChildren().isEmpty())
-			container.getChildren().remove(INDEX_OF_FIRST_ITEM);
+		if (!getChildren().isEmpty())
+			getChildren().remove(0);
 	}
-	
-	public HBox getContainer() {
-		return container;
+
+	public void reset() {
+		getChildren().clear();
+		initialize();
 	}
 }

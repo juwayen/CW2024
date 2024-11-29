@@ -1,52 +1,63 @@
 package com.example.demo.level;
 
-import com.example.demo.entity.EntityDestructible;
+import com.example.demo.controller.GameController;
 import com.example.demo.entity.enemy.EnemyPlane;
+
+import static com.example.demo.Main.SCREEN_WIDTH;
 
 public class LevelOne extends LevelParent {
 	private static final String BACKGROUND_IMAGE_NAME = "background_1.png";
 	private static final int TOTAL_ENEMIES = 2;
-	private static final int KILLS_TO_ADVANCE = 10;
-	private static final double ENEMY_SPAWN_PROBABILITY = .20;
+	private static final int KILLS_TO_ADVANCE = 1;
 
-	public LevelOne(double screenWidth, double screenHeight) {
-		super(BACKGROUND_IMAGE_NAME, screenWidth, screenHeight);
+	private final GameController gameController;
+
+	public LevelOne(GameController gameController) {
+		super(gameController, BACKGROUND_IMAGE_NAME);
+
+		this.gameController = gameController;
+
+		initialize();
 	}
 
-	@Override
-	protected void checkIfGameOver() {
-		if (isPlayerDestroyed()) {
-			loseGame();
-		}
-		else if (isKillTargetReached()) {
-			stopLevel();
-			levelWinSignal.emit();
-		}
+	private void initialize() {
+		connectSignals();
 	}
 
-	@Override
-	protected void initializeFriendlyUnits() {
-		getRoot().getChildren().add(getPlayer());
+	private void connectSignals() {
+		getPlayer().getEnemyPlaneDestroyedSignal().connect(this, "onEnemyPlaneDestroyed");
 	}
 
-	@Override
-	protected void spawnEnemyUnits() {
-		int currentNumberOfEnemies = getCurrentNumberOfEnemies();
-		for (int i = 0; i < TOTAL_ENEMIES - currentNumberOfEnemies; i++) {
-			if (Math.random() < ENEMY_SPAWN_PROBABILITY) {
-				double newEnemyInitialYPosition = Math.random() * getEnemyMaximumYPosition();
-				EntityDestructible newEnemy = new EnemyPlane(getScreenWidth(), newEnemyInitialYPosition);
-				addEnemyUnit(newEnemy);
-			}
-		}
-	}
-
-	@Override
-	protected LevelView instantiateLevelView() {
-		return new LevelView(getRoot(), getPlayer().getHealth());
+	public void onEnemyPlaneDestroyed() {
+		if (isKillTargetReached())
+			winLevel();
 	}
 
 	private boolean isKillTargetReached() {
 		return getPlayer().getNumberOfKills() >= KILLS_TO_ADVANCE;
+	}
+
+	@Override
+	protected void spawnEnemyUnits() {
+		int currentNumberOfEnemies = getEnemyCount();
+
+		for (int i = 0; i < TOTAL_ENEMIES - currentNumberOfEnemies; i++) {
+			double newEnemyInitialYPosition = Math.random() * ENEMY_MAX_Y_POSITION;
+			EnemyPlane newEnemy = new EnemyPlane(gameController, SCREEN_WIDTH, newEnemyInitialYPosition);
+			newEnemy.addToScene();
+
+			setEnemyCount(getEnemyCount() + 1);
+
+			newEnemy.getPlaneDestroyedSignal().connect(this, "decrementEnemyCount");
+			newEnemy.getDefensesBreachedSignal().connect(this, "onDefensesBreached");
+		}
+	}
+
+	public void decrementEnemyCount() {
+		setEnemyCount(getEnemyCount() - 1);
+	}
+
+	public void onDefensesBreached() {
+		loseLevel();
 	}
 }

@@ -1,103 +1,121 @@
 package com.example.demo.entity.player;
 
-import com.example.demo.entity.EntityDestructible;
+import com.example.demo.controller.GameController;
+import com.example.demo.controller.GameLoop;
 import com.example.demo.entity.FighterPlane;
-import com.example.demo.level.LevelParent;
-import com.example.demo.manager.InputManager;
+import com.example.demo.controller.Input;
+import com.example.demo.signal.Signal;
+import com.example.demo.util.Vector;
+import javafx.geometry.Bounds;
+
+import static com.example.demo.Main.SCREEN_WIDTH;
+import static com.example.demo.Main.SCREEN_HEIGHT;
 
 public class PlayerPlane extends FighterPlane {
+	public static final int HEALTH = 5;
+
 	private static final String IMAGE_NAME = "player_plane.png";
-	private static final double Y_UPPER_BOUND = -280;
-	private static final double Y_LOWER_BOUND = 340;
+	private static final int IMAGE_HEIGHT = 30;
+	private static final int MIN_FRAMES_PER_FIRE = 15;
 	private static final double INITIAL_X_POSITION = 5.0;
 	private static final double INITIAL_Y_POSITION = 300.0;
-	private static final int IMAGE_HEIGHT = 30;
-	private static final int VERTICAL_VELOCITY = 12;
-	private static final int PROJECTILE_X_POSITION = 110;
-	private static final int PROJECTILE_Y_POSITION_OFFSET = 20;
-	private static final int MIN_FRAMES_PER_FIRE = 5;
-	private static final int INITIAL_HEALTH = 10;
+	private static final double SPEED = 0.5;
+	private static final Vector PROJECTILE_POSITION_OFFSET = new Vector(115, 20);
 
-	private static int playerHealth = INITIAL_HEALTH;
+	private final GameController gameController;
+	private final Signal enemyPlaneDestroyed;
+	private final Signal damageTaken;
 
-	private final InputManager inputManager = InputManager.getInstance();
-	private final LevelParent levelParent;
-
+	private int numberOfKills = 0;
 	private int framesSinceLastShot = 0;
-	private int numberOfKills;
 
-	public PlayerPlane(LevelParent levelParent) {
-		super(IMAGE_NAME, IMAGE_HEIGHT, INITIAL_X_POSITION, INITIAL_Y_POSITION, playerHealth);
-		this.levelParent = levelParent;
-	}
-	
-	@Override
-	public void updatePosition() {
-		double newTranslateY = getTranslateY();
+	public PlayerPlane(GameController gameController) {
+		super(gameController, IMAGE_NAME, IMAGE_HEIGHT, INITIAL_X_POSITION, INITIAL_Y_POSITION, HEALTH);
 
-		if (inputManager.isMoveUpActive())
-			newTranslateY -= VERTICAL_VELOCITY;
-
-		if (inputManager.isMoveDownActive())
-			newTranslateY += VERTICAL_VELOCITY;
-
-		if (isTranslateYInBounds(newTranslateY))
-			setTranslateY(newTranslateY);
-	}
-	
-	@Override
-	public void updateEntity() {
-		updatePosition();
-		updateFire();
+		this.gameController = gameController;
+		this.enemyPlaneDestroyed = new Signal();
+		this.damageTaken = new Signal();
 	}
 
-    @Override
-    public EntityDestructible fireProjectile() {
-        return null;
-    }
-
-    @Override
-	public void takeDamage() {
-		playerHealth--;
-
-		if (playerHealth <= 0)
-			this.destroy();
+	public Signal getEnemyPlaneDestroyedSignal() {
+		return enemyPlaneDestroyed;
 	}
 
-	@Override
-	public int getHealth() {
-		return playerHealth;
-	}
-
-	private void firePlayerProjectile() {
-		EntityDestructible projectile = new PlayerProjectile(PROJECTILE_X_POSITION, getProjectileYPosition(PROJECTILE_Y_POSITION_OFFSET));
-
-		levelParent.getRoot().getChildren().add(projectile);
-		levelParent.getPlayerProjectiles().add(projectile);
-
-		framesSinceLastShot = 0;
-	}
-
-	private void updateFire() {
-		boolean canFirePlayerProjectile = framesSinceLastShot >= MIN_FRAMES_PER_FIRE;
-
-		framesSinceLastShot++;
-
-		if (inputManager.isFireActive()) {
-			if (canFirePlayerProjectile)
-				firePlayerProjectile();
-		}
-	}
-
-	private boolean isTranslateYInBounds(double translateY) {
-		return translateY > Y_UPPER_BOUND && translateY < Y_LOWER_BOUND;
+	public Signal getDamageTakenSignal() {
+		return damageTaken;
 	}
 
 	public int getNumberOfKills() {
 		return numberOfKills;
 	}
 
+	@Override
+	public void updatePosition() {
+		moveWithinBounds(Input.getInputMoveDirection());
+	}
+
+	private void moveWithinBounds(Vector direction) {
+		Vector scaledVector = direction.duplicate();
+		scaledVector.multiply(PlayerPlane.SPEED * GameLoop.MILLISECOND_DELAY);
+
+		double newTranslateX = getTranslateX() + scaledVector.getX();
+		double newTranslateY = getTranslateY() + scaledVector.getY();
+
+		Bounds bounds = getBoundsInParent();
+
+		double newGlobalX = newTranslateX + getLayoutX();
+		double newGlobalY = newTranslateY + getLayoutY();
+
+		if (newGlobalX >= 0 && newGlobalX <= SCREEN_WIDTH * 0.25 - bounds.getWidth())
+			setTranslateX(newTranslateX);
+
+		if (newGlobalY >= 0 && newGlobalY <= SCREEN_HEIGHT - bounds.getHeight())
+			setTranslateY(newTranslateY);
+	}
+
+	@Override
+	public boolean canFireProjectile() {
+		if (framesSinceLastShot >= MIN_FRAMES_PER_FIRE) {
+			if (Input.isFireActive())
+				return true;
+		}
+
+		framesSinceLastShot++;
+
+		return false;
+	}
+
+    @Override
+    public void fireProjectile() {
+		double projectilePosX = PROJECTILE_POSITION_OFFSET.getX() + getTranslateX() + getLayoutX();
+		double projectilePosY = PROJECTILE_POSITION_OFFSET.getY() + getTranslateY() + getLayoutY();
+		PlayerProjectile projectile = new PlayerProjectile(gameController, projectilePosX, projectilePosY);
+
+		projectile.getEnemyPlaneDestroyedSignal().connect(this, "incrementKillCount");
+
+		projectile.addToScene();
+
+		framesSinceLastShot = 0;
+    }
+
 	public void incrementKillCount() {
 		numberOfKills++;
+		enemyPlaneDestroyed.emit();
+	}
+
+	@Override
+	protected void takeDamage(int damageAmount) {
+		super.takeDamage(damageAmount);
+		damageTaken.emit(damageAmount);
+	}
+
+	@Override
+	public void onSceneReset() {
+		setHealth(HEALTH);
+	}
+
+	@Override
+	public boolean isFriendly() {
+		return true;
 	}
 }

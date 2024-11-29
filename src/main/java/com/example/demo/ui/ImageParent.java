@@ -1,40 +1,31 @@
 package com.example.demo.ui;
 
 import com.example.demo.Main;
+import javafx.geometry.Bounds;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
 import java.util.Objects;
 
-public abstract class ImageParent extends ImageView {
-    private static final String IMAGE_PATH = "/com/example/demo/images/";
+import static com.example.demo.Main.IMAGE_PATH;
 
+public abstract class ImageParent extends ImageView {
     public ImageParent(String imageName, int height, double xPosition, double yPosition) {
         setImage(new Image(Objects.requireNonNull(getClass().getResource(IMAGE_PATH + imageName)).toExternalForm()));
-        setVisible(false);
         setPreserveRatio(true);
         setFitHeight(height);
-        setLayoutX(xPosition);
-        setLayoutY(yPosition);
-        setViewOrder(-1);
-    }
-
-    public void show() {
-        setVisible(true);
-    }
-
-    public void hide() {
-        setVisible(false);
+        relocate(xPosition, yPosition);
     }
 
     public void moveToCenter() {
-        Image image = getImage();
-        double widthToHeightRatio = image.getWidth() / image.getHeight();
-        double imageHeight = getFitHeight();
-        double imageWidth = imageHeight * widthToHeightRatio;
+        Bounds bounds = getBoundsInParent();
+
+        double imageWidth = bounds.getWidth();
+        double imageHeight = bounds.getHeight();
+
         double x = ((double) Main.SCREEN_WIDTH / 2) - (imageWidth / 2);
         double y = ((double) Main.SCREEN_HEIGHT / 2) - (imageHeight / 2);
-        setLayoutX(x);
-        setLayoutY(y);
+
+        relocate(x, y);
     }
 }
