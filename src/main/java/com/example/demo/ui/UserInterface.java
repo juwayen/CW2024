@@ -33,16 +33,15 @@ public class UserInterface extends Group {
     }
 
     private void connectSignals() {
-        player.getDamageTakenSignal().connect(this, "onPlayerDamageTaken", int.class);
-        gameController.getSceneResetSignal().connect(this, "onSceneReset");
+        player.getDamageTakenSignal().connect(this::onPlayerDamageTaken);
+        gameController.getSceneResetSignal().connect(this::onSceneReset);
     }
 
-    public void onPlayerDamageTaken(int damageAmount) {
-        for (int i = 0; i < damageAmount; i++)
-            heartDisplay.removeHeart();
+    private void onPlayerDamageTaken() {
+        heartDisplay.setHeartCount(player.getHealth());
     }
 
-    public void onSceneReset() {
+    private void onSceneReset() {
         heartDisplay.reset();
     }
 }

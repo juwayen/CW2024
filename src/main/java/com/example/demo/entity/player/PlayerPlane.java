@@ -91,14 +91,14 @@ public class PlayerPlane extends FighterPlane {
 		double projectilePosY = PROJECTILE_POSITION_OFFSET.getY() + getTranslateY() + getLayoutY();
 		PlayerProjectile projectile = new PlayerProjectile(gameController, projectilePosX, projectilePosY);
 
-		projectile.getEnemyPlaneDestroyedSignal().connect(this, "incrementKillCount");
+		projectile.getEnemyPlaneDestroyedSignal().connect(this::incrementKillCount);
 
 		projectile.addToScene();
 
 		framesSinceLastShot = 0;
     }
 
-	public void incrementKillCount() {
+	private void incrementKillCount() {
 		numberOfKills++;
 		enemyPlaneDestroyed.emit();
 	}
@@ -106,7 +106,7 @@ public class PlayerPlane extends FighterPlane {
 	@Override
 	protected void takeDamage(int damageAmount) {
 		super.takeDamage(damageAmount);
-		damageTaken.emit(damageAmount);
+		damageTaken.emit();
 	}
 
 	@Override

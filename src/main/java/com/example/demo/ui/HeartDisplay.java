@@ -25,11 +25,17 @@ public class HeartDisplay extends HBox {
 	}
 	
 	private void initialize() {
-		for (int i = 0; i < numberOfHeartsToDisplay; i++) {
+		setHeartCount(numberOfHeartsToDisplay);
+	}
+
+	public void setHeartCount(int heartCount) {
+		getChildren().clear();
+
+		for (int i = 0; i < heartCount; i++) {
 			ImageView heart = new ImageView(heartImage);
 
-			heart.setFitHeight(HEART_HEIGHT);
 			heart.setPreserveRatio(true);
+			heart.setFitHeight(HEART_HEIGHT);
 			getChildren().add(heart);
 		}
 	}

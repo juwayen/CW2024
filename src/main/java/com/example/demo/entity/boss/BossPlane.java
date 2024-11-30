@@ -4,8 +4,6 @@ import com.example.demo.controller.GameController;
 import com.example.demo.entity.FighterPlane;
 import com.example.demo.util.Vector;
 
-import java.util.*;
-
 public class BossPlane extends FighterPlane {
 	private static final String IMAGE_NAME = "boss_plane.png";
 	private static final double INITIAL_X_POSITION = 1040;

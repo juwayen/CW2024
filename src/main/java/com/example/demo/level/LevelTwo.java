@@ -21,10 +21,10 @@ public class LevelTwo extends LevelParent {
 	}
 
 	private void connectSignals() {
-		boss.getPlaneDestroyedSignal().connect(this, "onBossPlaneDestroyed");
+		boss.getPlaneDestroyedSignal().connect(this::onBossPlaneDestroyed);
 	}
 
-	public void onBossPlaneDestroyed() {
+	private void onBossPlaneDestroyed() {
 		winLevel();
 	}
 

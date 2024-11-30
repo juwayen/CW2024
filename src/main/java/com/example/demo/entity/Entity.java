@@ -31,10 +31,10 @@ public abstract class Entity extends ImageView implements Updatable, Collidable 
 	}
 
 	private void connectSignals() {
-		gameController.getSceneResetSignal().connect(this, "onSceneReset");
+		gameController.getSceneResetSignal().connect(this::onSceneReset);
 	}
 
-	public void onSceneReset() {
+	protected void onSceneReset() {
 		removeFromScene();
 	}
 

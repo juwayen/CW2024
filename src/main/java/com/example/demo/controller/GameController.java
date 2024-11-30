@@ -64,7 +64,7 @@ public class GameController {
 	}
 
 	private void connectSignals() {
-		player.getPlaneDestroyedSignal().connect(this, "loseGame");
+		player.getPlaneDestroyedSignal().connect(this::loseGame);
 	}
 
 	public Scene getScene() {
@@ -94,11 +94,11 @@ public class GameController {
 	}
 
 	private void connectLevelSignals(LevelParent level) {
-		level.getLevelWon().connect(this, "onLevelWon");
-		level.getLevelLost().connect(this, "loseGame");
+		level.getLevelWon().connect(this::onLevelWon);
+		level.getLevelLost().connect(this::loseGame);
 	}
 
-	public void onLevelWon() {
+	private void onLevelWon() {
 		if (nextLevelIndex < levelsOrdered.size()) {
 			sceneReset.emit();
 			goToNextLevel();
@@ -112,7 +112,7 @@ public class GameController {
 		stopGame();
 	}
 
-	public void loseGame() {
+	private void loseGame() {
 		displayImage(new GameOverImage(0, 0));
 		stopGame();
 	}

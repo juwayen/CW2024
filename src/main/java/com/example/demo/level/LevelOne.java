@@ -25,10 +25,10 @@ public class LevelOne extends LevelParent {
 	}
 
 	private void connectSignals() {
-		getPlayer().getEnemyPlaneDestroyedSignal().connect(this, "onEnemyPlaneDestroyed");
+		getPlayer().getEnemyPlaneDestroyedSignal().connect(this::onEnemyPlaneDestroyed);
 	}
 
-	public void onEnemyPlaneDestroyed() {
+	private void onEnemyPlaneDestroyed() {
 		if (isKillTargetReached())
 			winLevel();
 	}
@@ -48,16 +48,16 @@ public class LevelOne extends LevelParent {
 
 			setEnemyCount(getEnemyCount() + 1);
 
-			newEnemy.getPlaneDestroyedSignal().connect(this, "decrementEnemyCount");
-			newEnemy.getDefensesBreachedSignal().connect(this, "onDefensesBreached");
+			newEnemy.getPlaneDestroyedSignal().connect(this::decrementEnemyCount);
+			newEnemy.getDefensesBreachedSignal().connect(this::onDefensesBreached);
 		}
 	}
 
-	public void decrementEnemyCount() {
+	private void decrementEnemyCount() {
 		setEnemyCount(getEnemyCount() - 1);
 	}
 
-	public void onDefensesBreached() {
+	private void onDefensesBreached() {
 		loseLevel();
 	}
 }
