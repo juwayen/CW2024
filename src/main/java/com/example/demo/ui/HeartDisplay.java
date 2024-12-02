@@ -1,12 +1,9 @@
 package com.example.demo.ui;
 
+import com.example.demo.util.ImageUtils;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
-
-import java.util.Objects;
-
-import static com.example.demo.Main.IMAGE_PATH;
 
 public class HeartDisplay extends HBox {
 	private static final String HEART_IMAGE_NAME = "heart.png";
@@ -17,9 +14,10 @@ public class HeartDisplay extends HBox {
 	
 	public HeartDisplay(double xPosition, double yPosition, int heartsToDisplay) {
 		this.numberOfHeartsToDisplay = heartsToDisplay;
-		this.heartImage = new Image(Objects.requireNonNull(getClass().getResource(IMAGE_PATH + HEART_IMAGE_NAME)).toExternalForm());
+		this.heartImage = ImageUtils.getImageFromName(HEART_IMAGE_NAME);
 
-		relocate(xPosition, yPosition);
+		setTranslateX(xPosition);
+		setTranslateY(yPosition);
 
 		initialize();
 	}
@@ -38,11 +36,6 @@ public class HeartDisplay extends HBox {
 			heart.setFitHeight(HEART_HEIGHT);
 			getChildren().add(heart);
 		}
-	}
-	
-	public void removeHeart() {
-		if (!getChildren().isEmpty())
-			getChildren().remove(0);
 	}
 
 	public void reset() {

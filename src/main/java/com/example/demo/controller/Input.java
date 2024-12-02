@@ -58,8 +58,7 @@ public class Input {
 
         inputMoveDirection.setX(hPosComponent - hNegComponent);
         inputMoveDirection.setY(vPosComponent - vNegComponent);
-        inputMoveDirection.normalize();
 
-        return inputMoveDirection;
+        return inputMoveDirection.normalized();
     }
 }

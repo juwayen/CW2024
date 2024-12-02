@@ -3,17 +3,16 @@ package com.example.demo.level;
 import com.example.demo.controller.GameController;
 import com.example.demo.entity.enemy.EnemyPlane;
 
-import static com.example.demo.Main.SCREEN_WIDTH;
-
 public class LevelOne extends LevelParent {
-	private static final String BACKGROUND_IMAGE_NAME = "background_1.png";
 	private static final int TOTAL_ENEMIES = 2;
-	private static final int KILLS_TO_ADVANCE = 1;
+	private static final int KILLS_TO_ADVANCE = 20;
+	private static final int ENEMY_INITIAL_Y_POS = -64;
+	private static final int ENEMY_MAX_X_POSITION = 942;
 
 	private final GameController gameController;
 
 	public LevelOne(GameController gameController) {
-		super(gameController, BACKGROUND_IMAGE_NAME);
+		super(gameController);
 
 		this.gameController = gameController;
 
@@ -42,8 +41,8 @@ public class LevelOne extends LevelParent {
 		int currentNumberOfEnemies = getEnemyCount();
 
 		for (int i = 0; i < TOTAL_ENEMIES - currentNumberOfEnemies; i++) {
-			double newEnemyInitialYPosition = Math.random() * ENEMY_MAX_Y_POSITION;
-			EnemyPlane newEnemy = new EnemyPlane(gameController, SCREEN_WIDTH, newEnemyInitialYPosition);
+			double newEnemyInitialXPosition = Math.random()  * ENEMY_MAX_X_POSITION;
+			EnemyPlane newEnemy = new EnemyPlane(gameController, newEnemyInitialXPosition, ENEMY_INITIAL_Y_POS);
 			newEnemy.addToScene();
 
 			setEnemyCount(getEnemyCount() + 1);

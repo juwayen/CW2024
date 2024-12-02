@@ -4,12 +4,12 @@ import com.example.demo.controller.GameController;
 import javafx.application.Application;
 import javafx.scene.Group;
 import javafx.scene.Scene;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 
 public class Main extends Application {
-	public static final String IMAGE_PATH = "/com/example/demo/images/";
-	public static final int SCREEN_WIDTH = 1280;
-	public static final int SCREEN_HEIGHT = 720;
+	public static final int SCREEN_WIDTH = 1024;
+	public static final int SCREEN_HEIGHT = 1024;
 
 	private static final String TITLE = "Warbirds";
 
@@ -22,12 +22,18 @@ public class Main extends Application {
 	}
 
 	private void initializeStage(Stage stage, Group root) {
-		Scene scene = new Scene(root, stage.getWidth(), stage.getHeight());
+		double outputScaleX = Screen.getPrimary().getOutputScaleX();
+		double outputScaleY = Screen.getPrimary().getOutputScaleY();
+
+		double screenWidthAdjusted = SCREEN_WIDTH / outputScaleX;
+		double screenHeightAdjusted = SCREEN_HEIGHT / outputScaleY;
+
+		Scene scene = new Scene(root);
 
 		stage.setTitle(TITLE);
 		stage.setResizable(false);
-		stage.setWidth(SCREEN_WIDTH);
-		stage.setHeight(SCREEN_HEIGHT);
+		stage.setWidth(screenWidthAdjusted);
+		stage.setHeight(screenHeightAdjusted);
 		stage.setScene(scene);
 		stage.show();
 	}

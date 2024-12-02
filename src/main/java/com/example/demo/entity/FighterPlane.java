@@ -8,8 +8,8 @@ public abstract class FighterPlane extends Entity {
 
 	private int health;
 
-	public FighterPlane(GameController gameController, String imageName, int imageHeight, double initialXPos, double initialYPos, int health) {
-		super(gameController, imageName, imageHeight, initialXPos, initialYPos);
+	public FighterPlane(GameController gameController, String imageName, double initialXPos, double initialYPos, int health) {
+		super(gameController, imageName, initialXPos, initialYPos);
 
 		this.planeDestroyed = new Signal();
 		this.health = health;

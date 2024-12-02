@@ -13,10 +13,6 @@ public class Vector {
         this.y = y;
     }
 
-    public Vector duplicate() {
-        return new Vector(x, y);
-    }
-
     public double getX() {
         return x;
     }
@@ -33,24 +29,24 @@ public class Vector {
         this.y = y;
     }
 
-    public void multiply(double scalar) {
-        x *= scalar;
-        y *= scalar;
+    public Vector multiply(double scalar) {
+        return new Vector(x * scalar, y * scalar);
     }
 
-    public void divide(double scalar) {
-        x /= scalar;
-        y /= scalar;
+    public Vector divide(double scalar) {
+        return new Vector(x / scalar, y / scalar);
     }
 
     public double magnitude() {
         return Math.sqrt(x * x + y * y);
     }
 
-    public void normalize() {
+    public Vector normalized() {
         double magnitude = magnitude();
 
         if (magnitude != 0)
-            divide(magnitude());
+            return divide(magnitude);
+
+        return new Vector();
     }
 }

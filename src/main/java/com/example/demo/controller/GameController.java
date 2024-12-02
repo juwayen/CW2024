@@ -4,15 +4,10 @@ import com.example.demo.entity.player.PlayerPlane;
 import com.example.demo.level.LevelOne;
 import com.example.demo.level.LevelTwo;
 import com.example.demo.signal.Signal;
-import com.example.demo.ui.GameOverImage;
-import com.example.demo.ui.ImageParent;
-import com.example.demo.ui.UserInterface;
-import com.example.demo.ui.WinImage;
+import com.example.demo.ui.*;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 import com.example.demo.level.LevelParent;
 
@@ -23,7 +18,6 @@ public class GameController {
 	private final Signal sceneReset;
 	private final Stage stage;
 	private final Group root;
-	private final ImageView background;
 	private final PlayerPlane player;
 	private final UserInterface userInterface;
     private final List<LevelParent> levelsOrdered;
@@ -34,7 +28,6 @@ public class GameController {
 		this.sceneReset = new Signal();
 		this.stage = stage;
 		this.root = root;
-		this.background = new ImageView();
 		this.player = new PlayerPlane(this);
 		this.userInterface = new UserInterface(this);
 		this.levelsOrdered = new ArrayList<>();
@@ -52,10 +45,7 @@ public class GameController {
 	}
 
 	private void initializeBackground() {
-		background.setViewOrder(1);
-		background.setFitWidth(stage.getWidth());
-		background.setFitHeight(stage.getHeight());
-		addNodeToRoot(background);
+		addNodeToRoot(new Background());
 	}
 
 	private void initializeLevels() {
@@ -134,9 +124,5 @@ public class GameController {
 
 	public void removeNodeFromRoot(Node node) {
 		root.getChildren().remove(node);
-	}
-
-	public void setBackgroundImage(Image backgroundImage) {
-		background.setImage(backgroundImage);
 	}
 }

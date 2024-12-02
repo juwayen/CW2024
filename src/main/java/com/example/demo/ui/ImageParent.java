@@ -1,20 +1,20 @@
 package com.example.demo.ui;
 
-import com.example.demo.Main;
+import com.example.demo.util.ImageUtils;
 import javafx.geometry.Bounds;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
-import java.util.Objects;
-
-import static com.example.demo.Main.IMAGE_PATH;
+import static com.example.demo.Main.SCREEN_WIDTH;
+import static com.example.demo.Main.SCREEN_HEIGHT;
+import static com.example.demo.util.ImageUtils.OUTPUT_SCALE;
 
 public abstract class ImageParent extends ImageView {
     public ImageParent(String imageName, int height, double xPosition, double yPosition) {
-        setImage(new Image(Objects.requireNonNull(getClass().getResource(IMAGE_PATH + imageName)).toExternalForm()));
+        setImage(ImageUtils.getImageFromName(imageName));
         setPreserveRatio(true);
         setFitHeight(height);
-        relocate(xPosition, yPosition);
+        setTranslateX(xPosition);
+        setTranslateY(yPosition);
     }
 
     public void moveToCenter() {
@@ -23,9 +23,10 @@ public abstract class ImageParent extends ImageView {
         double imageWidth = bounds.getWidth();
         double imageHeight = bounds.getHeight();
 
-        double x = ((double) Main.SCREEN_WIDTH / 2) - (imageWidth / 2);
-        double y = ((double) Main.SCREEN_HEIGHT / 2) - (imageHeight / 2);
+        double x = ((double) SCREEN_WIDTH / 2) - (imageWidth / 2);
+        double y = ((double) SCREEN_HEIGHT / 2) - (imageHeight / 2);
 
-        relocate(x, y);
+        setTranslateX(x / OUTPUT_SCALE);
+        setTranslateY(y / OUTPUT_SCALE);
     }
 }

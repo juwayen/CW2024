@@ -4,12 +4,11 @@ import com.example.demo.controller.GameController;
 import com.example.demo.entity.boss.BossPlane;
 
 public class LevelTwo extends LevelParent {
-	private static final String BACKGROUND_IMAGE_NAME = "background_2.png";
 
 	private final BossPlane boss;
 
     public LevelTwo(GameController gameController) {
-		super(gameController, BACKGROUND_IMAGE_NAME);
+		super(gameController);
 
 		this.boss = new BossPlane(gameController);
 

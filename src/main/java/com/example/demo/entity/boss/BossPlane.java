@@ -4,22 +4,19 @@ import com.example.demo.controller.GameController;
 import com.example.demo.entity.FighterPlane;
 import com.example.demo.util.Vector;
 
+import static com.example.demo.util.ImageUtils.OUTPUT_SCALE;
+
 public class BossPlane extends FighterPlane {
 	private static final String IMAGE_NAME = "boss_plane.png";
-	private static final double INITIAL_X_POSITION = 1040;
-	private static final double INITIAL_Y_POSITION = 300;
+	private static final double INITIAL_X_POSITION = 75;
+	private static final double INITIAL_Y_POSITION = -246;
 	private static final double BOSS_SHIELD_PROBABILITY = 0.25;
-	private static final int IMAGE_HEIGHT = 80;
-	private static final int SPEED = 1;
-	private static final int HEALTH = 50;
-	private static final int MIN_FRAMES_PER_FIRE = 120;
-	private static final int MAX_FRAMES_PER_FIRE = 300;
-	private static final int Y_POSITION_UPPER_BOUND = 0;
-	private static final int Y_POSITION_LOWER_BOUND = 600;
+	private static final int HEALTH = 150;
+	private static final int MIN_FRAMES_PER_FIRE = 60;
+	private static final int MAX_FRAMES_PER_FIRE = 150;
 	private static final int FRAMES_PER_SHIELD_CHANCE = 300;
 	private static final int MAX_FRAMES_WITH_SHIELD = 90;
-	private static final Vector DIRECTION = new Vector(0, 1);
-	private static final Vector PROJECTILE_POSITION_OFFSET = new Vector(0, 0);
+	private static final Vector PROJECTILE_POSITION_OFFSET = new Vector(412, 492);
 
 	private final GameController gameController;
 
@@ -29,7 +26,7 @@ public class BossPlane extends FighterPlane {
 	private int framesWithShieldActivated = 0;
 
 	public BossPlane(GameController gameController) {
-		super(gameController, IMAGE_NAME, IMAGE_HEIGHT, INITIAL_X_POSITION, INITIAL_Y_POSITION, HEALTH);
+		super(gameController, IMAGE_NAME, INITIAL_X_POSITION, INITIAL_Y_POSITION, HEALTH);
 
 		this.gameController = gameController;
 	}
@@ -40,13 +37,7 @@ public class BossPlane extends FighterPlane {
 		updateShield();
 	}
 
-	public void updatePosition() {
-		move(DIRECTION, getNextMove());
-	}
-
-	private int getNextMove() {
-		return 0;
-	}
+	public void updatePosition() {}
 
 	private void updateShield() {
 		if (isShielded)
@@ -94,8 +85,8 @@ public class BossPlane extends FighterPlane {
 
 	@Override
 	public void fireProjectile() {
-		double projectilePosX = PROJECTILE_POSITION_OFFSET.getX() + getTranslateX() + getLayoutX();
-		double projectilePosY = PROJECTILE_POSITION_OFFSET.getY() + getTranslateY() + getLayoutY();
+		double projectilePosX = PROJECTILE_POSITION_OFFSET.getX() + getTranslateX() * OUTPUT_SCALE;
+		double projectilePosY = PROJECTILE_POSITION_OFFSET.getY() + getTranslateY() * OUTPUT_SCALE;
 		BossProjectile projectile = new BossProjectile(gameController, projectilePosX, projectilePosY);
 
 		projectile.addToScene();

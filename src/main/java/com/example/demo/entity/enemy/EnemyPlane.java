@@ -5,15 +5,16 @@ import com.example.demo.entity.FighterPlane;
 import com.example.demo.signal.Signal;
 import com.example.demo.util.Vector;
 
+import static com.example.demo.util.ImageUtils.OUTPUT_SCALE;
+
 public class EnemyPlane extends FighterPlane {
 	private static final String IMAGE_NAME = "enemy_plane.png";
-	private static final int IMAGE_HEIGHT = 50;
 	private static final int INITIAL_HEALTH = 1;
-	private static final int MIN_FRAMES_PER_FIRE = 60;
+	private static final int MIN_FRAMES_PER_FIRE = 120;
 	private static final int MAX_FRAMES_PER_FIRE = 150;
-	private static final Vector PROJECTILE_POSITION_OFFSET = new Vector(-75, 25);
-	private static final Vector DIRECTION = new Vector(-1, 0);
-	private static final double SPEED = 0.25;
+	private static final Vector PROJECTILE_POSITION_OFFSET = new Vector(16, 64);
+	private static final Vector DIRECTION = new Vector(0, 1);
+	private static final double SPEED = 0.48;
 
 	private final GameController gameController;
 	private final Signal defensesBreached;
@@ -21,7 +22,7 @@ public class EnemyPlane extends FighterPlane {
 	private int framesBeforeNextShot;
 
 	public EnemyPlane(GameController gameController, double initialXPos, double initialYPos) {
-		super(gameController, IMAGE_NAME, IMAGE_HEIGHT, initialXPos, initialYPos, INITIAL_HEALTH);
+		super(gameController, IMAGE_NAME, initialXPos, initialYPos, INITIAL_HEALTH);
 
 		this.gameController = gameController;
 		this.defensesBreached = new Signal();
@@ -43,7 +44,7 @@ public class EnemyPlane extends FighterPlane {
 	}
 
 	private boolean hasBreachedDefenses() {
-		return getTranslateX() + getLayoutX() < 0;
+		return getTranslateY() > 1041 / OUTPUT_SCALE;
 	}
 
 	@Override
@@ -63,8 +64,8 @@ public class EnemyPlane extends FighterPlane {
 
 	@Override
 	public void fireProjectile() {
-		double projectilePosX = PROJECTILE_POSITION_OFFSET.getX() + getTranslateX() + getLayoutX();
-		double projectilePosY = PROJECTILE_POSITION_OFFSET.getY() + getTranslateY() + getLayoutY();
+		double projectilePosX = PROJECTILE_POSITION_OFFSET.getX() + getTranslateX() * OUTPUT_SCALE;
+		double projectilePosY = PROJECTILE_POSITION_OFFSET.getY() + getTranslateY() * OUTPUT_SCALE;
 		EnemyProjectile projectile = new EnemyProjectile(gameController, projectilePosX, projectilePosY);
 
 		projectile.addToScene();

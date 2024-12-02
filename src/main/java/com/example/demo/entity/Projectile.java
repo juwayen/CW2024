@@ -12,8 +12,8 @@ public abstract class Projectile extends Entity {
 	private final double speed;
 	private final int damageOutput;
 
-	public Projectile(GameController gameController, String imageName, int imageHeight, double initialXPos, double initialYPos, Vector direction, double speed, int damageOutput) {
-		super(gameController, imageName, imageHeight, initialXPos, initialYPos);
+	public Projectile(GameController gameController, String imageName, double initialXPos, double initialYPos, Vector direction, double speed, int damageOutput) {
+		super(gameController, imageName, initialXPos, initialYPos);
 
 		this.direction = direction;
 		this.speed = speed;

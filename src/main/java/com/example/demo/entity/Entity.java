@@ -1,27 +1,25 @@
 package com.example.demo.entity;
 
 import com.example.demo.controller.*;
+import com.example.demo.util.ImageUtils;
 import com.example.demo.util.Vector;
 import javafx.geometry.Bounds;
 import javafx.scene.image.*;
 
-import java.util.Objects;
-
-import static com.example.demo.Main.IMAGE_PATH;
 import static com.example.demo.controller.GameLoop.MILLISECOND_DELAY;
+import static com.example.demo.util.ImageUtils.OUTPUT_SCALE;
 
 public abstract class Entity extends ImageView implements Updatable, Collidable {
 	private static final CollisionEngine COLLISION_ENGINE = CollisionEngine.getInstance();
 
 	private final GameController gameController;
 
-	public Entity(GameController gameController, String imageName, int imageHeight, double initialXPos, double initialYPos) {
+	public Entity(GameController gameController, String imageName, double initialXPos, double initialYPos) {
 		this.gameController = gameController;
 
-		setImage(new Image(Objects.requireNonNull(getClass().getResource(IMAGE_PATH + imageName)).toExternalForm()));
-		setPreserveRatio(true);
-		setFitHeight(imageHeight);
-		relocate(initialXPos, initialYPos);
+		setImage(ImageUtils.getImageFromName(imageName));
+		setTranslateX(initialXPos / OUTPUT_SCALE);
+		setTranslateY(initialYPos / OUTPUT_SCALE);
 
 		initialize();
 	}
@@ -51,8 +49,7 @@ public abstract class Entity extends ImageView implements Updatable, Collidable 
 	}
 
 	public void move(Vector direction, double magnitude) {
-		Vector scaledVector = direction.duplicate();
-		scaledVector.multiply(magnitude * MILLISECOND_DELAY);
+		Vector scaledVector = direction.multiply(magnitude / OUTPUT_SCALE * MILLISECOND_DELAY);
 
 		double newX = getTranslateX() + scaledVector.getX();
 		double newY = getTranslateY() + scaledVector.getY();
