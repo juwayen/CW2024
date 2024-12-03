@@ -30,6 +30,10 @@ public class Input {
         return false;
     }
 
+    public static boolean isAnyKeyActive() {
+        return !activeKeys.isEmpty();
+    }
+
     public static boolean isMoveUpActive() {
         return isActionActive(moveUpKeys);
     }

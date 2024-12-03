@@ -4,23 +4,22 @@ import com.example.demo.controller.GameController;
 import com.example.demo.entity.boss.BossPlane;
 
 public class LevelTwo extends LevelParent {
-
-	private final BossPlane boss;
+	private final GameController gameController;
 
     public LevelTwo(GameController gameController) {
 		super(gameController);
 
-		this.boss = new BossPlane(gameController);
-
-		initialize();
+		this.gameController = gameController;
 	}
 
-	private void initialize() {
-		connectSignals();
-	}
+	@Override
+	public void startLevel() {
+		super.startLevel();
 
-	private void connectSignals() {
-		boss.getPlaneDestroyedSignal().connect(this::onBossPlaneDestroyed);
+        BossPlane boss = new BossPlane(gameController);
+		boss.getDestroyedSignal().connect(this::onBossPlaneDestroyed);
+		boss.addToScene();
+		getPlayer().getDestroyedSignal().connect(this::loseLevel);
 	}
 
 	private void onBossPlaneDestroyed() {
@@ -28,12 +27,5 @@ public class LevelTwo extends LevelParent {
 	}
 
 	@Override
-	protected void spawnEnemyUnits() {
-		int enemyCount = getEnemyCount();
-
-		if (enemyCount == 0) {
-			boss.addToScene();
-			setEnemyCount(enemyCount + 1);
-		}
-	}
+	protected void spawnEnemyUnits() {}
 }

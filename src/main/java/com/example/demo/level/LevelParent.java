@@ -1,7 +1,6 @@
 package com.example.demo.level;
 
 import com.example.demo.entity.Updatable;
-import com.example.demo.controller.GameLoop;
 import com.example.demo.controller.GameController;
 import com.example.demo.signal.Signal;
 import com.example.demo.entity.player.PlayerPlane;
@@ -11,16 +10,12 @@ public abstract class LevelParent implements Updatable {
 	private final Signal levelLost;
 	private final PlayerPlane player;
 
-	private int enemyCount;
+	private boolean isStopped = true;
 
 	public LevelParent(GameController gameController) {
 		this.levelWon = new Signal();
 		this.levelLost = new Signal();
 		this.player = gameController.getPlayer();
-	}
-
-	protected PlayerPlane getPlayer() {
-		return player;
 	}
 
 	public Signal getLevelWon() {
@@ -31,12 +26,8 @@ public abstract class LevelParent implements Updatable {
 		return levelLost;
 	}
 
-	protected int getEnemyCount() {
-		return enemyCount;
-	}
-
-	protected void setEnemyCount(int enemyCount) {
-		this.enemyCount = enemyCount;
+	protected PlayerPlane getPlayer() {
+		return player;
 	}
 
 	@Override
@@ -46,21 +37,31 @@ public abstract class LevelParent implements Updatable {
 
 	protected abstract void spawnEnemyUnits();
 
-	public void startGame() {
-		GameLoop.addToLoop(this);
+	public void startLevel() {
+		isStopped = false;
+
+		addToGameLoop();
 	}
 
 	protected void winLevel() {
-		stopLevel();
+		if (isStopped)
+			return;
+
 		levelWon.emit();
+		stopLevel();
 	}
 
 	protected void loseLevel() {
-		stopLevel();
+		if (isStopped)
+			return;
+
 		levelLost.emit();
+		stopLevel();
 	}
 
 	protected void stopLevel() {
-		GameLoop.removeFromLoop(this);
+		isStopped = true;
+
+		removeFromGameLoop();
 	}
 }

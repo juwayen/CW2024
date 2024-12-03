@@ -4,8 +4,8 @@ public class Vector {
     private double x, y;
 
     public Vector() {
-        x = 0;
-        y = 0;
+        this.x = 0;
+        this.y = 0;
     }
 
     public Vector(double x, double y) {
@@ -29,6 +29,10 @@ public class Vector {
         this.y = y;
     }
 
+    public Vector add(Vector vector) {
+        return new Vector(x + vector.getX(), y + vector.getY());
+    }
+
     public Vector multiply(double scalar) {
         return new Vector(x * scalar, y * scalar);
     }
@@ -48,5 +52,12 @@ public class Vector {
             return divide(magnitude);
 
         return new Vector();
+    }
+
+    public Vector clamped(Vector min, Vector max) {
+        double clampedX = Math.max(min.getX(), Math.min(x, max.getX()));
+        double clampedY = Math.max(min.getY(), Math.min(y, max.getY()));
+
+        return new Vector(clampedX, clampedY);
     }
 }

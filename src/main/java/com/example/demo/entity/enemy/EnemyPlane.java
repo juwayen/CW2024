@@ -5,7 +5,7 @@ import com.example.demo.entity.FighterPlane;
 import com.example.demo.signal.Signal;
 import com.example.demo.util.Vector;
 
-import static com.example.demo.util.ImageUtils.OUTPUT_SCALE;
+import static com.example.demo.Main.OUTPUT_SCALE;
 
 public class EnemyPlane extends FighterPlane {
 	private static final String IMAGE_NAME = "enemy_plane.png";
@@ -30,6 +30,12 @@ public class EnemyPlane extends FighterPlane {
 
 	public Signal getDefensesBreachedSignal() {
 		return defensesBreached;
+	}
+
+	@Override
+	protected void clearSignalsConnections() {
+		super.clearSignalsConnections();
+		defensesBreached.clearConnections();
 	}
 
 	@Override

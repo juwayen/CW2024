@@ -20,7 +20,7 @@ public class GameLoop {
     }
 
     private static void initialize() {
-        KeyFrame gameLoop = new KeyFrame(Duration.millis(MILLISECOND_DELAY), e -> update());
+        KeyFrame gameLoop = new KeyFrame(Duration.millis(MILLISECOND_DELAY), event -> update());
 
         Timeline timeline = new Timeline();
         timeline.setCycleCount(Timeline.INDEFINITE);

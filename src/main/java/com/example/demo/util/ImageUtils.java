@@ -1,13 +1,12 @@
 package com.example.demo.util;
 
 import javafx.scene.image.Image;
-import javafx.stage.Screen;
 
 import java.util.Objects;
 
-public class ImageUtils {
-    public static final double OUTPUT_SCALE = Screen.getPrimary().getOutputScaleX();
+import static com.example.demo.Main.OUTPUT_SCALE;
 
+public class ImageUtils {
     private static final String IMAGE_PATH = "/com/example/demo/images/";
 
     public static Image getImageFromName(String imageName) {
