@@ -6,13 +6,12 @@ import com.example.demo.util.Vector;
 
 public class EnemyProjectile extends Projectile {
 	private static final String IMAGE_NAME = "enemy_projectile.png";
-	private static final int IMAGE_HEIGHT = 25;
-	private static final Vector DIRECTION = new Vector(-1, 0);
-	private static final double SPEED = 0.4;
+	private static final Vector DIRECTION = new Vector(0, 1);
+	private static final double SPEED = 0.96;
 	private static final int DAMAGE = 1;
 
 	public EnemyProjectile(GameController gameController, double initialXPos, double initialYPos) {
-		super(gameController, IMAGE_NAME, IMAGE_HEIGHT, initialXPos, initialYPos, DIRECTION, SPEED, DAMAGE);
+		super(gameController, IMAGE_NAME, initialXPos, initialYPos, DIRECTION, SPEED, DAMAGE);
 	}
 
 	@Override

@@ -1,38 +1,21 @@
 package com.example.demo.level;
 
-import java.util.*;
-
 import com.example.demo.entity.Updatable;
-import com.example.demo.controller.GameLoop;
 import com.example.demo.controller.GameController;
 import com.example.demo.signal.Signal;
 import com.example.demo.entity.player.PlayerPlane;
-import javafx.scene.image.*;
-
-import static com.example.demo.Main.IMAGE_PATH;
-import static com.example.demo.Main.SCREEN_HEIGHT;
 
 public abstract class LevelParent implements Updatable {
-	protected static final double ENEMY_MAX_Y_POSITION = SCREEN_HEIGHT - 150;
-
 	private final Signal levelWon;
 	private final Signal levelLost;
-	private final GameController gameController;
 	private final PlayerPlane player;
-	private final Image backgroundImage;
 
-	private int enemyCount;
+	private boolean isStopped = true;
 
-	public LevelParent(GameController gameController, String backgroundImageName) {
+	public LevelParent(GameController gameController) {
 		this.levelWon = new Signal();
 		this.levelLost = new Signal();
-		this.gameController = gameController;
 		this.player = gameController.getPlayer();
-		this.backgroundImage = new Image(Objects.requireNonNull(getClass().getResource(IMAGE_PATH + backgroundImageName)).toExternalForm());
-	}
-
-	protected PlayerPlane getPlayer() {
-		return player;
 	}
 
 	public Signal getLevelWon() {
@@ -43,12 +26,8 @@ public abstract class LevelParent implements Updatable {
 		return levelLost;
 	}
 
-	protected int getEnemyCount() {
-		return enemyCount;
-	}
-
-	protected void setEnemyCount(int enemyCount) {
-		this.enemyCount = enemyCount;
+	protected PlayerPlane getPlayer() {
+		return player;
 	}
 
 	@Override
@@ -58,22 +37,31 @@ public abstract class LevelParent implements Updatable {
 
 	protected abstract void spawnEnemyUnits();
 
-	public void startGame() {
-		gameController.setBackgroundImage(backgroundImage);
-		GameLoop.addToLoop(this);
+	public void startLevel() {
+		isStopped = false;
+
+		addToGameLoop();
 	}
 
 	protected void winLevel() {
-		stopLevel();
+		if (isStopped)
+			return;
+
 		levelWon.emit();
+		stopLevel();
 	}
 
 	protected void loseLevel() {
-		stopLevel();
+		if (isStopped)
+			return;
+
 		levelLost.emit();
+		stopLevel();
 	}
 
 	protected void stopLevel() {
-		GameLoop.removeFromLoop(this);
+		isStopped = true;
+
+		removeFromGameLoop();
 	}
 }

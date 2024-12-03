@@ -22,10 +22,8 @@ public class UserInterface extends Group {
     }
 
     private void initialize() {
-        setViewOrder(-1);
         initializeHeartDisplay();
         connectSignals();
-        gameController.addNodeToRoot(this);
     }
 
     private void initializeHeartDisplay() {

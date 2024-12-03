@@ -4,19 +4,19 @@ import com.example.demo.controller.GameController;
 import com.example.demo.signal.Signal;
 
 public abstract class FighterPlane extends Entity {
-	private final Signal planeDestroyed;
+	private final Signal destroyed;
 
 	private int health;
 
-	public FighterPlane(GameController gameController, String imageName, int imageHeight, double initialXPos, double initialYPos, int health) {
-		super(gameController, imageName, imageHeight, initialXPos, initialYPos);
+	public FighterPlane(GameController gameController, String imageName, double initialXPos, double initialYPos, int health) {
+		super(gameController, imageName, initialXPos, initialYPos);
 
-		this.planeDestroyed = new Signal();
+		this.destroyed = new Signal();
 		this.health = health;
 	}
 
-	public Signal getPlaneDestroyedSignal() {
-		return planeDestroyed;
+	public Signal getDestroyedSignal() {
+		return destroyed;
 	}
 
 	public int getHealth() {
@@ -25,6 +25,12 @@ public abstract class FighterPlane extends Entity {
 
 	public void setHealth(int health) {
 		this.health = health;
+	}
+
+	@Override
+	protected void clearSignalsConnections() {
+		super.clearSignalsConnections();
+		destroyed.clearConnections();
 	}
 
 	@Override
@@ -48,8 +54,8 @@ public abstract class FighterPlane extends Entity {
 		health -= damageAmount;
 
 		if (health <= 0) {
+			destroyed.emit();
 			removeFromScene();
-			planeDestroyed.emit();
 		}
 	}
 }

@@ -30,6 +30,10 @@ public class Input {
         return false;
     }
 
+    public static boolean isAnyKeyActive() {
+        return !activeKeys.isEmpty();
+    }
+
     public static boolean isMoveUpActive() {
         return isActionActive(moveUpKeys);
     }
@@ -58,8 +62,7 @@ public class Input {
 
         inputMoveDirection.setX(hPosComponent - hNegComponent);
         inputMoveDirection.setY(vPosComponent - vNegComponent);
-        inputMoveDirection.normalize();
 
-        return inputMoveDirection;
+        return inputMoveDirection.normalized();
     }
 }

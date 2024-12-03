@@ -14,7 +14,7 @@ public class CollisionEngine implements Updatable {
     private final List<Collidable> collidablesToRemove = new ArrayList<>();
 
     private CollisionEngine() {
-        GameLoop.addToLoop(this);
+        addToGameLoop();
     }
 
     public static CollisionEngine getInstance() {

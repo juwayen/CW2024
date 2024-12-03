@@ -1,6 +1,5 @@
 module com.example.demo {
-    requires javafx.graphics;
-    requires javafx.base;
+    requires javafx.controls;
 
     opens com.example.demo to javafx.fxml;
     exports com.example.demo;
