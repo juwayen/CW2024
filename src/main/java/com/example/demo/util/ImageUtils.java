@@ -23,4 +23,10 @@ public class ImageUtils {
 
         return image;
     }
+
+    public static Vector getImageCenter(String imageName) {
+        Image image = getImageFromName(imageName);
+        Vector imageSize = new Vector(image.getWidth(), image.getHeight()).multiply(OUTPUT_SCALE);
+        return imageSize.divide(2.0);
+    }
 }

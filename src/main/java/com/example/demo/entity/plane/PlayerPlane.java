@@ -1,46 +1,54 @@
-package com.example.demo.entity.player;
+package com.example.demo.entity.plane;
 
 import com.example.demo.controller.GameController;
-import com.example.demo.entity.Collidable;
-import com.example.demo.entity.FighterPlane;
+import com.example.demo.entity.bullet.*;
+import com.example.demo.controller.Collidable;
 import com.example.demo.controller.Input;
 import com.example.demo.signal.Signal;
+import com.example.demo.util.ImageUtils;
 import com.example.demo.util.Vector;
 
-import static com.example.demo.Main.OUTPUT_SCALE;
 import static com.example.demo.controller.GameLoop.MILLISECOND_DELAY;
 
-public class PlayerPlane extends FighterPlane {
+public class PlayerPlane extends Plane {
 	public static final int HEALTH = 5;
 
 	private static final String IMAGE_NAME = "player_plane.png";
 	private static final double MIN_MILLISECONDS_PER_FIRE = 66.667;
-	private static final double INITIAL_X_POSITION = 460.0;
-	private static final double INITIAL_Y_POSITION = 849.0;
+	private static final Vector INITIAL_POSITION = new Vector(460.0, 849.0);
 	private static final double SPEED = 0.96;
-	private static final Vector MIN_POS = new Vector(0, 0);
-	private static final Vector MAX_POS = new Vector(920, 913);
-	private static final Vector PROJECTILE_POSITION_OFFSET = new Vector(20, -64);
+	private static final Vector MIN_POS = Vector.ZERO;
+	private static final Vector MAX_POS = new Vector(920.0, 913.0);
+	private static final Vector BULLET_DIRECTION = Vector.UP;
+	private static final Vector BULLET_OFFSET = new Vector(52.0, 0.0);
 
 	private final GameController gameController;
 	private final Signal damageTaken;
+	private final BulletConfig bulletConfig;
 
-	private double millisecondsSinceLastShot = 0;
+	private double millisecondsSinceLastShot;
+
+	public Signal getDamageTakenSignal() {
+		return damageTaken;
+	}
 
 	public PlayerPlane(GameController gameController) {
-		super(gameController, IMAGE_NAME, INITIAL_X_POSITION, INITIAL_Y_POSITION, HEALTH);
+		super(gameController, IMAGE_NAME, INITIAL_POSITION, HEALTH);
 
 		this.gameController = gameController;
 		this.damageTaken = new Signal();
+		this.bulletConfig = new SingleBulletConfig(this, BULLET_DIRECTION, BULLET_OFFSET);
+
+		this.millisecondsSinceLastShot = 0.0;
+	}
+
+	public Vector getCenterPosition() {
+		return getPosition().add(ImageUtils.getImageCenter(IMAGE_NAME));
 	}
 
 	@Override
 	public void onCollision(Collidable collidable) {
 		super.onCollision(collidable);
-	}
-
-	public Signal getDamageTakenSignal() {
-		return damageTaken;
 	}
 
 	@Override
@@ -55,7 +63,7 @@ public class PlayerPlane extends FighterPlane {
 	}
 
 	@Override
-	public boolean canFireProjectile() {
+	public boolean canFire() {
 		millisecondsSinceLastShot += MILLISECOND_DELAY;
 
 		if (millisecondsSinceLastShot >= MIN_MILLISECONDS_PER_FIRE)
@@ -65,25 +73,23 @@ public class PlayerPlane extends FighterPlane {
 	}
 
     @Override
-    public void fireProjectile() {
-		double projectilePosX = PROJECTILE_POSITION_OFFSET.getX() + getTranslateX() * OUTPUT_SCALE;
-		double projectilePosY = PROJECTILE_POSITION_OFFSET.getY() + getTranslateY() * OUTPUT_SCALE;
-		PlayerProjectile projectile = new PlayerProjectile(gameController, projectilePosX, projectilePosY);
+    public void fire() {
+		Bullet bullet = new Bullet(gameController, bulletConfig);
 
-		projectile.addToScene();
+		bullet.addToScene();
 
 		millisecondsSinceLastShot = 0;
     }
 
 	@Override
-	protected void takeDamage(int damageAmount) {
+    public void takeDamage(int damageAmount) {
 		super.takeDamage(damageAmount);
 		damageTaken.emit();
 	}
 
 	@Override
 	public void onSceneReset() {
-		setPosition(new Vector(INITIAL_X_POSITION, INITIAL_Y_POSITION));
+		setPosition(INITIAL_POSITION);
 		setHealth(HEALTH);
 	}
 

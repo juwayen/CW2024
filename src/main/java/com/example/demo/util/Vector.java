@@ -1,6 +1,10 @@
 package com.example.demo.util;
 
 public class Vector {
+    public static final Vector ZERO = new Vector(0.0, 0.0);
+    public static final Vector UP = new Vector(0.0, -1.0);
+    public static final Vector DOWN = new Vector(0.0, 1.0);
+
     private double x, y;
 
     public Vector() {
@@ -33,6 +37,10 @@ public class Vector {
         return new Vector(x + vector.getX(), y + vector.getY());
     }
 
+    public Vector subtract(Vector vector) {
+        return new Vector(x - vector.getX(), y - vector.getY());
+    }
+
     public Vector multiply(double scalar) {
         return new Vector(x * scalar, y * scalar);
     }
@@ -49,9 +57,9 @@ public class Vector {
         double magnitude = magnitude();
 
         if (magnitude != 0)
-            return divide(magnitude);
+            return this.divide(magnitude);
 
-        return new Vector();
+        return Vector.ZERO;
     }
 
     public Vector clamped(Vector min, Vector max) {
@@ -59,5 +67,9 @@ public class Vector {
         double clampedY = Math.max(min.getY(), Math.min(y, max.getY()));
 
         return new Vector(clampedX, clampedY);
+    }
+
+    public Vector directionTo(Vector vector) {
+        return new Vector(vector.getX() - x, vector.getY() - y).normalized();
     }
 }

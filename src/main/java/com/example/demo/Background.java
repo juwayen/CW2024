@@ -1,6 +1,6 @@
-package com.example.demo.screen;
+package com.example.demo;
 
-import com.example.demo.entity.Updatable;
+import com.example.demo.controller.Updatable;
 import com.example.demo.util.ImageUtils;
 import javafx.scene.image.ImageView;
 

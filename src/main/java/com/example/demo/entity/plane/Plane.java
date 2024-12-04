@@ -1,15 +1,17 @@
-package com.example.demo.entity;
+package com.example.demo.entity.plane;
 
 import com.example.demo.controller.GameController;
+import com.example.demo.entity.Entity;
 import com.example.demo.signal.Signal;
+import com.example.demo.util.Vector;
 
-public abstract class FighterPlane extends Entity {
+public abstract class Plane extends Entity {
 	private final Signal destroyed;
 
 	private int health;
 
-	public FighterPlane(GameController gameController, String imageName, double initialXPos, double initialYPos, int health) {
-		super(gameController, imageName, initialXPos, initialYPos);
+	public Plane(GameController gameController, String imageName, Vector initialPos, int health) {
+		super(gameController, imageName, initialPos);
 
 		this.destroyed = new Signal();
 		this.health = health;
@@ -42,15 +44,15 @@ public abstract class FighterPlane extends Entity {
 	protected abstract void updatePosition();
 
 	protected void updateFire() {
-		if (canFireProjectile())
-			fireProjectile();
+		if (canFire())
+			fire();
 	}
 
-	protected abstract boolean canFireProjectile();
+	protected abstract boolean canFire();
 
-	protected abstract void fireProjectile();
+	protected abstract void fire();
 
-	protected void takeDamage(int damageAmount) {
+	public void takeDamage(int damageAmount) {
 		health -= damageAmount;
 
 		if (health <= 0) {
@@ -58,4 +60,6 @@ public abstract class FighterPlane extends Entity {
 			removeFromScene();
 		}
 	}
+
+	public abstract boolean isFriendly();
 }

@@ -20,12 +20,12 @@ public abstract class Entity extends ImageView implements Updatable, Collidable 
 		return removed;
 	}
 
-	public Entity(GameController gameController, String imageName, double initialXPos, double initialYPos) {
+	public Entity(GameController gameController, String imageName, Vector initialPos) {
 		this.gameController = gameController;
 		this.removed = new Signal();
 
 		setImage(ImageUtils.getImageFromName(imageName));
-		setPosition(new Vector(initialXPos, initialYPos));
+		setPosition(initialPos);
 
 		initialize();
 	}
@@ -54,13 +54,13 @@ public abstract class Entity extends ImageView implements Updatable, Collidable 
 	public void addToScene() {
 		addToGameLoop();
 		COLLISION_ENGINE.enableCollision(this);
-		gameController.addNodeToRoot(this);
+		gameController.addNodeToMiddleLayer(this);
 	}
 
 	public void removeFromScene() {
 		removeFromGameLoop();
 		COLLISION_ENGINE.disableCollision(this);
-		gameController.removeNodeFromRoot(this);
+		gameController.removeNodeFromMiddleLayer(this);
 		removed.emit();
 		clearSignalsConnections();
 	}
@@ -85,7 +85,4 @@ public abstract class Entity extends ImageView implements Updatable, Collidable 
 	public Bounds getHitbox() {
 		return getBoundsInParent();
 	}
-
-	@Override
-	public abstract boolean isFriendly();
 }

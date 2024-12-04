@@ -1,6 +1,4 @@
-package com.example.demo.entity;
-
-import com.example.demo.controller.GameLoop;
+package com.example.demo.controller;
 
 public interface Updatable {
     default void addToGameLoop() {

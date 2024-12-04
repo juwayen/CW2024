@@ -1,18 +1,18 @@
 package com.example.demo.level;
 
-import com.example.demo.entity.Updatable;
+import com.example.demo.controller.Updatable;
 import com.example.demo.controller.GameController;
 import com.example.demo.signal.Signal;
-import com.example.demo.entity.player.PlayerPlane;
+import com.example.demo.entity.plane.PlayerPlane;
 
-public abstract class LevelParent implements Updatable {
+public abstract class Level implements Updatable {
 	private final Signal levelWon;
 	private final Signal levelLost;
 	private final PlayerPlane player;
 
 	private boolean isStopped = true;
 
-	public LevelParent(GameController gameController) {
+	public Level(GameController gameController) {
 		this.levelWon = new Signal();
 		this.levelLost = new Signal();
 		this.player = gameController.getPlayer();

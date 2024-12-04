@@ -1,7 +1,7 @@
 package com.example.demo.ui;
 
 import com.example.demo.controller.GameController;
-import com.example.demo.entity.player.PlayerPlane;
+import com.example.demo.entity.plane.PlayerPlane;
 import javafx.scene.Group;
 
 public class UserInterface extends Group {

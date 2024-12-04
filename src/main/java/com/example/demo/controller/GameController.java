@@ -1,8 +1,8 @@
 package com.example.demo.controller;
 
-import com.example.demo.entity.player.PlayerPlane;
+import com.example.demo.entity.plane.PlayerPlane;
 import com.example.demo.level.*;
-import com.example.demo.screen.Background;
+import com.example.demo.Background;
 import com.example.demo.screen.GameOverScreen;
 import com.example.demo.screen.StartScreen;
 import com.example.demo.screen.WinScreen;
@@ -11,7 +11,6 @@ import com.example.demo.ui.*;
 
 import javafx.scene.Group;
 import javafx.scene.Node;
-import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 import java.util.ArrayList;
@@ -21,90 +20,87 @@ public class GameController {
 	private final Signal sceneReset;
 	private final Stage stage;
 	private final Group root;
-	private final Group backgroundLayer;
-	private final Group middlegroundLayer;
-	private final Group foregroundLayer;
+	private final Group bottomLayer;
+	private final Group middleLayer;
+	private final Group topLayer;
 	private final StartScreen startScreen;
 	private final PlayerPlane player;
 	private final UserInterface userInterface;
-	private final List<LevelParent> levelsOrdered;
+	private final List<Level> levelsOrdered;
 
-    private int nextLevelIndex = 0;
+    private int nextLevelIndex;
 
-	public Scene getScene() {
-		return stage.getScene();
+	public Signal getSceneResetSignal() {
+		return sceneReset;
 	}
 
 	public PlayerPlane getPlayer() {
 		return player;
 	}
 
-	public Signal getSceneResetSignal() {
-		return sceneReset;
-	}
-
     public GameController(Stage stage) {
 		this.sceneReset = new Signal();
 		this.stage = stage;
 		this.root = (Group) stage.getScene().getRoot();
-		this.backgroundLayer = new Group();
-		this.middlegroundLayer = new Group();
-		this.foregroundLayer = new Group();
+		this.bottomLayer = new Group();
+		this.middleLayer = new Group();
+		this.topLayer = new Group();
 		this.startScreen = new StartScreen();
 		this.player = new PlayerPlane(this);
 		this.userInterface = new UserInterface(this);
 		this.levelsOrdered = new ArrayList<>();
 
+		this.nextLevelIndex = 0;
+
 		initialize();
 	}
 
 	private void initialize() {
-		Input.initialize(getScene());
+		Input.initialize(stage.getScene());
 		initializeRoot();
+		initializeBackground();
 		initializeLevels();
 		connectSignals();
 	}
 
 	private void initializeRoot() {
-		root.getChildren().add(backgroundLayer);
-		root.getChildren().add(middlegroundLayer);
-		root.getChildren().add(foregroundLayer);
+		root.getChildren().add(bottomLayer);
+		root.getChildren().add(middleLayer);
+		root.getChildren().add(topLayer);
+	}
 
-		backgroundLayer.getChildren().add(new Background());
+	private void initializeBackground() {
+		bottomLayer.getChildren().add(new Background());
 	}
 
 	private void initializeLevels() {
 		levelsOrdered.add(new LevelOne(this));
 		levelsOrdered.add(new LevelTwo(this));
 
-		connectLevelsSignals();
-	}
-
-	private void connectLevelsSignals() {
-		for (LevelParent level : levelsOrdered) {
+		for (Level level : levelsOrdered) {
 			level.getLevelWon().connect(this::onLevelWon);
 			level.getLevelLost().connect(this::loseGame);
 		}
 	}
 
 	private void connectSignals() {
-		startScreen.getStartedSignal().connect(this::startLevels);
+		startScreen.getContinuedSignal().connect(this::startLevels);
 	}
 
 	private void startLevels() {
-		middlegroundLayer.getChildren().clear();
+		clearMiddleLayer();
+
 		player.addToScene();
-		foregroundLayer.getChildren().add(userInterface);
+
+		addNodeToTopLayer(userInterface);
+
 		nextLevelIndex = 0;
+
 		goToNextLevel();
 	}
 
-	public void launchGame() {
-		middlegroundLayer.getChildren().add(startScreen);
-	}
-
 	private void goToNextLevel() {
-        LevelParent currentLevel = levelsOrdered.get(nextLevelIndex++);
+        Level currentLevel = levelsOrdered.get(nextLevelIndex++);
 
 		currentLevel.startLevel();
 	}
@@ -122,9 +118,9 @@ public class GameController {
 		WinScreen winScreen = new WinScreen();
 		winScreen.getContinuedSignal().connect(this::startLevels);
 
-		middlegroundLayer.getChildren().clear();
-		middlegroundLayer.getChildren().add(winScreen);
-		winScreen.activate();
+		clearMiddleLayer();
+		addNodeToMiddleLayer(winScreen);
+		winScreen.start();
 		stopGame();
 	}
 
@@ -132,23 +128,40 @@ public class GameController {
 		GameOverScreen gameOverScreen = new GameOverScreen();
 		gameOverScreen.getContinuedSignal().connect(this::startLevels);
 
-		middlegroundLayer.getChildren().clear();
-		middlegroundLayer.getChildren().add(gameOverScreen);
-		gameOverScreen.activate();
+		clearMiddleLayer();
+		addNodeToMiddleLayer(gameOverScreen);
+		gameOverScreen.start();
 		stopGame();
 	}
 
 	private void stopGame() {
 		sceneReset.emit();
 		player.removeFromScene();
-		foregroundLayer.getChildren().clear();
+		clearTopLayer();
 	}
 
-	public void addNodeToRoot(Node node) {
-		middlegroundLayer.getChildren().add(node);
+	public void launchGame() {
+		addNodeToMiddleLayer(startScreen);
+		startScreen.start();
 	}
 
-	public void removeNodeFromRoot(Node node) {
-		middlegroundLayer.getChildren().remove(node);
+	private void addNodeToTopLayer(Node node) {
+		topLayer.getChildren().add(node);
+	}
+
+	private void clearTopLayer() {
+		topLayer.getChildren().clear();
+	}
+
+	public void addNodeToMiddleLayer(Node node) {
+		middleLayer.getChildren().add(node);
+	}
+
+	public void removeNodeFromMiddleLayer(Node node) {
+		middleLayer.getChildren().remove(node);
+	}
+
+	private void clearMiddleLayer() {
+		middleLayer.getChildren().clear();
 	}
 }

@@ -1,8 +1,5 @@
 package com.example.demo.controller;
 
-import com.example.demo.entity.Collidable;
-import com.example.demo.entity.Updatable;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,15 +10,15 @@ public class CollisionEngine implements Updatable {
     private final List<Collidable> collidablesToAdd = new ArrayList<>();
     private final List<Collidable> collidablesToRemove = new ArrayList<>();
 
-    private CollisionEngine() {
-        addToGameLoop();
-    }
-
     public static CollisionEngine getInstance() {
         if (instance == null)
             instance = new CollisionEngine();
 
         return instance;
+    }
+
+    private CollisionEngine() {
+        addToGameLoop();
     }
 
     @Override
