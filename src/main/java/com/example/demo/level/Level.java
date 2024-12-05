@@ -1,21 +1,27 @@
 package com.example.demo.level;
 
-import com.example.demo.controller.Updatable;
-import com.example.demo.controller.GameController;
-import com.example.demo.signal.Signal;
+import com.example.demo.service.GameLoopService;
+import com.example.demo.service.ServiceLocator;
+import com.example.demo.service.Updatable;
+import com.example.demo.GameController;
+import com.example.demo.util.Signal;
 import com.example.demo.entity.plane.PlayerPlane;
 
 public abstract class Level implements Updatable {
 	private final Signal levelWon;
 	private final Signal levelLost;
 	private final PlayerPlane player;
+	private final GameLoopService gameLoopService;
 
-	private boolean isStopped = true;
+	private boolean isStopped;
 
 	public Level(GameController gameController) {
 		this.levelWon = new Signal();
 		this.levelLost = new Signal();
 		this.player = gameController.getPlayer();
+		this.gameLoopService = ServiceLocator.getGameLoopService();
+
+		this.isStopped = true;
 	}
 
 	public Signal getLevelWon() {
@@ -40,7 +46,7 @@ public abstract class Level implements Updatable {
 	public void startLevel() {
 		isStopped = false;
 
-		addToGameLoop();
+		gameLoopService.addToLoop(this);
 	}
 
 	protected void winLevel() {
@@ -62,6 +68,6 @@ public abstract class Level implements Updatable {
 	protected void stopLevel() {
 		isStopped = true;
 
-		removeFromGameLoop();
+		gameLoopService.removeFromLoop(this);
 	}
 }

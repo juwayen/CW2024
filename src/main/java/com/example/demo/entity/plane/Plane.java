@@ -1,8 +1,8 @@
 package com.example.demo.entity.plane;
 
-import com.example.demo.controller.GameController;
+import com.example.demo.GameController;
 import com.example.demo.entity.Entity;
-import com.example.demo.signal.Signal;
+import com.example.demo.util.Signal;
 import com.example.demo.util.Vector;
 
 public abstract class Plane extends Entity {

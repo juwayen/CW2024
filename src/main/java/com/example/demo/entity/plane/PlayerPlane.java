@@ -1,14 +1,15 @@
 package com.example.demo.entity.plane;
 
-import com.example.demo.controller.GameController;
+import com.example.demo.GameController;
 import com.example.demo.entity.bullet.*;
-import com.example.demo.controller.Collidable;
-import com.example.demo.controller.Input;
-import com.example.demo.signal.Signal;
+import com.example.demo.service.Collidable;
+import com.example.demo.service.InputService;
+import com.example.demo.service.ServiceLocator;
+import com.example.demo.util.Signal;
 import com.example.demo.util.ImageUtils;
 import com.example.demo.util.Vector;
 
-import static com.example.demo.controller.GameLoop.MILLISECOND_DELAY;
+import static com.example.demo.service.GameLoopService.MILLISECOND_DELAY;
 
 public class PlayerPlane extends Plane {
 	public static final int HEALTH = 5;
@@ -18,13 +19,14 @@ public class PlayerPlane extends Plane {
 	private static final Vector INITIAL_POSITION = new Vector(460.0, 849.0);
 	private static final double SPEED = 0.96;
 	private static final Vector MIN_POS = Vector.ZERO;
-	private static final Vector MAX_POS = new Vector(920.0, 913.0);
+	private static final Vector MAX_POS = new Vector(920.0, 921.0);
 	private static final Vector BULLET_DIRECTION = Vector.UP;
 	private static final Vector BULLET_OFFSET = new Vector(52.0, 0.0);
 
 	private final GameController gameController;
 	private final Signal damageTaken;
 	private final BulletConfig bulletConfig;
+	private final InputService inputService;
 
 	private double millisecondsSinceLastShot;
 
@@ -38,6 +40,7 @@ public class PlayerPlane extends Plane {
 		this.gameController = gameController;
 		this.damageTaken = new Signal();
 		this.bulletConfig = new SingleBulletConfig(this, BULLET_DIRECTION, BULLET_OFFSET);
+		this.inputService = ServiceLocator.getInputService();
 
 		this.millisecondsSinceLastShot = 0.0;
 	}
@@ -53,7 +56,7 @@ public class PlayerPlane extends Plane {
 
 	@Override
 	public void updatePosition() {
-		moveWithinBounds(Input.getInputMoveDirection());
+		moveWithinBounds(inputService.getInputMoveDirection());
 	}
 
 	private void moveWithinBounds(Vector direction) {
@@ -67,7 +70,7 @@ public class PlayerPlane extends Plane {
 		millisecondsSinceLastShot += MILLISECOND_DELAY;
 
 		if (millisecondsSinceLastShot >= MIN_MILLISECONDS_PER_FIRE)
-            return Input.isFireActive();
+            return inputService.isFireActive();
 
 		return false;
 	}

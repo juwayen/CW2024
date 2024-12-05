@@ -67,8 +67,4 @@ public class BulletConfig {
 
         return initialPosition.subtract(imageCenter);
     }
-
-    public boolean getIsFriendly() {
-        return shooter.isFriendly();
-    }
 }

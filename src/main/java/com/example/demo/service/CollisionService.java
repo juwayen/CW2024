@@ -1,24 +1,24 @@
-package com.example.demo.controller;
+package com.example.demo.service;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class CollisionEngine implements Updatable {
-    private static CollisionEngine instance;
+public class CollisionService implements Updatable {
+    private final List<Collidable> collidables;
+    private final List<Collidable> collidablesToAdd;
+    private final List<Collidable> collidablesToRemove;
 
-    private final List<Collidable> collidables = new ArrayList<>();
-    private final List<Collidable> collidablesToAdd = new ArrayList<>();
-    private final List<Collidable> collidablesToRemove = new ArrayList<>();
+    public CollisionService() {
+        this.collidables = new ArrayList<>();
+        this.collidablesToAdd = new ArrayList<>();
+        this.collidablesToRemove = new ArrayList<>();
 
-    public static CollisionEngine getInstance() {
-        if (instance == null)
-            instance = new CollisionEngine();
-
-        return instance;
+        initialize();
     }
 
-    private CollisionEngine() {
-        addToGameLoop();
+    private void initialize() {
+        GameLoopService gameLoopService = ServiceLocator.getGameLoopService();
+        gameLoopService.addToLoop(this);
     }
 
     @Override

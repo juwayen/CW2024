@@ -1,18 +1,18 @@
 package com.example.demo.entity.plane;
 
-import com.example.demo.controller.GameController;
+import com.example.demo.GameController;
 import com.example.demo.entity.bullet.Bullet;
 import com.example.demo.entity.bullet.BulletConfig;
 import com.example.demo.entity.bullet.BasicBulletConfig;
 import com.example.demo.util.Vector;
 
-import static com.example.demo.controller.GameLoop.MILLISECOND_DELAY;
+import static com.example.demo.service.GameLoopService.MILLISECOND_DELAY;
 
 public class EnemyPlane extends Plane {
 	private static final String IMAGE_NAME = "enemy_plane.png";
 	private static final int INITIAL_HEALTH = 1;
-	private static final double MIN_MILLISECONDS_PER_FIRE = 1000.0;
-	private static final double MAX_MILLISECONDS_PER_FIRE = 2000.0;
+	private static final double MIN_MILLISECONDS_PER_FIRE = 500.0;
+	private static final double MAX_MILLISECONDS_PER_FIRE = 1000.0;
 	private static final Vector DIRECTION = Vector.DOWN;
 	private static final double SPEED = 0.48;
 	private static final Vector BULLET_DIRECTION = Vector.DOWN;

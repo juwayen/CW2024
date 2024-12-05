@@ -1,7 +1,7 @@
 package com.example.demo.entity.bullet;
 
-import com.example.demo.controller.GameController;
-import com.example.demo.controller.Collidable;
+import com.example.demo.GameController;
+import com.example.demo.service.Collidable;
 import com.example.demo.entity.Entity;
 import com.example.demo.entity.plane.Plane;
 import com.example.demo.util.Vector;
@@ -18,7 +18,7 @@ public class Bullet extends Entity {
 	public Bullet(GameController gameController, BulletConfig bulletConfig) {
 		super(gameController, bulletConfig.getImageName(), bulletConfig.getInitialPosition());
 
-		this.isFriendly = bulletConfig.getIsFriendly();
+		this.isFriendly = bulletConfig.getShooter().isFriendly();
 		this.direction = bulletConfig.getDirection();
 		this.speed = bulletConfig.getSpeed();
 		this.damage = bulletConfig.getDamage();
@@ -44,8 +44,8 @@ public class Bullet extends Entity {
 
 		return  bounds.getMaxX() < 0 ||
 				bounds.getMaxY() < 0 ||
-				bounds.getMinX() > GAME_WIDTH / OUTPUT_SCALE ||
-				bounds.getMinY() > GAME_HEIGHT / OUTPUT_SCALE;
+				bounds.getMinX() > GAME_WIDTH ||
+				bounds.getMinY() > GAME_HEIGHT;
 	}
 
 	@Override

@@ -1,12 +1,12 @@
 package com.example.demo.entity.plane;
 
-import com.example.demo.controller.GameController;
+import com.example.demo.GameController;
 import com.example.demo.entity.bullet.Bullet;
 import com.example.demo.entity.bullet.BulletConfig;
 import com.example.demo.entity.bullet.HeavyBulletConfig;
 import com.example.demo.util.Vector;
 
-import static com.example.demo.controller.GameLoop.MILLISECOND_DELAY;
+import static com.example.demo.service.GameLoopService.MILLISECOND_DELAY;
 
 public class BossPlane extends Plane {
 	private static final String IMAGE_NAME = "boss_plane.png";

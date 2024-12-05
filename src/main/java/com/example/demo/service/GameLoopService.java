@@ -1,4 +1,4 @@
-package com.example.demo.controller;
+package com.example.demo.service;
 
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -7,18 +7,22 @@ import javafx.util.Duration;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GameLoop {
+public class GameLoopService {
     public static final double MILLISECOND_DELAY = (double) 1000 / 60;
 
-    private static final List<Updatable> updatables = new ArrayList<>();
-    private static final List<Updatable> updatablesToAdd = new ArrayList<>();
-    private static final List<Updatable> updatablesToRemove = new ArrayList<>();
+    private final List<Updatable> updatables;
+    private final List<Updatable> updatablesToAdd;
+    private final List<Updatable> updatablesToRemove;
 
-    static {
+    public GameLoopService() {
+        this.updatables = new ArrayList<>();
+        this.updatablesToAdd = new ArrayList<>();
+        this.updatablesToRemove = new ArrayList<>();
+
         initialize();
     }
 
-    private static void initialize() {
+    private void initialize() {
         KeyFrame gameLoop = new KeyFrame(Duration.millis(MILLISECOND_DELAY), event -> update());
 
         Timeline timeline = new Timeline();
@@ -27,12 +31,12 @@ public class GameLoop {
         timeline.play();
     }
 
-    private static void update() {
+    private void update() {
         handleUpdates();
         processQueue();
     }
 
-    private static void handleUpdates() {
+    private void handleUpdates() {
         for (Updatable updatable : updatables) {
             if (updatablesToRemove.contains(updatable))
                 continue;
@@ -41,7 +45,7 @@ public class GameLoop {
         }
     }
 
-    private static void processQueue() {
+    private void processQueue() {
         updatables.addAll(updatablesToAdd);
         updatablesToAdd.clear();
 
@@ -49,11 +53,11 @@ public class GameLoop {
         updatablesToRemove.clear();
     }
 
-    public static void addToLoop(Updatable updatable) {
+    public void addToLoop(Updatable updatable) {
         updatablesToAdd.add(updatable);
     }
 
-    public static void removeFromLoop(Updatable updatable) {
+    public void removeFromLoop(Updatable updatable) {
         updatablesToRemove.add(updatable);
     }
 }

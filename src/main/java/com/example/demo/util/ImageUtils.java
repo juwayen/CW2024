@@ -4,8 +4,6 @@ import javafx.scene.image.Image;
 
 import java.util.Objects;
 
-import static com.example.demo.Main.OUTPUT_SCALE;
-
 public class ImageUtils {
     private static final String IMAGE_PATH = "/com/example/demo/images/";
 
@@ -15,8 +13,8 @@ public class ImageUtils {
 
         image = new Image(
                 imageUrl,
-                image.getWidth() / OUTPUT_SCALE,
-                image.getHeight() / OUTPUT_SCALE,
+                image.getWidth(),
+                image.getHeight(),
                 true,
                 false
         );
@@ -26,7 +24,7 @@ public class ImageUtils {
 
     public static Vector getImageCenter(String imageName) {
         Image image = getImageFromName(imageName);
-        Vector imageSize = new Vector(image.getWidth(), image.getHeight()).multiply(OUTPUT_SCALE);
+        Vector imageSize = new Vector(image.getWidth(), image.getHeight());
         return imageSize.divide(2.0);
     }
 }

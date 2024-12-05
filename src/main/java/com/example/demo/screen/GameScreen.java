@@ -1,8 +1,10 @@
 package com.example.demo.screen;
 
-import com.example.demo.controller.Input;
-import com.example.demo.controller.Updatable;
-import com.example.demo.signal.Signal;
+import com.example.demo.service.GameLoopService;
+import com.example.demo.service.InputService;
+import com.example.demo.service.ServiceLocator;
+import com.example.demo.service.Updatable;
+import com.example.demo.util.Signal;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.scene.control.Label;
@@ -24,6 +26,9 @@ public class GameScreen extends StackPane implements Updatable {
     private final Font pixelFont;
     private final Label label;
 
+    private GameLoopService gameLoopService;
+    private InputService inputService;
+
     public Signal getContinuedSignal() {
         return continued;
     }
@@ -35,13 +40,16 @@ public class GameScreen extends StackPane implements Updatable {
     protected GameScreen(String labelText) {
         this.labelText = labelText;
         this.continued = new Signal();
-        this.pixelFont = Font.loadFont(getClass().getResourceAsStream(FONT_PATH), FONT_SIZE / OUTPUT_SCALE);
+        this.pixelFont = Font.loadFont(getClass().getResourceAsStream(FONT_PATH), FONT_SIZE);
         this.label = new Label();
 
-        setPrefSize(GAME_WIDTH / OUTPUT_SCALE, GAME_HEIGHT / OUTPUT_SCALE);
+        setPrefSize(GAME_WIDTH, GAME_HEIGHT);
     }
 
     public void start() {
+        gameLoopService = ServiceLocator.getGameLoopService();
+        inputService = ServiceLocator.getInputService();
+
         label.setFont(pixelFont);
         label.setTextFill(Color.WHITE);
         label.setTextAlignment(TextAlignment.CENTER);
@@ -65,16 +73,16 @@ public class GameScreen extends StackPane implements Updatable {
             timeline.getKeyFrames().add(keyFrame);
         }
 
-        timeline.setOnFinished(event -> addToGameLoop());
+        timeline.setOnFinished(event -> gameLoopService.addToLoop(this));
 
         timeline.play();
     }
 
     @Override
     public void update() {
-        if (Input.isAnyKeyActive()) {
+        if (inputService.isAnyKeyActive()) {
             continued.emit();
-            removeFromGameLoop();
+            gameLoopService.removeFromLoop(this);
         }
     }
 }

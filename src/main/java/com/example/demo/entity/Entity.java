@@ -1,20 +1,19 @@
 package com.example.demo.entity;
 
-import com.example.demo.controller.*;
-import com.example.demo.signal.Signal;
-import com.example.demo.util.ImageUtils;
-import com.example.demo.util.Vector;
+import com.example.demo.GameController;
+import com.example.demo.service.*;
+import com.example.demo.util.*;
 import javafx.geometry.Bounds;
 import javafx.scene.image.*;
 
-import static com.example.demo.Main.OUTPUT_SCALE;
-import static com.example.demo.controller.GameLoop.MILLISECOND_DELAY;
+import static com.example.demo.service.GameLoopService.MILLISECOND_DELAY;
 
 public abstract class Entity extends ImageView implements Updatable, Collidable {
-	private static final CollisionEngine COLLISION_ENGINE = CollisionEngine.getInstance();
-
 	private final GameController gameController;
 	private final Signal removed;
+	private final GameLoopService gameLoopService;
+	private final SceneService sceneService;
+	private final CollisionService collisionService;
 
 	public Signal getRemovedSignal() {
 		return removed;
@@ -23,6 +22,9 @@ public abstract class Entity extends ImageView implements Updatable, Collidable 
 	public Entity(GameController gameController, String imageName, Vector initialPos) {
 		this.gameController = gameController;
 		this.removed = new Signal();
+		this.gameLoopService = ServiceLocator.getGameLoopService();
+		this.sceneService = ServiceLocator.getSceneService();
+		this.collisionService = ServiceLocator.getCollisionService();
 
 		setImage(ImageUtils.getImageFromName(imageName));
 		setPosition(initialPos);
@@ -43,24 +45,25 @@ public abstract class Entity extends ImageView implements Updatable, Collidable 
 	}
 
 	public Vector getPosition() {
-		return new Vector(getTranslateX(), getTranslateY()).multiply(OUTPUT_SCALE);
+		return new Vector(getTranslateX(), getTranslateY());
 	}
 
 	public void setPosition(Vector position) {
-		setTranslateX(position.getX() / OUTPUT_SCALE);
-		setTranslateY(position.getY() / OUTPUT_SCALE);
+		setTranslateX(position.getX());
+		setTranslateY(position.getY());
 	}
 
 	public void addToScene() {
-		addToGameLoop();
-		COLLISION_ENGINE.enableCollision(this);
-		gameController.addNodeToMiddleLayer(this);
+		gameLoopService.addToLoop(this);
+		collisionService.enableCollision(this);
+		sceneService.addNodeToMiddleLayer(this);
 	}
 
 	public void removeFromScene() {
-		removeFromGameLoop();
-		COLLISION_ENGINE.disableCollision(this);
-		gameController.removeNodeFromMiddleLayer(this);
+		gameLoopService.removeFromLoop(this);
+		collisionService.disableCollision(this);
+		sceneService.removeNodeFromMiddleLayer(this);
+
 		removed.emit();
 		clearSignalsConnections();
 	}

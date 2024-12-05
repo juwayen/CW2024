@@ -1,4 +1,4 @@
-package com.example.demo.controller;
+package com.example.demo.service;
 
 import com.example.demo.util.Vector;
 import javafx.scene.Scene;
@@ -7,21 +7,32 @@ import javafx.scene.input.KeyCode;
 import java.util.HashSet;
 import java.util.Set;
 
-public class Input {
-    private static final Set<KeyCode> activeKeys = new HashSet<>();
+public class InputService {
     private static final KeyCode[] moveUpKeys = {KeyCode.UP, KeyCode.W};
     private static final KeyCode[] moveDownKeys = {KeyCode.DOWN, KeyCode.S};
     private static final KeyCode[] moveLeftKeys = {KeyCode.LEFT, KeyCode.A};
     private static final KeyCode[] moveRightKeys = {KeyCode.RIGHT, KeyCode.D};
     private static final KeyCode[] fireKeys = {KeyCode.SPACE};
-    private static final Vector inputMoveDirection = new Vector();
 
-    public static void initialize(Scene scene) {
+    private final Set<KeyCode> activeKeys;
+    private final Vector inputMoveDirection;
+
+    public InputService() {
+        this.activeKeys = new HashSet<>();
+        this.inputMoveDirection = new Vector();
+
+        initialize();
+    }
+
+    private void initialize() {
+        SceneService sceneService = ServiceLocator.getSceneService();
+        Scene scene = sceneService.getScene();
+
         scene.setOnKeyPressed(event -> activeKeys.add(event.getCode()));
         scene.setOnKeyReleased(event -> activeKeys.remove(event.getCode()));
     }
 
-    private static boolean isActionActive(KeyCode[] actionKeys) {
+    private boolean isActionActive(KeyCode[] actionKeys) {
         for (KeyCode key : actionKeys) {
             if (activeKeys.contains(key))
                 return true;
@@ -30,31 +41,31 @@ public class Input {
         return false;
     }
 
-    public static boolean isAnyKeyActive() {
+    public boolean isAnyKeyActive() {
         return !activeKeys.isEmpty();
     }
 
-    public static boolean isMoveUpActive() {
+    public boolean isMoveUpActive() {
         return isActionActive(moveUpKeys);
     }
 
-    public static boolean isMoveDownActive() {
+    public boolean isMoveDownActive() {
         return isActionActive(moveDownKeys);
     }
 
-    public static boolean isMoveLeftActive() {
+    public boolean isMoveLeftActive() {
         return isActionActive(moveLeftKeys);
     }
 
-    public static boolean isMoveRightActive() {
+    public boolean isMoveRightActive() {
         return isActionActive(moveRightKeys);
     }
 
-    public static boolean isFireActive() {
+    public boolean isFireActive() {
         return isActionActive(fireKeys);
     }
 
-    public static Vector getInputMoveDirection() {
+    public Vector getInputMoveDirection() {
         double hPosComponent = isMoveRightActive() ? 1 : 0;
         double hNegComponent = isMoveLeftActive() ? 1 : 0;
         double vPosComponent = isMoveDownActive() ? 1 : 0;

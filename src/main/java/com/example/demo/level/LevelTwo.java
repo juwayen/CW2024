@@ -1,6 +1,6 @@
 package com.example.demo.level;
 
-import com.example.demo.controller.GameController;
+import com.example.demo.GameController;
 import com.example.demo.entity.plane.BossPlane;
 
 public class LevelTwo extends Level {
