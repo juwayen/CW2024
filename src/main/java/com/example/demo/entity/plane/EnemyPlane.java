@@ -15,7 +15,7 @@ public class EnemyPlane extends Plane {
 	private static final Vector DIRECTION = Vector.DOWN;
 	private static final double SPEED = 0.48;
 	private static final Vector BULLET_DIRECTION = Vector.DOWN;
-	private static final Vector BULLET_OFFSET = new Vector(32.0, 60.0);
+	private static final Vector BULLET_OFFSET = new Vector(48.0, 64.0);
 
 	private final GameController gameController;
 	private final BulletConfig bulletConfig;

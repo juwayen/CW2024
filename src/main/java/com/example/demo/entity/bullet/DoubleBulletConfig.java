@@ -6,10 +6,10 @@ import com.example.demo.util.Vector;
 
 public class DoubleBulletConfig extends BulletConfig {
 	private static final String IMAGE_NAME = "double_bullet.png";
-	private static final String DESTROYED_1_IMAGE_NAME = "bullet_destroyed_1.png";
-	private static final String DESTROYED_2_IMAGE_NAME = "bullet_destroyed_2.png";
-	private static final String DESTROYED_3_IMAGE_NAME = "bullet_destroyed_3.png";
-	private static final double SPEED = 3.84;
+	private static final String DESTROYED_1_IMAGE_NAME = "double_bullet_destroyed_1.png";
+	private static final String DESTROYED_2_IMAGE_NAME = "double_bullet_destroyed_2.png";
+	private static final String DESTROYED_3_IMAGE_NAME = "double_bullet_destroyed_3.png";
+	private static final double SPEED = 1.92;
 	private static final int DAMAGE = 2;
 
 	public DoubleBulletConfig(Plane shooter, Vector direction, Vector offset) {

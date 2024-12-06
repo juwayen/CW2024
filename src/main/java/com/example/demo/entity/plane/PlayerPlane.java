@@ -93,7 +93,6 @@ public class PlayerPlane extends Plane {
 	public void onSceneReset() {
 		setPosition(INITIAL_POSITION);
 		setHealth(INITIAL_HEALTH);
-		playMovingStraightTimeline();
 	}
 
 	@Override

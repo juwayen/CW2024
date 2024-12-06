@@ -9,11 +9,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class BulletConfig {
+    private final List<Image> destroyedImages;
+
     private Plane shooter;
     private Vector direction;
     private Vector offset;
     private Image image;
-    private List<Image> destroyedImages;
     private double speed;
     private int damage;
 

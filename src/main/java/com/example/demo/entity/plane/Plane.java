@@ -2,6 +2,7 @@ package com.example.demo.entity.plane;
 
 import com.example.demo.GameController;
 import com.example.demo.entity.Entity;
+import com.example.demo.entity.state.*;
 import com.example.demo.util.ImageUtils;
 import com.example.demo.util.Signal;
 import com.example.demo.util.Vector;
@@ -18,8 +19,15 @@ public abstract class Plane extends Entity {
 	private final Timeline movingRightTimeline;
 	private final Timeline movingLeftTimeline;
 	private final Timeline destroyedTimeline;
+	private final EntityStateMachine stateMachine;
+	private final PlaneMovingStraightState movingStraightState;
+	private final PlaneMovingRightState movingRightState;
+	private final PlaneMovingLeftState movingLeftState;
+	private final PlaneDestroyedState destroyedState;
 
 	private int health;
+	private Vector oldPosition;
+	private Vector velocity;
 
 	public Signal getDestroyedSignal() {
 		return destroyed;
@@ -33,6 +41,22 @@ public abstract class Plane extends Entity {
 		this.health = health;
 	}
 
+	public Timeline getMovingStraightTimeline() {
+		return movingStraightTimeline;
+	}
+
+	public Timeline getMovingRightTimeline() {
+		return movingRightTimeline;
+	}
+
+	public Timeline getMovingLeftTimeline() {
+		return movingLeftTimeline;
+	}
+
+	public Timeline getDestroyedTimeline() {
+		return destroyedTimeline;
+	}
+
 	public Plane(GameController gameController, PlaneImageData planeImageData, Vector initialPosition, int health) {
 		super(gameController, planeImageData.getMovingStraightImages().get(0), initialPosition);
 
@@ -42,8 +66,15 @@ public abstract class Plane extends Entity {
 		this.movingRightTimeline = new Timeline();
 		this.movingLeftTimeline = new Timeline();
 		this.destroyedTimeline = new Timeline();
+		this.stateMachine = new EntityStateMachine(this);
+		this.movingStraightState = new PlaneMovingStraightState();
+		this.movingRightState = new PlaneMovingRightState();
+		this.movingLeftState = new PlaneMovingLeftState();
+		this.destroyedState = new PlaneDestroyedState();
 
 		this.health = health;
+		this.oldPosition = new Vector();
+		this.velocity = new Vector();
 
 		initialize();
 	}
@@ -54,14 +85,13 @@ public abstract class Plane extends Entity {
 
 	private void initializeTimelines() {
 		movingStraightTimeline.setCycleCount(Timeline.INDEFINITE);
-		ImageUtils.initializeTimeline(movingStraightTimeline, planeImageData.getMovingStraightImages(), this, FRAMES_PER_IMAGE);
-		movingStraightTimeline.play();
+		ImageUtils.addImagesToTimeline(movingStraightTimeline, planeImageData.getMovingStraightImages(), this, FRAMES_PER_IMAGE);
 
 		movingRightTimeline.setCycleCount(Timeline.INDEFINITE);
-		ImageUtils.initializeTimeline(movingRightTimeline, planeImageData.getMovingRightImages(), this, FRAMES_PER_IMAGE);
+		ImageUtils.addImagesToTimeline(movingRightTimeline, planeImageData.getMovingRightImages(), this, FRAMES_PER_IMAGE);
 
 		movingLeftTimeline.setCycleCount(Timeline.INDEFINITE);
-		ImageUtils.initializeTimeline(movingLeftTimeline, planeImageData.getMovingLeftImages(), this, FRAMES_PER_IMAGE);
+		ImageUtils.addImagesToTimeline(movingLeftTimeline, planeImageData.getMovingLeftImages(), this, FRAMES_PER_IMAGE);
 
 		Vector movingImageCenterOffset = ImageUtils.getImageCenterOffset(getImage());
 		Vector destroyedImageCenterOffset = ImageUtils.getImageCenterOffset(planeImageData.getDestroyedImages().get(0));
@@ -69,7 +99,7 @@ public abstract class Plane extends Entity {
 		KeyFrame keyFrame = new KeyFrame(Duration.ZERO, event -> setPosition(getPosition().add(destroyedImageOffset)));
 		destroyedTimeline.getKeyFrames().add(keyFrame);
 
-		ImageUtils.initializeTimeline(destroyedTimeline, planeImageData.getDestroyedImages(), this, FRAMES_PER_IMAGE);
+		ImageUtils.addImagesToTimeline(destroyedTimeline, planeImageData.getDestroyedImages(), this, FRAMES_PER_IMAGE);
 
 		destroyedTimeline.setOnFinished(event -> {
 			disableVisuals();
@@ -88,6 +118,8 @@ public abstract class Plane extends Entity {
 	public void update() {
 		updatePosition();
 		updateFire();
+		calculateVelocity();
+		updateState();
 	}
 
 	protected abstract void updatePosition();
@@ -101,19 +133,33 @@ public abstract class Plane extends Entity {
 
 	protected abstract void fire();
 
+	private void calculateVelocity() {
+		Vector newPosition = getPosition();
+
+		velocity = newPosition.subtract(oldPosition);
+
+		oldPosition = newPosition;
+	}
+
+	private void updateState() {
+		double velocityX = velocity.getX();
+
+		if (velocityX > 0)
+			stateMachine.changeState(movingRightState);
+		else if (velocityX < 0)
+			stateMachine.changeState(movingLeftState);
+		else
+			stateMachine.changeState(movingStraightState);
+	}
+
 	public void takeDamage(int damageAmount) {
 		health -= damageAmount;
 
 		if (health <= 0) {
 			disableInteraction();
-			movingStraightTimeline.stop();
-			destroyedTimeline.play();
+			stateMachine.changeState(destroyedState);
 		}
 	}
 
 	public abstract boolean isFriendly();
-
-	protected void playMovingStraightTimeline() {
-		movingStraightTimeline.play();
-	}
 }

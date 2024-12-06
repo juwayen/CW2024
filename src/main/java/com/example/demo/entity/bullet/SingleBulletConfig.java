@@ -9,7 +9,7 @@ public class SingleBulletConfig extends BulletConfig {
 	private static final String DESTROYED_1_IMAGE_NAME = "bullet_destroyed_1.png";
 	private static final String DESTROYED_2_IMAGE_NAME = "bullet_destroyed_2.png";
 	private static final String DESTROYED_3_IMAGE_NAME = "bullet_destroyed_3.png";
-	private static final double SPEED = 3.84/2;
+	private static final double SPEED = 1.92;
 	private static final int DAMAGE = 1;
 
 	public SingleBulletConfig(Plane shooter, Vector direction, Vector offset) {

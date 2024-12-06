@@ -34,7 +34,21 @@ public class ImageUtils {
         return imageSize.divide(2.0);
     }
 
-    public static void initializeTimeline(Timeline timeline, List<Image> images, ImageView imageView, int framesPerImage) {
+    public static void addImageToTimeline(Timeline timeline, Image image, ImageView imageView) {
+        KeyFrame keyFrame1 = new KeyFrame(
+                Duration.ZERO,
+                event -> imageView.setImage(image)
+        );
+
+        KeyFrame keyFrame2 = new KeyFrame(
+                Duration.millis(MILLISECOND_DELAY)
+        );
+
+        timeline.getKeyFrames().add(keyFrame1);
+        timeline.getKeyFrames().add(keyFrame2);
+    }
+
+    public static void addImagesToTimeline(Timeline timeline, List<Image> images, ImageView imageView, int framesPerImage) {
         int imagesCount = images.size();
 
         for (int i = 0; i < imagesCount; i++) {

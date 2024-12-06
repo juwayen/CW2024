@@ -19,18 +19,6 @@ public abstract class Entity extends ImageView implements Updatable, Collidable 
 		return removed;
 	}
 
-	protected GameLoopService getGameLoopService() {
-		return gameLoopService;
-	}
-
-	protected SceneService getSceneService() {
-		return sceneService;
-	}
-
-	protected CollisionService getCollisionService() {
-		return collisionService;
-	}
-
 	public Entity(GameController gameController, Image image, Vector initialPos) {
 		this.gameController = gameController;
 		this.removed = new Signal();
