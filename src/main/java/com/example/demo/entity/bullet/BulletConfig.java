@@ -3,12 +3,17 @@ package com.example.demo.entity.bullet;
 import com.example.demo.entity.plane.Plane;
 import com.example.demo.util.ImageUtils;
 import com.example.demo.util.Vector;
+import javafx.scene.image.Image;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class BulletConfig {
     private Plane shooter;
     private Vector direction;
     private Vector offset;
-    private String imageName;
+    private Image image;
+    private List<Image> destroyedImages;
     private double speed;
     private int damage;
 
@@ -36,12 +41,20 @@ public class BulletConfig {
         this.offset = offset;
     }
 
-    public String getImageName() {
-        return imageName;
+    public Image getImage() {
+        return image;
     }
 
-    public void setImageName(String imageName) {
-        this.imageName = imageName;
+    public void setImageName(Image image) {
+        this.image = image;
+    }
+
+    public List<Image> getDestroyedImages() {
+        return destroyedImages;
+    }
+
+    public void addDestroyedImage(Image image) {
+        destroyedImages.add(image);
     }
 
     public double getSpeed() {
@@ -61,10 +74,14 @@ public class BulletConfig {
     }
 
     public Vector getInitialPosition() {
-        Vector imageCenter = ImageUtils.getImageCenter(imageName);
+        Vector imageCenter = ImageUtils.getImageCenterOffset(image);
 
         Vector initialPosition = shooter.getPosition().add(offset);
 
         return initialPosition.subtract(imageCenter);
+    }
+
+    public BulletConfig() {
+        this.destroyedImages = new ArrayList<>();
     }
 }

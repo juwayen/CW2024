@@ -8,7 +8,7 @@ public class LevelOne extends Level {
 	private static final int TOTAL_ENEMIES = 3;
 	private static final int KILLS_TO_ADVANCE = 30;
 	private static final int ENEMY_INITIAL_Y_POS = -64;
-	private static final int ENEMY_MAX_X_POSITION = 960;
+	private static final int ENEMY_MAX_X_POSITION = 928;
 
 	private final GameController gameController;
 

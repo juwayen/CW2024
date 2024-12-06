@@ -9,8 +9,7 @@ import com.example.demo.util.Vector;
 import static com.example.demo.service.GameLoopService.MILLISECOND_DELAY;
 
 public class EnemyPlane extends Plane {
-	private static final String IMAGE_NAME = "enemy_plane.png";
-	private static final int INITIAL_HEALTH = 1;
+	public static final int INITIAL_HEALTH = 2;
 	private static final double MIN_MILLISECONDS_PER_FIRE = 500.0;
 	private static final double MAX_MILLISECONDS_PER_FIRE = 1000.0;
 	private static final Vector DIRECTION = Vector.DOWN;
@@ -23,8 +22,8 @@ public class EnemyPlane extends Plane {
 
 	private double millisecondsBeforeNextShot;
 
-	public EnemyPlane(GameController gameController, Vector initialPos) {
-		super(gameController, IMAGE_NAME, initialPos, INITIAL_HEALTH);
+	public EnemyPlane(GameController gameController, Vector initialPosition) {
+		super(gameController, new EnemyPlaneImageData(), initialPosition, INITIAL_HEALTH);
 
 		this.gameController = gameController;
 		this.bulletConfig = new BasicBulletConfig(this, BULLET_DIRECTION, BULLET_OFFSET);

@@ -63,7 +63,7 @@ public class GameScreen extends StackPane implements Updatable {
         Timeline timeline = new Timeline();
 
         for (int i = 0; i < labelText.length(); i++) {
-            final char currentChar = labelText.charAt(i);
+            char currentChar = labelText.charAt(i);
 
             KeyFrame keyFrame = new KeyFrame(
                     Duration.millis(LABEL_MILLISECONDS_DELAY * i),

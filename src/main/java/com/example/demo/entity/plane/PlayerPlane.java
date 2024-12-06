@@ -12,9 +12,8 @@ import com.example.demo.util.Vector;
 import static com.example.demo.service.GameLoopService.MILLISECOND_DELAY;
 
 public class PlayerPlane extends Plane {
-	public static final int HEALTH = 5;
+	public static final int INITIAL_HEALTH = 5;
 
-	private static final String IMAGE_NAME = "player_plane.png";
 	private static final double MIN_MILLISECONDS_PER_FIRE = 66.667;
 	private static final Vector INITIAL_POSITION = new Vector(460.0, 849.0);
 	private static final double SPEED = 0.96;
@@ -35,7 +34,7 @@ public class PlayerPlane extends Plane {
 	}
 
 	public PlayerPlane(GameController gameController) {
-		super(gameController, IMAGE_NAME, INITIAL_POSITION, HEALTH);
+		super(gameController, new PlayerPlaneImageData(), INITIAL_POSITION, INITIAL_HEALTH);
 
 		this.gameController = gameController;
 		this.damageTaken = new Signal();
@@ -46,7 +45,7 @@ public class PlayerPlane extends Plane {
 	}
 
 	public Vector getCenterPosition() {
-		return getPosition().add(ImageUtils.getImageCenter(IMAGE_NAME));
+		return getPosition().add(ImageUtils.getImageCenterOffset(getImage()));
 	}
 
 	@Override
@@ -93,7 +92,8 @@ public class PlayerPlane extends Plane {
 	@Override
 	public void onSceneReset() {
 		setPosition(INITIAL_POSITION);
-		setHealth(HEALTH);
+		setHealth(INITIAL_HEALTH);
+		playMovingStraightTimeline();
 	}
 
 	@Override

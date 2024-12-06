@@ -19,14 +19,26 @@ public abstract class Entity extends ImageView implements Updatable, Collidable 
 		return removed;
 	}
 
-	public Entity(GameController gameController, String imageName, Vector initialPos) {
+	protected GameLoopService getGameLoopService() {
+		return gameLoopService;
+	}
+
+	protected SceneService getSceneService() {
+		return sceneService;
+	}
+
+	protected CollisionService getCollisionService() {
+		return collisionService;
+	}
+
+	public Entity(GameController gameController, Image image, Vector initialPos) {
 		this.gameController = gameController;
 		this.removed = new Signal();
 		this.gameLoopService = ServiceLocator.getGameLoopService();
 		this.sceneService = ServiceLocator.getSceneService();
 		this.collisionService = ServiceLocator.getCollisionService();
 
-		setImage(ImageUtils.getImageFromName(imageName));
+		setImage(image);
 		setPosition(initialPos);
 
 		initialize();
@@ -60,10 +72,22 @@ public abstract class Entity extends ImageView implements Updatable, Collidable 
 	}
 
 	public void removeFromScene() {
+		disableInteraction();
+		disableVisuals();
+
+		emitRemovedSignal();
+	}
+
+	protected void disableInteraction() {
 		gameLoopService.removeFromLoop(this);
 		collisionService.disableCollision(this);
-		sceneService.removeNodeFromMiddleLayer(this);
+	}
 
+	protected void disableVisuals() {
+		sceneService.removeNodeFromMiddleLayer(this);
+	}
+
+	protected void emitRemovedSignal() {
 		removed.emit();
 		clearSignalsConnections();
 	}
@@ -82,10 +106,10 @@ public abstract class Entity extends ImageView implements Updatable, Collidable 
 	public void update() {}
 
 	@Override
-	public void onCollision(Collidable collidable) {}
-
-	@Override
 	public Bounds getHitbox() {
 		return getBoundsInParent();
 	}
+
+	@Override
+	public void onCollision(Collidable collidable) {}
 }
