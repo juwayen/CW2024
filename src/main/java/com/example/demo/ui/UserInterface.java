@@ -10,12 +10,12 @@ public class UserInterface extends Group {
 
     private final Controller controller;
     private final PlayerPlane player;
-    private final HeartDisplay heartDisplay;
+    private final HealthDisplay healthDisplay;
 
     public UserInterface(Controller controller) {
         this.controller = controller;
         this.player = controller.getPlayer();
-        this.heartDisplay = new HeartDisplay(HEART_DISPLAY_X_POSITION, HEART_DISPLAY_Y_POSITION, player.getHealth());
+        this.healthDisplay = new HealthDisplay(HEART_DISPLAY_X_POSITION, HEART_DISPLAY_Y_POSITION, player.getHealth());
 
         initialize();
     }
@@ -26,7 +26,7 @@ public class UserInterface extends Group {
     }
 
     private void initializeHeartDisplay() {
-        getChildren().add(heartDisplay);
+        getChildren().add(healthDisplay);
     }
 
     private void connectSignals() {
@@ -35,10 +35,10 @@ public class UserInterface extends Group {
     }
 
     private void onPlayerDamageTaken() {
-        heartDisplay.setHeartCount(player.getHealth());
+        healthDisplay.setHeartCount(player.getHealth());
     }
 
     private void onSceneReset() {
-        heartDisplay.reset();
+        healthDisplay.reset();
     }
 }

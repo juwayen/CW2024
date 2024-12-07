@@ -1,5 +1,6 @@
 package com.example.demo.level;
 
+import com.example.demo.screen.GameScreen;
 import com.example.demo.service.GameLoopService;
 import com.example.demo.service.ServiceLocator;
 import com.example.demo.service.Updatable;
@@ -8,6 +9,7 @@ import com.example.demo.util.Signal;
 import com.example.demo.entity.plane.PlayerPlane;
 
 public abstract class Level implements Updatable {
+	private final GameScreen levelEndScreen;
 	private final Signal levelWon;
 	private final Signal levelLost;
 	private final PlayerPlane player;
@@ -15,13 +17,8 @@ public abstract class Level implements Updatable {
 
 	private boolean isStopped;
 
-	public Level(Controller controller) {
-		this.levelWon = new Signal();
-		this.levelLost = new Signal();
-		this.player = controller.getPlayer();
-		this.gameLoopService = ServiceLocator.getGameLoopService();
-
-		this.isStopped = true;
+	public GameScreen getLevelEndScreen() {
+		return levelEndScreen;
 	}
 
 	public Signal getLevelWon() {
@@ -34,6 +31,16 @@ public abstract class Level implements Updatable {
 
 	protected PlayerPlane getPlayer() {
 		return player;
+	}
+
+	public Level(Controller controller, GameScreen levelEndScreen) {
+		this.levelEndScreen = levelEndScreen;
+		this.levelWon = new Signal();
+		this.levelLost = new Signal();
+		this.player = controller.getPlayer();
+		this.gameLoopService = ServiceLocator.getGameLoopService();
+
+		this.isStopped = true;
 	}
 
 	@Override

@@ -18,15 +18,17 @@ public class PlayerPlane extends Plane {
 
 	private static final double MIN_MILLISECONDS_PER_FIRE = 66.667;
 	private static final Vector INITIAL_POSITION = new Vector(460.0, 985.0);
-	private static final double ENTER_LEVEL_FINAL_Y = 793.0;
+	private static final double ENTER_LEVEL_FINAL_Y = 706.75;
+	private static final Vector EXIT_LEVEL_FINAL_POSITION = new Vector(460.0, -64.0);
 	private static final double SPEED = 0.96;
-	private static final Vector MIN_POS = Vector.ZERO;
+	private static final Vector MIN_POS = new Vector(0.0, 492.5);
 	private static final Vector MAX_POS = new Vector(920.0, 921.0);
 	private static final Vector BULLET_DIRECTION = Vector.UP;
 	private static final Vector BULLET_OFFSET = new Vector(52.0, 0.0);
 
 	private final Controller controller;
 	private final Signal enteredLevel;
+	private final Signal exitedLevel;
 	private final Signal damageTaken;
 	private final BulletConfig bulletConfig;
 	private final InputService inputService;
@@ -38,6 +40,10 @@ public class PlayerPlane extends Plane {
 		return enteredLevel;
 	}
 
+	public Signal getExitedLevelSignal() {
+		return exitedLevel;
+	}
+
 	public Signal getDamageTakenSignal() {
 		return damageTaken;
 	}
@@ -46,6 +52,7 @@ public class PlayerPlane extends Plane {
 		super(controller, new PlayerPlaneImageData(), INITIAL_POSITION, INITIAL_HEALTH);
 
 		this.controller = controller;
+		this.exitedLevel = new Signal();
 		this.enteredLevel = new Signal();
 		this.damageTaken = new Signal();
 		this.bulletConfig = new SingleBulletConfig(this, BULLET_DIRECTION, BULLET_OFFSET);
@@ -119,15 +126,35 @@ public class PlayerPlane extends Plane {
 	public void playEnterTransition() {
 		isControllable = false;
 
+		Vector finalPosition = new Vector(INITIAL_POSITION.getX(), ENTER_LEVEL_FINAL_Y);
+		double duration = INITIAL_POSITION.distanceTo(finalPosition) / SPEED;
+
 		TranslateTransition transition = new TranslateTransition();
 		transition.setNode(this);
-		transition.setDuration(Duration.seconds(1));
-		transition.setFromY(getTranslateY());
+		transition.setDuration(Duration.millis(duration));
+		transition.setFromY(getPosition().getY());
 		transition.setToY(ENTER_LEVEL_FINAL_Y);
 		transition.setOnFinished(event -> {
 			isControllable = true;
 			enteredLevel.emit();
 		});
+
+		transition.play();
+	}
+
+	public void playExitTransition() {
+		isControllable = false;
+
+		double duration = getPosition().distanceTo(EXIT_LEVEL_FINAL_POSITION) / SPEED;
+
+		TranslateTransition transition = new TranslateTransition();
+		transition.setNode(this);
+		transition.setDuration(Duration.millis(duration));
+		transition.setFromX(getPosition().getX());
+		transition.setToX(EXIT_LEVEL_FINAL_POSITION.getX());
+		transition.setFromY(getPosition().getY());
+		transition.setToY(EXIT_LEVEL_FINAL_POSITION.getY());
+		transition.setOnFinished(event -> exitedLevel.emit());
 
 		transition.play();
 	}

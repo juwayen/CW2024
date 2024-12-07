@@ -21,13 +21,12 @@ public class GameScreen extends StackPane implements Updatable {
     private static final double FONT_SIZE = 64;
     private static final double LABEL_MILLISECONDS_DELAY = 50;
 
+    private final GameLoopService gameLoopService;
+    private final InputService inputService;
     private final String labelText;
     private final Signal continued;
     private final Font pixelFont;
     private final Label label;
-
-    private GameLoopService gameLoopService;
-    private InputService inputService;
 
     public Signal getContinuedSignal() {
         return continued;
@@ -38,23 +37,23 @@ public class GameScreen extends StackPane implements Updatable {
     }
 
     protected GameScreen(String labelText) {
+        this.gameLoopService = ServiceLocator.getGameLoopService();
+        this.inputService = ServiceLocator.getInputService();
         this.labelText = labelText;
         this.continued = new Signal();
         this.pixelFont = Font.loadFont(getClass().getResourceAsStream(FONT_PATH), FONT_SIZE);
         this.label = new Label();
 
+        getChildren().add(label);
         setPrefSize(GAME_WIDTH, GAME_HEIGHT);
     }
 
     public void start() {
-        gameLoopService = ServiceLocator.getGameLoopService();
-        inputService = ServiceLocator.getInputService();
+        label.setText("");
 
         label.setFont(pixelFont);
         label.setTextFill(Color.WHITE);
         label.setTextAlignment(TextAlignment.CENTER);
-
-        getChildren().add(label);
 
         animateText(label);
     }

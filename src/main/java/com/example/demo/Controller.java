@@ -3,14 +3,13 @@ package com.example.demo;
 import com.example.demo.entity.plane.PlayerPlane;
 import com.example.demo.level.*;
 import com.example.demo.screen.GameOverScreen;
+import com.example.demo.screen.GameScreen;
 import com.example.demo.screen.StartScreen;
 import com.example.demo.screen.WinScreen;
 import com.example.demo.service.*;
 import com.example.demo.ui.*;
 import com.example.demo.util.Signal;
-import javafx.animation.Timeline;
 
-import java.sql.Time;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -58,6 +57,7 @@ public class Controller {
 
 	private void connectSignals() {
 		player.getEnteredLevelSignal().connect(this::onPlayerEnteredLevel);
+		player.getExitedLevelSignal().connect(this::onPlayerExitedLevel);
 		startScreen.getContinuedSignal().connect(this::startLevels);
 
 		for (Level level : levelsOrdered) {
@@ -83,20 +83,37 @@ public class Controller {
 	}
 
 	private void goToNextLevel() {
-        currentLevel = levelsOrdered.get(nextLevelIndex++);
+		currentLevel = levelsOrdered.get(nextLevelIndex++);
 
+		userInterface.setVisible(true);
 		player.playEnterTransition();
 	}
 
-	private void onLevelWon() {
-		boolean isLastLevelWon = nextLevelIndex >= levelsOrdered.size();
+	private void onPlayerExitedLevel() {
+		GameScreen levelEndScreen = currentLevel.getLevelEndScreen();
+		sceneService.addNodeToMiddleLayer(levelEndScreen);
+		levelEndScreen.getContinuedSignal().connect(this::startNextLevel);
+		levelEndScreen.start();
+	}
 
-		if (isLastLevelWon)
+	private void startNextLevel() {
+		GameScreen levelEndScreen = currentLevel.getLevelEndScreen();
+		sceneService.removeNodeFromMiddleLayer(levelEndScreen);
+		levelEndScreen.getContinuedSignal().clearConnections();
+
+		boolean isFinalLevelWon = nextLevelIndex >= levelsOrdered.size();
+
+		if (isFinalLevelWon)
 			winGame();
 		else {
 			sceneReset.emit();
 			goToNextLevel();
 		}
+	}
+
+	private void onLevelWon() {
+		userInterface.setVisible(false);
+		player.playExitTransition();
 	}
 
 	private void winGame() {

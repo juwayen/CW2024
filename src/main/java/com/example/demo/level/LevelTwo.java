@@ -2,12 +2,13 @@ package com.example.demo.level;
 
 import com.example.demo.Controller;
 import com.example.demo.entity.plane.BossPlane;
+import com.example.demo.screen.LevelTwoEndScreen;
 
 public class LevelTwo extends Level {
 	private final Controller controller;
 
     public LevelTwo(Controller controller) {
-		super(controller);
+		super(controller, new LevelTwoEndScreen());
 
 		this.controller = controller;
 	}

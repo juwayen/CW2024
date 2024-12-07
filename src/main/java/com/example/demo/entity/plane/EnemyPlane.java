@@ -1,9 +1,7 @@
 package com.example.demo.entity.plane;
 
 import com.example.demo.Controller;
-import com.example.demo.entity.bullet.Bullet;
-import com.example.demo.entity.bullet.BulletConfig;
-import com.example.demo.entity.bullet.BasicBulletConfig;
+import com.example.demo.entity.bullet.*;
 import com.example.demo.util.Vector;
 
 import static com.example.demo.service.GameLoopService.MILLISECOND_DELAY;

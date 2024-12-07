@@ -5,14 +5,14 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 
-public class HeartDisplay extends HBox {
+public class HealthDisplay extends HBox {
 	private static final String HEART_IMAGE_NAME = "heart.png";
 	private static final int HEART_HEIGHT = 50;
 
 	private final int numberOfHeartsToDisplay;
 	private final Image heartImage;
 	
-	public HeartDisplay(double xPosition, double yPosition, int heartsToDisplay) {
+	public HealthDisplay(double xPosition, double yPosition, int heartsToDisplay) {
 		this.numberOfHeartsToDisplay = heartsToDisplay;
 		this.heartImage = ImageUtils.getImageFromName(HEART_IMAGE_NAME);
 

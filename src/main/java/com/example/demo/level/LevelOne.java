@@ -2,6 +2,7 @@ package com.example.demo.level;
 
 import com.example.demo.Controller;
 import com.example.demo.entity.plane.EnemyPlane;
+import com.example.demo.screen.LevelOneEndScreen;
 import com.example.demo.util.Vector;
 
 public class LevelOne extends Level {
@@ -14,26 +15,34 @@ public class LevelOne extends Level {
 
 	private int enemyCount;
 	private int enemyPlanesDestroyed;
+	private int totalEnemiesSpawned;
 
 	public LevelOne(Controller controller) {
-		super(controller);
+		super(controller, new LevelOneEndScreen());
 
 		this.controller = controller;
 
 		this.enemyCount = 0;
 		this.enemyPlanesDestroyed = 0;
+		this.totalEnemiesSpawned = 0;
 	}
 
 	@Override
 	public void startLevel() {
 		super.startLevel();
+
 		enemyCount = 0;
 		enemyPlanesDestroyed = 0;
+		totalEnemiesSpawned = 0;
+
 		getPlayer().getDestroyedSignal().connect(this::loseLevel);
 	}
 
 	@Override
 	protected void spawnEnemyUnits() {
+		if (totalEnemiesSpawned >= KILLS_TO_ADVANCE)
+			return;
+
 		for (int i = 0; i < TOTAL_ENEMIES - enemyCount; i++) {
 			double spawnPosX = Math.random()  * ENEMY_MAX_X_POSITION;
 
@@ -43,6 +52,7 @@ public class LevelOne extends Level {
 			newEnemy.addToScene();
 
 			enemyCount++;
+			totalEnemiesSpawned++;
 
 			newEnemy.getRemovedSignal().connect(this::decrementEnemyCount);
 			newEnemy.getDestroyedSignal().connect(this::onEnemyPlaneDestroyed);

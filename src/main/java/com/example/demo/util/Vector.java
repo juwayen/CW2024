@@ -72,4 +72,8 @@ public class Vector {
     public Vector directionTo(Vector vector) {
         return new Vector(vector.getX() - x, vector.getY() - y).normalized();
     }
+
+    public double distanceTo(Vector vector) {
+        return vector.subtract(this).magnitude();
+    }
 }
