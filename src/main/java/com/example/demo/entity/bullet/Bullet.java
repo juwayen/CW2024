@@ -1,6 +1,6 @@
 package com.example.demo.entity.bullet;
 
-import com.example.demo.GameController;
+import com.example.demo.Controller;
 import com.example.demo.entity.state.BulletDestroyedState;
 import com.example.demo.entity.state.BulletMovingState;
 import com.example.demo.entity.state.EntityStateMachine;
@@ -38,8 +38,8 @@ public class Bullet extends Entity {
 		return destroyedTimeline;
 	}
 
-	public Bullet(GameController gameController, BulletConfig bulletConfig) {
-		super(gameController, bulletConfig.getImage(), bulletConfig.getInitialPosition());
+	public Bullet(Controller controller, BulletConfig bulletConfig) {
+		super(controller, bulletConfig.getImage(), bulletConfig.getInitialPosition());
 
 		this.bulletConfig = bulletConfig;
 		this.isFriendly = bulletConfig.getShooter().isFriendly();

@@ -3,7 +3,7 @@ package com.example.demo.level;
 import com.example.demo.service.GameLoopService;
 import com.example.demo.service.ServiceLocator;
 import com.example.demo.service.Updatable;
-import com.example.demo.GameController;
+import com.example.demo.Controller;
 import com.example.demo.util.Signal;
 import com.example.demo.entity.plane.PlayerPlane;
 
@@ -15,10 +15,10 @@ public abstract class Level implements Updatable {
 
 	private boolean isStopped;
 
-	public Level(GameController gameController) {
+	public Level(Controller controller) {
 		this.levelWon = new Signal();
 		this.levelLost = new Signal();
-		this.player = gameController.getPlayer();
+		this.player = controller.getPlayer();
 		this.gameLoopService = ServiceLocator.getGameLoopService();
 
 		this.isStopped = true;

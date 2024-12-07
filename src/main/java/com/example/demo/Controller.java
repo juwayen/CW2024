@@ -8,11 +8,13 @@ import com.example.demo.screen.WinScreen;
 import com.example.demo.service.*;
 import com.example.demo.ui.*;
 import com.example.demo.util.Signal;
+import javafx.animation.Timeline;
 
+import java.sql.Time;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GameController {
+public class Controller {
 	private final SceneService sceneService;
 	private final Signal sceneReset;
     private final StartScreen startScreen;
@@ -20,6 +22,7 @@ public class GameController {
 	private final UserInterface userInterface;
 	private final List<Level> levelsOrdered;
 
+	private Level currentLevel;
     private int nextLevelIndex;
 
 	public Signal getSceneResetSignal() {
@@ -30,7 +33,7 @@ public class GameController {
 		return player;
 	}
 
-    public GameController() {
+    public Controller() {
 		this.sceneService = ServiceLocator.getSceneService();
 		this.sceneReset = new Signal();
         this.startScreen = new StartScreen();
@@ -54,12 +57,17 @@ public class GameController {
 	}
 
 	private void connectSignals() {
+		player.getEnteredLevelSignal().connect(this::onPlayerEnteredLevel);
 		startScreen.getContinuedSignal().connect(this::startLevels);
 
 		for (Level level : levelsOrdered) {
 			level.getLevelWon().connect(this::onLevelWon);
 			level.getLevelLost().connect(this::loseGame);
 		}
+	}
+
+	private void onPlayerEnteredLevel() {
+		currentLevel.startLevel();
 	}
 
 	private void startLevels() {
@@ -75,9 +83,9 @@ public class GameController {
 	}
 
 	private void goToNextLevel() {
-        Level currentLevel = levelsOrdered.get(nextLevelIndex++);
+        currentLevel = levelsOrdered.get(nextLevelIndex++);
 
-		currentLevel.startLevel();
+		player.playEnterTransition();
 	}
 
 	private void onLevelWon() {

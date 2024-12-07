@@ -1,6 +1,6 @@
 package com.example.demo.entity.plane;
 
-import com.example.demo.GameController;
+import com.example.demo.Controller;
 import com.example.demo.entity.Entity;
 import com.example.demo.entity.state.*;
 import com.example.demo.util.ImageUtils;
@@ -57,8 +57,8 @@ public abstract class Plane extends Entity {
 		return destroyedTimeline;
 	}
 
-	public Plane(GameController gameController, PlaneImageData planeImageData, Vector initialPosition, int health) {
-		super(gameController, planeImageData.getMovingStraightImages().get(0), initialPosition);
+	public Plane(Controller controller, PlaneImageData planeImageData, Vector initialPosition, int health) {
+		super(controller, planeImageData.getMovingStraightImages().get(0), initialPosition);
 
 		this.planeImageData = planeImageData;
 		this.destroyed = new Signal();

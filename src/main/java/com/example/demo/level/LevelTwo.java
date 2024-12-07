@@ -1,22 +1,22 @@
 package com.example.demo.level;
 
-import com.example.demo.GameController;
+import com.example.demo.Controller;
 import com.example.demo.entity.plane.BossPlane;
 
 public class LevelTwo extends Level {
-	private final GameController gameController;
+	private final Controller controller;
 
-    public LevelTwo(GameController gameController) {
-		super(gameController);
+    public LevelTwo(Controller controller) {
+		super(controller);
 
-		this.gameController = gameController;
+		this.controller = controller;
 	}
 
 	@Override
 	public void startLevel() {
 		super.startLevel();
 
-        BossPlane boss = new BossPlane(gameController);
+        BossPlane boss = new BossPlane(controller);
 		boss.getDestroyedSignal().connect(this::onBossPlaneDestroyed);
 		boss.addToScene();
 		getPlayer().getDestroyedSignal().connect(this::loseLevel);

@@ -19,8 +19,8 @@ public class Main extends Application {
 		initializeStage(stage);
 		initializeServiceLocator(stage);
 
-		GameController gameController = new GameController();
-		gameController.launchGame();
+		Controller controller = new Controller();
+		controller.launchGame();
 	}
 
 	private void initializeStage(Stage stage) {
