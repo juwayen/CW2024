@@ -1,45 +1,44 @@
 package com.example.demo.ui;
 
-import com.example.demo.GameController;
+import com.example.demo.Controller;
 import com.example.demo.entity.plane.PlayerPlane;
 import javafx.scene.Group;
 
 public class UserInterface extends Group {
-    private static final double HEART_DISPLAY_X_POSITION = 5;
-    private static final double HEART_DISPLAY_Y_POSITION = 25;
-    private static final int PLAYER_INITIAL_HEALTH = PlayerPlane.HEALTH;
+    private static final double HEALTH_DISPLAY_X_POSITION = 8;
+    private static final double HEALTH_DISPLAY_Y_POSITION = 8;
 
-    private final GameController gameController;
+    private final Controller controller;
     private final PlayerPlane player;
-    private final HeartDisplay heartDisplay;
+    private final HealthDisplay healthDisplay;
 
-    public UserInterface(GameController gameController) {
-        this.gameController = gameController;
-        this.player = gameController.getPlayer();
-        this.heartDisplay = new HeartDisplay(HEART_DISPLAY_X_POSITION, HEART_DISPLAY_Y_POSITION, PLAYER_INITIAL_HEALTH);
+    public UserInterface(Controller controller) {
+        this.controller = controller;
+        this.player = controller.getPlayer();
+        this.healthDisplay = new HealthDisplay(HEALTH_DISPLAY_X_POSITION, HEALTH_DISPLAY_Y_POSITION, player.getHealth());
 
         initialize();
     }
 
     private void initialize() {
-        initializeHeartDisplay();
+        initializeHealthDisplay();
         connectSignals();
     }
 
-    private void initializeHeartDisplay() {
-        getChildren().add(heartDisplay);
+    private void initializeHealthDisplay() {
+        getChildren().add(healthDisplay);
     }
 
     private void connectSignals() {
         player.getDamageTakenSignal().connect(this::onPlayerDamageTaken);
-        gameController.getSceneResetSignal().connect(this::onSceneReset);
+        controller.getSceneResetSignal().connect(this::onSceneReset);
     }
 
     private void onPlayerDamageTaken() {
-        heartDisplay.setHeartCount(player.getHealth());
+        healthDisplay.setHealth(player.getHealth());
     }
 
     private void onSceneReset() {
-        heartDisplay.reset();
+        healthDisplay.reset();
     }
 }

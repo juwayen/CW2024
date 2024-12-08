@@ -4,13 +4,11 @@ import com.example.demo.service.*;
 import javafx.application.Application;
 import javafx.scene.Group;
 import javafx.scene.Scene;
-import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 public class Main extends Application {
-	public static final int WINDOW_WIDTH = 1280;
+	public static final int WINDOW_WIDTH = 1040;
 	public static final int WINDOW_HEIGHT = 1024;
-	public static final int GAME_LEFT_PADDING = 120;
 	public static final int GAME_WIDTH = 1024;
 	public static final int GAME_HEIGHT = 985;
 
@@ -21,15 +19,14 @@ public class Main extends Application {
 		initializeStage(stage);
 		initializeServiceLocator(stage);
 
-		GameController gameController = new GameController();
-		gameController.launchGame();
+		Controller controller = new Controller();
+		controller.launchGame();
 	}
 
 	private void initializeStage(Stage stage) {
 		Group root = new Group();
-		root.setLayoutX(GAME_LEFT_PADDING);
 
-		Scene scene = new Scene(root, Color.BLACK);
+		Scene scene = new Scene(root);
 
 		stage.setTitle(TITLE);
 		stage.setResizable(false);

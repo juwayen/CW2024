@@ -1,6 +1,6 @@
 package com.example.demo.entity;
 
-import com.example.demo.GameController;
+import com.example.demo.Controller;
 import com.example.demo.service.*;
 import com.example.demo.util.*;
 import javafx.geometry.Bounds;
@@ -9,7 +9,7 @@ import javafx.scene.image.*;
 import static com.example.demo.service.GameLoopService.MILLISECOND_DELAY;
 
 public abstract class Entity extends ImageView implements Updatable, Collidable {
-	private final GameController gameController;
+	private final Controller controller;
 	private final Signal removed;
 	private final GameLoopService gameLoopService;
 	private final SceneService sceneService;
@@ -19,14 +19,14 @@ public abstract class Entity extends ImageView implements Updatable, Collidable 
 		return removed;
 	}
 
-	public Entity(GameController gameController, String imageName, Vector initialPos) {
-		this.gameController = gameController;
+	public Entity(Controller controller, Image image, Vector initialPos) {
+		this.controller = controller;
 		this.removed = new Signal();
 		this.gameLoopService = ServiceLocator.getGameLoopService();
 		this.sceneService = ServiceLocator.getSceneService();
 		this.collisionService = ServiceLocator.getCollisionService();
 
-		setImage(ImageUtils.getImageFromName(imageName));
+		setImage(image);
 		setPosition(initialPos);
 
 		initialize();
@@ -37,7 +37,7 @@ public abstract class Entity extends ImageView implements Updatable, Collidable 
 	}
 
 	private void connectSignals() {
-		gameController.getSceneResetSignal().connect(this::onSceneReset);
+		controller.getSceneResetSignal().connect(this::onSceneReset);
 	}
 
 	protected void onSceneReset() {
@@ -60,10 +60,22 @@ public abstract class Entity extends ImageView implements Updatable, Collidable 
 	}
 
 	public void removeFromScene() {
+		disableInteraction();
+		disableVisuals();
+
+		emitRemovedSignal();
+	}
+
+	protected void disableInteraction() {
 		gameLoopService.removeFromLoop(this);
 		collisionService.disableCollision(this);
-		sceneService.removeNodeFromMiddleLayer(this);
+	}
 
+	protected void disableVisuals() {
+		sceneService.removeNodeFromMiddleLayer(this);
+	}
+
+	protected void emitRemovedSignal() {
 		removed.emit();
 		clearSignalsConnections();
 	}
@@ -82,10 +94,10 @@ public abstract class Entity extends ImageView implements Updatable, Collidable 
 	public void update() {}
 
 	@Override
-	public void onCollision(Collidable collidable) {}
-
-	@Override
 	public Bounds getHitbox() {
 		return getBoundsInParent();
 	}
+
+	@Override
+	public void onCollision(Collidable collidable) {}
 }
