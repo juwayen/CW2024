@@ -6,8 +6,8 @@ import com.example.demo.screen.LevelOneEndScreen;
 import com.example.demo.util.Vector;
 
 public class LevelOne extends Level {
-	private static final int TOTAL_ENEMIES = 3;
-	private static final int KILLS_TO_ADVANCE = 30;
+	private static final int TOTAL_ENEMIES = 1;
+	private static final int KILLS_TO_ADVANCE = 5;
 	private static final int ENEMY_INITIAL_Y_POS = -64;
 	private static final int ENEMY_MAX_X_POSITION = 928;
 

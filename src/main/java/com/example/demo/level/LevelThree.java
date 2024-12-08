@@ -2,12 +2,12 @@ package com.example.demo.level;
 
 import com.example.demo.Controller;
 import com.example.demo.entity.plane.EnemyPlane;
-import com.example.demo.screen.LevelTwoEndScreen;
+import com.example.demo.screen.LevelThreeEndScreen;
 import com.example.demo.util.Vector;
 
-public class LevelTwo extends Level {
-	private static final int TOTAL_ENEMIES = 2;
-	private static final int KILLS_TO_ADVANCE = 10;
+public class LevelThree extends Level {
+	private static final int TOTAL_ENEMIES = 3;
+	private static final int KILLS_TO_ADVANCE = 15;
 	private static final int ENEMY_INITIAL_Y_POS = -64;
 	private static final int ENEMY_MAX_X_POSITION = 928;
 
@@ -17,8 +17,8 @@ public class LevelTwo extends Level {
 	private int enemyPlanesDestroyed;
 	private int totalEnemiesSpawned;
 
-	public LevelTwo(Controller controller) {
-		super(controller, new LevelTwoEndScreen());
+	public LevelThree(Controller controller) {
+		super(controller, new LevelThreeEndScreen());
 
 		this.controller = controller;
 

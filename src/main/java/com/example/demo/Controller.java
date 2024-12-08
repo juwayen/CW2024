@@ -53,6 +53,9 @@ public class Controller {
 	private void initializeLevels() {
 		levelsOrdered.add(new LevelOne(this));
 		levelsOrdered.add(new LevelTwo(this));
+		levelsOrdered.add(new LevelThree(this));
+		levelsOrdered.add(new LevelFour(this));
+		levelsOrdered.add(new LevelFive(this));
 	}
 
 	private void connectSignals() {
