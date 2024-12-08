@@ -14,7 +14,7 @@ import javafx.util.Duration;
 import static com.example.demo.service.GameLoopService.MILLISECOND_DELAY;
 
 public class PlayerPlane extends Plane {
-	public static final int INITIAL_HEALTH = 5;
+	public static final int INITIAL_HEALTH = 10;
 
 	private static final double MIN_MILLISECONDS_PER_FIRE = 66.667;
 	private static final Vector INITIAL_POSITION = new Vector(460.0, 985.0);
