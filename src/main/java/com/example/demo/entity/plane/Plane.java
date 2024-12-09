@@ -153,7 +153,7 @@ public abstract class Plane extends Entity {
 	}
 
 	public void takeDamage(int damageAmount) {
-		health -= damageAmount;
+		setHealth(health - damageAmount);
 
 		if (health <= 0) {
 			disableInteraction();

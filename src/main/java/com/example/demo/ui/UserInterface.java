@@ -30,11 +30,11 @@ public class UserInterface extends Group {
     }
 
     private void connectSignals() {
-        player.getDamageTakenSignal().connect(this::onPlayerDamageTaken);
+        player.getHealthUpdatedSignal().connect(this::onPlayerHealthUpdated);
         controller.getSceneResetSignal().connect(this::onSceneReset);
     }
 
-    private void onPlayerDamageTaken() {
+    private void onPlayerHealthUpdated() {
         healthDisplay.setHealth(player.getHealth());
     }
 

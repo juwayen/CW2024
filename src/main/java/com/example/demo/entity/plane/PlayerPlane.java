@@ -27,14 +27,20 @@ public class PlayerPlane extends Plane {
 	private static final Vector BULLET_OFFSET = new Vector(52.0, 0.0);
 
 	private final Controller controller;
+	private final Signal healthUpdated;
 	private final Signal enteredLevel;
 	private final Signal exitedLevel;
-	private final Signal damageTaken;
-	private final BulletConfig bulletConfig;
 	private final InputService inputService;
+	private final BulletConfig singleBulletConfig;
+	private final BulletConfig doubleBulletConfig;
 
 	private boolean isControllable;
+	private BulletConfig bulletConfig;
 	private double millisecondsSinceLastShot;
+
+	public Signal getHealthUpdatedSignal() {
+		return healthUpdated;
+	}
 
 	public Signal getEnteredLevelSignal() {
 		return enteredLevel;
@@ -44,25 +50,34 @@ public class PlayerPlane extends Plane {
 		return exitedLevel;
 	}
 
-	public Signal getDamageTakenSignal() {
-		return damageTaken;
+	@Override
+	public void setHealth(int health) {
+		super.setHealth(health);
+		healthUpdated.emit();
 	}
 
 	public PlayerPlane(Controller controller) {
 		super(controller, new PlayerPlaneImageData(), INITIAL_POSITION, INITIAL_HEALTH);
 
 		this.controller = controller;
+		this.healthUpdated = new Signal();
 		this.exitedLevel = new Signal();
 		this.enteredLevel = new Signal();
-		this.damageTaken = new Signal();
-		this.bulletConfig = new SingleBulletConfig(this, BULLET_DIRECTION, BULLET_OFFSET);
 		this.inputService = ServiceLocator.getInputService();
+		this.singleBulletConfig = new SingleBulletConfig(this, BULLET_DIRECTION, BULLET_OFFSET);
+		this.doubleBulletConfig = new DoubleBulletConfig(this, BULLET_DIRECTION, BULLET_OFFSET);
 
+		this.isControllable = false;
+		this.bulletConfig = new SingleBulletConfig(this, BULLET_DIRECTION, BULLET_OFFSET);
 		this.millisecondsSinceLastShot = 0.0;
 	}
 
 	public Vector getCenterPosition() {
 		return getPosition().add(ImageUtils.getImageCenterOffset(getImage()));
+	}
+
+	public void upgradeBullet() {
+		bulletConfig = doubleBulletConfig;
 	}
 
 	@Override
@@ -107,15 +122,10 @@ public class PlayerPlane extends Plane {
     }
 
 	@Override
-    public void takeDamage(int damageAmount) {
-		super.takeDamage(damageAmount);
-		damageTaken.emit();
-	}
-
-	@Override
 	public void onSceneReset() {
 		setPosition(INITIAL_POSITION);
 		setHealth(INITIAL_HEALTH);
+		bulletConfig = singleBulletConfig;
 	}
 
 	@Override

@@ -33,6 +33,13 @@ public class Vector {
         this.y = y;
     }
 
+    public static Vector random(Vector min, Vector max) {
+        double randomX = Math.random() * (max.getX() - min.getX()) + min.getX();
+        double randomY = Math.random() * (max.getY() - min.getY()) + min.getY();
+
+        return new Vector(randomX, randomY);
+    }
+
     public Vector add(Vector vector) {
         return new Vector(x + vector.getX(), y + vector.getY());
     }
