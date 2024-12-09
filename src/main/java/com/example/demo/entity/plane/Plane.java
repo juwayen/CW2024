@@ -13,7 +13,7 @@ import javafx.util.Duration;
 public abstract class Plane extends Entity {
 	private static final int FRAMES_PER_IMAGE = 4;
 
-	private final PlaneImageData planeImageData;
+	private final PlaneData planeData;
 	private final Signal destroyed;
 	private final Timeline movingStraightTimeline;
 	private final Timeline movingRightTimeline;
@@ -57,10 +57,10 @@ public abstract class Plane extends Entity {
 		return destroyedTimeline;
 	}
 
-	public Plane(Controller controller, PlaneImageData planeImageData, Vector initialPosition, int health) {
-		super(controller, planeImageData.getMovingStraightImages().get(0), initialPosition);
+	public Plane(Controller controller, PlaneData planeData, Vector initialPosition, int health) {
+		super(controller, planeData.getMovingStraightImages().get(0), initialPosition);
 
-		this.planeImageData = planeImageData;
+		this.planeData = planeData;
 		this.destroyed = new Signal();
 		this.movingStraightTimeline = new Timeline();
 		this.movingRightTimeline = new Timeline();
@@ -85,21 +85,21 @@ public abstract class Plane extends Entity {
 
 	private void initializeTimelines() {
 		movingStraightTimeline.setCycleCount(Timeline.INDEFINITE);
-		ImageUtils.addImagesToTimeline(movingStraightTimeline, planeImageData.getMovingStraightImages(), this, FRAMES_PER_IMAGE);
+		ImageUtils.addImagesToTimeline(movingStraightTimeline, planeData.getMovingStraightImages(), this, FRAMES_PER_IMAGE);
 
 		movingRightTimeline.setCycleCount(Timeline.INDEFINITE);
-		ImageUtils.addImagesToTimeline(movingRightTimeline, planeImageData.getMovingRightImages(), this, FRAMES_PER_IMAGE);
+		ImageUtils.addImagesToTimeline(movingRightTimeline, planeData.getMovingRightImages(), this, FRAMES_PER_IMAGE);
 
 		movingLeftTimeline.setCycleCount(Timeline.INDEFINITE);
-		ImageUtils.addImagesToTimeline(movingLeftTimeline, planeImageData.getMovingLeftImages(), this, FRAMES_PER_IMAGE);
+		ImageUtils.addImagesToTimeline(movingLeftTimeline, planeData.getMovingLeftImages(), this, FRAMES_PER_IMAGE);
 
 		Vector movingImageCenterOffset = ImageUtils.getImageCenterOffset(getImage());
-		Vector destroyedImageCenterOffset = ImageUtils.getImageCenterOffset(planeImageData.getDestroyedImages().get(0));
+		Vector destroyedImageCenterOffset = ImageUtils.getImageCenterOffset(planeData.getDestroyedImages().get(0));
 		Vector destroyedImageOffset = movingImageCenterOffset.subtract(destroyedImageCenterOffset);
 		KeyFrame keyFrame = new KeyFrame(Duration.ZERO, event -> setPosition(getPosition().add(destroyedImageOffset)));
 		destroyedTimeline.getKeyFrames().add(keyFrame);
 
-		ImageUtils.addImagesToTimeline(destroyedTimeline, planeImageData.getDestroyedImages(), this, FRAMES_PER_IMAGE);
+		ImageUtils.addImagesToTimeline(destroyedTimeline, planeData.getDestroyedImages(), this, FRAMES_PER_IMAGE);
 
 		destroyedTimeline.setOnFinished(event -> {
 			disableVisuals();

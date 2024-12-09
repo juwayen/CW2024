@@ -57,18 +57,22 @@ public class PlayerPlane extends Plane {
 	}
 
 	public PlayerPlane(Controller controller) {
-		super(controller, new PlayerPlaneImageData(), INITIAL_POSITION, INITIAL_HEALTH);
+		super(controller, new PlayerData(), INITIAL_POSITION, INITIAL_HEALTH);
 
 		this.controller = controller;
 		this.healthUpdated = new Signal();
 		this.exitedLevel = new Signal();
 		this.enteredLevel = new Signal();
 		this.inputService = ServiceLocator.getInputService();
-		this.singleBulletConfig = new SingleBulletConfig(this, BULLET_DIRECTION, BULLET_OFFSET);
-		this.doubleBulletConfig = new DoubleBulletConfig(this, BULLET_DIRECTION, BULLET_OFFSET);
+		this.singleBulletConfig = new SingleBulletConfig(BULLET_OFFSET);
+		singleBulletConfig.setShooter(this);
+		singleBulletConfig.setDirection(BULLET_DIRECTION);
+		this.doubleBulletConfig = new DoubleBulletConfig(BULLET_OFFSET);
+		doubleBulletConfig.setShooter(this);
+		doubleBulletConfig.setDirection(BULLET_DIRECTION);
 
 		this.isControllable = false;
-		this.bulletConfig = new SingleBulletConfig(this, BULLET_DIRECTION, BULLET_OFFSET);
+		this.bulletConfig = singleBulletConfig;
 		this.millisecondsSinceLastShot = 0.0;
 	}
 

@@ -3,7 +3,6 @@ package com.example.demo.util;
 public class Vector {
     public static final Vector ZERO = new Vector(0.0, 0.0);
     public static final Vector UP = new Vector(0.0, -1.0);
-    public static final Vector DOWN = new Vector(0.0, 1.0);
 
     private double x, y;
 

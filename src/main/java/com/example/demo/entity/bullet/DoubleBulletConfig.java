@@ -1,6 +1,5 @@
 package com.example.demo.entity.bullet;
 
-import com.example.demo.entity.plane.Plane;
 import com.example.demo.util.ImageUtils;
 import com.example.demo.util.Vector;
 
@@ -12,11 +11,9 @@ public class DoubleBulletConfig extends BulletConfig {
 	private static final double SPEED = 1.92;
 	private static final int DAMAGE = 2;
 
-	public DoubleBulletConfig(Plane shooter, Vector direction, Vector offset) {
+	public DoubleBulletConfig(Vector offset) {
 		super();
 
-		this.setShooter(shooter);
-		this.setDirection(direction);
 		this.setOffset(offset);
 		this.setImageName(ImageUtils.getImageFromName(IMAGE_NAME));
 

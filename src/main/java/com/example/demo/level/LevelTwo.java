@@ -2,16 +2,16 @@ package com.example.demo.level;
 
 import com.example.demo.Controller;
 import com.example.demo.entity.plane.EnemyPlane;
+import com.example.demo.factory.BasicEnemyFactory;
+import com.example.demo.factory.FormFactory;
+import com.example.demo.factory.RandomFormFormFactory;
 import com.example.demo.screen.LevelTwoEndScreen;
-import com.example.demo.util.Vector;
 
 public class LevelTwo extends Level {
-	private static final int TOTAL_ENEMIES = 2;
-	private static final int KILLS_TO_ADVANCE = 10;
-	private static final int ENEMY_INITIAL_Y_POS = -64;
-	private static final int ENEMY_MAX_X_POSITION = 928;
+	private static final int TOTAL_ENEMIES = 3;
+	private static final int KILLS_TO_ADVANCE = 15;
 
-	private final Controller controller;
+	private final FormFactory formFactory;
 
 	private int enemyCount;
 	private int enemyPlanesDestroyed;
@@ -20,7 +20,7 @@ public class LevelTwo extends Level {
 	public LevelTwo(Controller controller) {
 		super(controller, new LevelTwoEndScreen());
 
-		this.controller = controller;
+		this.formFactory = new RandomFormFormFactory(new BasicEnemyFactory(controller));
 
 		this.enemyCount = 0;
 		this.enemyPlanesDestroyed = 0;
@@ -44,18 +44,13 @@ public class LevelTwo extends Level {
 			return;
 
 		for (int i = 0; i < TOTAL_ENEMIES - enemyCount; i++) {
-			double spawnPosX = Math.random()  * ENEMY_MAX_X_POSITION;
-
-			Vector spawnPos = new Vector(spawnPosX, ENEMY_INITIAL_Y_POS);
-
-			EnemyPlane newEnemy = new EnemyPlane(controller, spawnPos);
-			newEnemy.addToScene();
+			EnemyPlane enemyPlane = formFactory.create();
 
 			enemyCount++;
 			totalEnemiesSpawned++;
 
-			newEnemy.getRemovedSignal().connect(this::decrementEnemyCount);
-			newEnemy.getDestroyedSignal().connect(this::onEnemyPlaneDestroyed);
+			enemyPlane.getRemovedSignal().connect(this::decrementEnemyCount);
+			enemyPlane.getDestroyedSignal().connect(this::onEnemyPlaneDestroyed);
 		}
 	}
 
