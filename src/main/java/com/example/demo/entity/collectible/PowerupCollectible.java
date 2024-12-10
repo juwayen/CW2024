@@ -17,6 +17,6 @@ public class PowerupCollectible extends Collectible {
 
     @Override
     protected void onCollected() {
-        controller.getPlayer().upgradeBullet();
+        controller.getPlayer().powerup();
     }
 }

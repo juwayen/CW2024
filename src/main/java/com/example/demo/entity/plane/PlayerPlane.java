@@ -14,7 +14,7 @@ import javafx.util.Duration;
 import static com.example.demo.service.GameLoopService.MILLISECOND_DELAY;
 
 public class PlayerPlane extends Plane {
-	public static final int INITIAL_HEALTH = 10;
+	public static final int INITIAL_HEALTH = 20;
 
 	private static final double MIN_MILLISECONDS_PER_FIRE = 66.667;
 	private static final Vector INITIAL_POSITION = new Vector(460.0, 985.0);
@@ -25,6 +25,7 @@ public class PlayerPlane extends Plane {
 	private static final Vector MAX_POS = new Vector(920.0, 921.0);
 	private static final Vector BULLET_DIRECTION = Vector.UP;
 	private static final Vector BULLET_OFFSET = new Vector(52.0, 0.0);
+	private static final double MAX_MILLISECONDS_WITH_POWERUP = 5000;
 
 	private final Controller controller;
 	private final Signal healthUpdated;
@@ -37,6 +38,7 @@ public class PlayerPlane extends Plane {
 	private boolean isControllable;
 	private BulletConfig bulletConfig;
 	private double millisecondsSinceLastShot;
+	private double millisecondsSincePowerup;
 
 	public Signal getHealthUpdatedSignal() {
 		return healthUpdated;
@@ -80,8 +82,25 @@ public class PlayerPlane extends Plane {
 		return getPosition().add(ImageUtils.getImageCenterOffset(getImage()));
 	}
 
-	public void upgradeBullet() {
+	public void powerup() {
 		bulletConfig = doubleBulletConfig;
+		millisecondsSincePowerup = 0;
+	}
+
+	@Override
+	public void update() {
+		super.update();
+		updatePowerup();
+	}
+
+	private void updatePowerup() {
+		if (bulletConfig != doubleBulletConfig)
+			return;
+
+		millisecondsSincePowerup += MILLISECOND_DELAY;
+
+		if (millisecondsSincePowerup > MAX_MILLISECONDS_WITH_POWERUP)
+			bulletConfig = singleBulletConfig;
 	}
 
 	@Override

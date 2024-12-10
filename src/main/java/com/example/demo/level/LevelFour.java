@@ -1,67 +1,37 @@
 package com.example.demo.level;
 
 import com.example.demo.Controller;
-import com.example.demo.entity.plane.EnemyPlane;
-import com.example.demo.factory.BasicEnemyFactory;
-import com.example.demo.factory.FormFactory;
-import com.example.demo.factory.VFormFormFactory;
+import com.example.demo.entity.plane.AdvancedEnemyData;
+import com.example.demo.entity.plane.BasicEnemyData;
+import com.example.demo.factory.*;
 import com.example.demo.screen.LevelFourEndScreen;
 
 public class LevelFour extends Level {
-	private static final int TOTAL_ENEMIES = 7;
-	private static final int KILLS_TO_ADVANCE = 35;
+	private static final int FACTORY_1_MAX_ENEMIES = 10;
+	private static final int FACTORY_1_ENEMIES_AT_ONCE = 5;
+	private static final int FACTORY_2_MAX_ENEMIES = 3;
+	private static final int FACTORY_2_ENEMIES_AT_ONCE = 3;
 
-	private final FormFactory formFactory;
+	private final Controller controller;
 
-	private int enemyCount;
-	private int enemyPlanesDestroyed;
-	private int totalEnemiesSpawned;
+	private FormationFactory formationFactory1;
+	private FormationFactory formationFactory2;
 
 	public LevelFour(Controller controller) {
-		super(controller, new LevelFourEndScreen());
+		super(controller, new LevelFourEndScreen(), FACTORY_1_MAX_ENEMIES + FACTORY_2_MAX_ENEMIES);
 
-		this.formFactory = new VFormFormFactory(new BasicEnemyFactory(controller));
-
-		this.enemyCount = 0;
-		this.enemyPlanesDestroyed = 0;
-		this.totalEnemiesSpawned = 0;
+		this.controller = controller;
 	}
 
 	@Override
-	public void startLevel() {
-		super.startLevel();
-
-		enemyCount = 0;
-		enemyPlanesDestroyed = 0;
-		totalEnemiesSpawned = 0;
-
-		getPlayer().getDestroyedSignal().connect(this::loseLevel);
+	protected void initializeFactories() {
+		formationFactory1 = new WallFormationFactory(controller, new BasicEnemyData());
+		formationFactory2 = new VFormationFactory(controller, new AdvancedEnemyData());
 	}
 
 	@Override
 	protected void spawnEnemyUnits() {
-		if (totalEnemiesSpawned >= KILLS_TO_ADVANCE)
-			return;
-
-		for (int i = 0; i < TOTAL_ENEMIES - enemyCount; i++) {
-			EnemyPlane enemyPlane = formFactory.create();
-
-			enemyCount++;
-			totalEnemiesSpawned++;
-
-			enemyPlane.getRemovedSignal().connect(this::decrementEnemyCount);
-			enemyPlane.getDestroyedSignal().connect(this::onEnemyPlaneDestroyed);
-		}
-	}
-
-	private void decrementEnemyCount() {
-		enemyCount--;
-	}
-
-	private void onEnemyPlaneDestroyed() {
-		enemyPlanesDestroyed++;
-
-		if (enemyPlanesDestroyed >= KILLS_TO_ADVANCE)
-			winLevel();
+		spawnEnemyFromFactory(formationFactory1, FACTORY_1_ENEMIES_AT_ONCE, FACTORY_1_MAX_ENEMIES);
+		spawnEnemyFromFactory(formationFactory2, FACTORY_2_ENEMIES_AT_ONCE, FACTORY_2_MAX_ENEMIES);
 	}
 }

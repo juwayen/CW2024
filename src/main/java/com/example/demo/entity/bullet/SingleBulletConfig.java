@@ -15,7 +15,7 @@ public class SingleBulletConfig extends BulletConfig {
 		super();
 
 		this.setOffset(offset);
-		this.setImageName(ImageUtils.getImageFromName(IMAGE_NAME));
+		this.setImage(ImageUtils.getImageFromName(IMAGE_NAME));
 
 		this.addDestroyedImage(ImageUtils.getImageFromName(DESTROYED_1_IMAGE_NAME));
 		this.addDestroyedImage(ImageUtils.getImageFromName(DESTROYED_2_IMAGE_NAME));

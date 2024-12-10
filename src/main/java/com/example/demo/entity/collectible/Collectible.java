@@ -10,7 +10,7 @@ import javafx.scene.image.Image;
 import static com.example.demo.service.GameLoopService.MILLISECOND_DELAY;
 
 public abstract class Collectible extends Entity {
-    private static final double MAX_TIME_MILLISECONDS = 5000;
+    private static final double MAX_TIME_MILLISECONDS = 3000;
 
     private boolean isActive;
     private double millisecondsSinceSpawned;

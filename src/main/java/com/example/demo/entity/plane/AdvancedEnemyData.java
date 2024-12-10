@@ -1,6 +1,6 @@
 package com.example.demo.entity.plane;
 
-import com.example.demo.entity.bullet.ShotBulletConfig;
+import com.example.demo.entity.bullet.BasicBulletConfig;
 import com.example.demo.util.ImageUtils;
 import com.example.demo.util.Vector;
 
@@ -17,12 +17,12 @@ public class AdvancedEnemyData extends PlaneData {
     private static final String DESTROYED_8_IMAGE_NAME = "plane_destroyed_8.png";
     private static final double INITIAL_POSITION_Y = -88.0;
     private static final int HEALTH = 10;
-    private static final double MIN_MILLISECONDS_PER_FIRE = 500.0;
-    private static final double MAX_MILLISECONDS_PER_FIRE = 1000.0;
+    private static final double MIN_MILLISECONDS_PER_FIRE = 1000.0;
+    private static final double MAX_MILLISECONDS_PER_FIRE = 3000.0;
     private static final double SPEED = 0.48;
     private static final Vector BULLET_OFFSET = new Vector(64.0, 88.0);
 
-    public AdvancedEnemyData(double initialX, Vector finalPosition) {
+    public AdvancedEnemyData() {
         super();
 
         this.addMovingStraightImage(ImageUtils.getImageFromName(MOVING_STRAIGHT_1_IMAGE_NAME));
@@ -43,12 +43,12 @@ public class AdvancedEnemyData extends PlaneData {
         this.addDestroyedImage(ImageUtils.getImageFromName(DESTROYED_7_IMAGE_NAME));
         this.addDestroyedImage(ImageUtils.getImageFromName(DESTROYED_8_IMAGE_NAME));
 
-        this.setInitialPosition(new Vector(initialX, INITIAL_POSITION_Y));
-        this.setFinalPosition(finalPosition);
+        this.setInitialPosition(new Vector(0.0, INITIAL_POSITION_Y));
+        this.setFinalPosition(null);
         this.setHealth(HEALTH);
         this.setMinMillisecondsPerFire(MIN_MILLISECONDS_PER_FIRE);
         this.setMaxMillisecondsPerFire(MAX_MILLISECONDS_PER_FIRE);
         this.setSpeed(SPEED);
-        this.setBulletConfig(new ShotBulletConfig(BULLET_OFFSET));
+        this.setBulletConfig(new BasicBulletConfig(BULLET_OFFSET));
     }
 }

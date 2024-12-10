@@ -7,4 +7,5 @@ module com.example.demo {
     exports com.example.demo.entity.plane;
     exports com.example.demo.service;
     exports com.example.demo.entity.bullet;
+    exports com.example.demo.entity;
 }

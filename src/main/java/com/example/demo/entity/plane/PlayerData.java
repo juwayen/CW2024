@@ -38,5 +38,7 @@ public class PlayerData extends PlaneData {
         this.addDestroyedImage(ImageUtils.getImageFromName(DESTROYED_6_IMAGE_NAME));
         this.addDestroyedImage(ImageUtils.getImageFromName(DESTROYED_7_IMAGE_NAME));
         this.addDestroyedImage(ImageUtils.getImageFromName(DESTROYED_8_IMAGE_NAME));
+
+
     }
 }

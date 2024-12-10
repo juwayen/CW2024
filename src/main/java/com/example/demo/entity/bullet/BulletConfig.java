@@ -1,5 +1,6 @@
 package com.example.demo.entity.bullet;
 
+import com.example.demo.entity.Cloneable;
 import com.example.demo.entity.plane.Plane;
 import com.example.demo.util.ImageUtils;
 import com.example.demo.util.Vector;
@@ -8,7 +9,7 @@ import javafx.scene.image.Image;
 import java.util.ArrayList;
 import java.util.List;
 
-public class BulletConfig {
+public class BulletConfig implements Cloneable {
     private final List<Image> destroyedImages;
 
     private Plane shooter;
@@ -46,7 +47,7 @@ public class BulletConfig {
         return image;
     }
 
-    public void setImageName(Image image) {
+    public void setImage(Image image) {
         this.image = image;
     }
 
@@ -84,5 +85,22 @@ public class BulletConfig {
 
     public BulletConfig() {
         this.destroyedImages = new ArrayList<>();
+    }
+
+    @Override
+    public BulletConfig cloneObject() {
+        BulletConfig clonedBulletConfig = new BulletConfig();
+
+        for (Image image : this.getDestroyedImages())
+            clonedBulletConfig.addDestroyedImage(image);
+
+        clonedBulletConfig.setShooter(this.getShooter());
+        clonedBulletConfig.setDirection(this.getDirection());
+        clonedBulletConfig.setOffset(this.getOffset());
+        clonedBulletConfig.setImage(this.getImage());
+        clonedBulletConfig.setSpeed(this.getSpeed());
+        clonedBulletConfig.setDamage(this.getDamage());
+
+        return clonedBulletConfig;
     }
 }

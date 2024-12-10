@@ -3,6 +3,8 @@ package com.example.demo.level;
 import com.example.demo.entity.collectible.Collectible;
 import com.example.demo.entity.collectible.HealthCollectible;
 import com.example.demo.entity.collectible.PowerupCollectible;
+import com.example.demo.entity.plane.EnemyPlane;
+import com.example.demo.factory.FormationFactory;
 import com.example.demo.screen.GameScreen;
 import com.example.demo.service.GameLoopService;
 import com.example.demo.service.ServiceLocator;
@@ -18,12 +20,13 @@ import java.util.List;
 import static com.example.demo.service.GameLoopService.MILLISECOND_DELAY;
 
 public abstract class Level implements Updatable {
-	private static final int MILLISECONDS_PER_COLLECTIBLE_CHANCE = 7500;
-	private static final double COLLECTIBLE_CHANCE = 0.5;
+	private static final int MILLISECONDS_PER_COLLECTIBLE_CHANCE = 5000;
+	private static final double COLLECTIBLE_CHANCE = 0.75;
 	private static final Vector COLLECTIBLE_MIN_POSITION = new Vector(0.0, 492.5);
 	private static final Vector COLLECTIBLE_MAX_POSITION = new Vector(960.0, 921.0);
 
 	private final GameScreen levelEndScreen;
+	private final int killsToWin;
 	private final Signal levelWon;
 	private final Signal levelLost;
 	private final PlayerPlane player;
@@ -31,7 +34,8 @@ public abstract class Level implements Updatable {
 	private final List<Collectible> collectiblePool;
 
 	private boolean isStopped;
-	private double millisecondsSinceLastCollectibleCheck;
+	private int enemiesKilled;
+	private double millisecondsSinceLastCollectibleChance;
 
 	public GameScreen getLevelEndScreen() {
 		return levelEndScreen;
@@ -49,8 +53,9 @@ public abstract class Level implements Updatable {
 		return player;
 	}
 
-	public Level(Controller controller, GameScreen levelEndScreen) {
+	public Level(Controller controller, GameScreen levelEndScreen, int killsToWin) {
 		this.levelEndScreen = levelEndScreen;
+		this.killsToWin = killsToWin;
 		this.levelWon = new Signal();
 		this.levelLost = new Signal();
 		this.player = controller.getPlayer();
@@ -60,8 +65,13 @@ public abstract class Level implements Updatable {
 		this.collectiblePool.add(new PowerupCollectible(controller));
 
 		this.isStopped = true;
-		this.millisecondsSinceLastCollectibleCheck = 0;
+		this.enemiesKilled = 0;
+		this.millisecondsSinceLastCollectibleChance = 0;
+
+		initializeFactories();
 	}
+
+	protected abstract void initializeFactories();
 
 	@Override
 	public void update() {
@@ -71,9 +81,28 @@ public abstract class Level implements Updatable {
 
 	protected abstract void spawnEnemyUnits();
 
+	protected void spawnEnemyFromFactory(FormationFactory factory, int enemiesAtOnce, int maxEnemies) {
+		if (factory.getTotalEnemyCount() >= maxEnemies)
+			return;
+
+		if (factory.getCurrentEnemyCount() >= enemiesAtOnce)
+			return;
+
+		EnemyPlane enemyPlane = factory.create();
+
+		enemyPlane.getDestroyedSignal().connect(this::onEnemyPlaneDestroyed);
+	}
+
+	protected void onEnemyPlaneDestroyed() {
+		enemiesKilled++;
+
+		if (enemiesKilled >= killsToWin)
+			winLevel();
+	}
+
 	private void spawnCollectibles() {
-		if (millisecondsSinceLastCollectibleCheck < MILLISECONDS_PER_COLLECTIBLE_CHANCE) {
-			millisecondsSinceLastCollectibleCheck += MILLISECOND_DELAY;
+		if (millisecondsSinceLastCollectibleChance < MILLISECONDS_PER_COLLECTIBLE_CHANCE) {
+			millisecondsSinceLastCollectibleChance += MILLISECOND_DELAY;
 			return;
 		}
 
@@ -85,13 +114,19 @@ public abstract class Level implements Updatable {
 		Collectible collectible = collectiblePool.get((int) (Math.random() * collectiblePool.size()));
 		collectible.spawnAt(Vector.random(COLLECTIBLE_MIN_POSITION, COLLECTIBLE_MAX_POSITION));
 
-		millisecondsSinceLastCollectibleCheck = 0;
+		millisecondsSinceLastCollectibleChance = 0;
 	}
 
 	public void startLevel() {
 		isStopped = false;
+		enemiesKilled = 0;
+		millisecondsSinceLastCollectibleChance = 0;
+
+		initializeFactories();
 
 		gameLoopService.addToLoop(this);
+
+		getPlayer().getDestroyedSignal().connect(this::loseLevel);
 	}
 
 	protected void winLevel() {

@@ -17,12 +17,12 @@ public class BasicEnemyData extends PlaneData {
     private static final String DESTROYED_8_IMAGE_NAME = "plane_destroyed_8.png";
     private static final double INITIAL_POSITION_Y = -64.0;
     private static final int HEALTH = 2;
-    private static final double MIN_MILLISECONDS_PER_FIRE = 500.0;
-    private static final double MAX_MILLISECONDS_PER_FIRE = 1000.0;
+    private static final double MIN_MILLISECONDS_PER_FIRE = 1000.0;
+    private static final double MAX_MILLISECONDS_PER_FIRE = 3000.0;
     private static final double SPEED = 0.48;
     private static final Vector BULLET_OFFSET = new Vector(48.0, 64.0);
 
-    public BasicEnemyData(double initialX, Vector finalPosition) {
+    public BasicEnemyData() {
         super();
 
         this.addMovingStraightImage(ImageUtils.getImageFromName(MOVING_STRAIGHT_1_IMAGE_NAME));
@@ -43,8 +43,8 @@ public class BasicEnemyData extends PlaneData {
         this.addDestroyedImage(ImageUtils.getImageFromName(DESTROYED_7_IMAGE_NAME));
         this.addDestroyedImage(ImageUtils.getImageFromName(DESTROYED_8_IMAGE_NAME));
 
-        this.setInitialPosition(new Vector(initialX, INITIAL_POSITION_Y));
-        this.setFinalPosition(finalPosition);
+        this.setInitialPosition(new Vector(0.0, INITIAL_POSITION_Y));
+        this.setFinalPosition(null);
         this.setHealth(HEALTH);
         this.setMinMillisecondsPerFire(MIN_MILLISECONDS_PER_FIRE);
         this.setMaxMillisecondsPerFire(MAX_MILLISECONDS_PER_FIRE);

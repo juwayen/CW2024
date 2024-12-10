@@ -1,5 +1,6 @@
 package com.example.demo.entity.plane;
 
+import com.example.demo.entity.Cloneable;
 import com.example.demo.entity.bullet.BulletConfig;
 import com.example.demo.util.Vector;
 import javafx.scene.image.Image;
@@ -7,7 +8,7 @@ import javafx.scene.image.Image;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PlaneData {
+public class PlaneData implements Cloneable {
     private final List<Image> movingStraightImages;
     private final List<Image> movingRightImages;
     private final List<Image> movingLeftImages;
@@ -114,5 +115,32 @@ public class PlaneData {
         this.movingRightImages = new ArrayList<>();
         this.movingLeftImages = new ArrayList<>();
         this.destroyedImages = new ArrayList<>();
+    }
+
+    @Override
+    public PlaneData cloneObject() {
+        PlaneData clonedPlaneData = new PlaneData();
+
+        for (Image image : this.getMovingStraightImages())
+            clonedPlaneData.addMovingStraightImage(image);
+
+        for (Image image : this.getMovingRightImages())
+            clonedPlaneData.addMovingRightImage(image);
+
+        for (Image image : this.getMovingLeftImages())
+            clonedPlaneData.addMovingLeftImage(image);
+
+        for (Image image : this.getDestroyedImages())
+            clonedPlaneData.addDestroyedImage(image);
+
+        clonedPlaneData.setInitialPosition(this.getInitialPosition());
+        clonedPlaneData.setFinalPosition(this.getFinalPosition());
+        clonedPlaneData.setHealth(this.getHealth());
+        clonedPlaneData.setMinMillisecondsPerFire(this.getMinMillisecondsPerFire());
+        clonedPlaneData.setMaxMillisecondsPerFire(this.getMaxMillisecondsPerFire());
+        clonedPlaneData.setSpeed(this.getSpeed());
+        clonedPlaneData.setBulletConfig(this.getBulletConfig().cloneObject());
+
+        return clonedPlaneData;
     }
 }
