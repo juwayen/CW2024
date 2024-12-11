@@ -41,6 +41,7 @@ public class Main extends Application {
 		ServiceLocator.setSceneService(new SceneService(stage.getScene()));
 		ServiceLocator.setInputService(new InputService());
 		ServiceLocator.setCollisionService(new CollisionService());
+		ServiceLocator.setAudioService(new AudioService());
 	}
 
 	public static void main(String[] args) {

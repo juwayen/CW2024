@@ -3,6 +3,8 @@ package com.example.demo.entity.plane;
 import com.example.demo.Controller;
 import com.example.demo.entity.Entity;
 import com.example.demo.entity.state.*;
+import com.example.demo.service.AudioService;
+import com.example.demo.service.ServiceLocator;
 import com.example.demo.util.ImageUtils;
 import com.example.demo.util.Signal;
 import com.example.demo.util.Vector;
@@ -125,8 +127,10 @@ public abstract class Plane extends Entity {
 	protected abstract void updatePosition();
 
 	protected void updateFire() {
-		if (canFire())
+		if (canFire()) {
 			fire();
+			ServiceLocator.getAudioService().playSound(AudioService.Sound.BULLET_FIRED);
+		}
 	}
 
 	protected abstract boolean canFire();
@@ -158,6 +162,7 @@ public abstract class Plane extends Entity {
 		if (health <= 0) {
 			disableInteraction();
 			stateMachine.changeState(destroyedState);
+			ServiceLocator.getAudioService().playSound(AudioService.Sound.PLANE_DESTROYED);
 		}
 	}
 

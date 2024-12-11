@@ -5,6 +5,7 @@ public class ServiceLocator {
     private static SceneService sceneService;
     private static InputService inputService;
     private static CollisionService collisionService;
+    private static AudioService audioService;
 
     public static GameLoopService getGameLoopService() {
         return gameLoopService;
@@ -36,5 +37,13 @@ public class ServiceLocator {
 
     public static void setCollisionService(CollisionService collisionService) {
         ServiceLocator.collisionService = collisionService;
+    }
+
+    public static AudioService getAudioService() {
+        return audioService;
+    }
+
+    public static void setAudioService(AudioService audioService) {
+        ServiceLocator.audioService = audioService;
     }
 }

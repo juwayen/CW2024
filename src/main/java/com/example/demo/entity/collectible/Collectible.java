@@ -3,7 +3,9 @@ package com.example.demo.entity.collectible;
 import com.example.demo.Controller;
 import com.example.demo.entity.Entity;
 import com.example.demo.entity.plane.PlayerPlane;
+import com.example.demo.service.AudioService;
 import com.example.demo.service.Collidable;
+import com.example.demo.service.ServiceLocator;
 import com.example.demo.util.Vector;
 import javafx.scene.image.Image;
 
@@ -40,6 +42,7 @@ public abstract class Collectible extends Entity {
 
         onCollected();
         despawn();
+        ServiceLocator.getAudioService().playSound(AudioService.Sound.COLLECTIBLE_COLLECTED);
     }
 
     protected abstract void onCollected();

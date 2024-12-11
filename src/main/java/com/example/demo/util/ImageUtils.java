@@ -16,17 +16,8 @@ public class ImageUtils {
 
     public static Image getImageFromName(String imageName) {
         String imageUrl = Objects.requireNonNull(ImageUtils.class.getResource(IMAGE_PATH + imageName)).toExternalForm();
-        Image image = new Image(imageUrl);
 
-        image = new Image(
-                imageUrl,
-                image.getWidth(),
-                image.getHeight(),
-                true,
-                false
-        );
-
-        return image;
+        return new Image(imageUrl);
     }
 
     public static Vector getImageCenterOffset(Image image) {
