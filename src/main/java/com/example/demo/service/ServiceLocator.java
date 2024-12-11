@@ -1,25 +1,34 @@
 package com.example.demo.service;
 
 public class ServiceLocator {
-    private static GameLoopService gameLoopService;
+    private static GameService gameService;
+    private static UpdateService updateService;
     private static SceneService sceneService;
     private static InputService inputService;
     private static CollisionService collisionService;
     private static AudioService audioService;
 
-    public static GameLoopService getGameLoopService() {
-        return gameLoopService;
+    public static GameService getGameService() {
+        return gameService;
     }
 
-    public static void setGameLoopService(GameLoopService gameLoopService) {
-        ServiceLocator.gameLoopService = gameLoopService;
+    public static void registerGameService(GameService gameService) {
+        ServiceLocator.gameService = gameService;
+    }
+
+    public static UpdateService getUpdateService() {
+        return updateService;
+    }
+
+    public static void registerUpdateService(UpdateService updateService) {
+        ServiceLocator.updateService = updateService;
     }
 
     public static SceneService getSceneService() {
         return sceneService;
     }
 
-    public static void setSceneService(SceneService sceneService) {
+    public static void registerSceneService(SceneService sceneService) {
         ServiceLocator.sceneService = sceneService;
     }
 
@@ -27,7 +36,7 @@ public class ServiceLocator {
         return inputService;
     }
 
-    public static void setInputService(InputService inputService) {
+    public static void registerInputService(InputService inputService) {
         ServiceLocator.inputService = inputService;
     }
 
@@ -35,7 +44,7 @@ public class ServiceLocator {
         return collisionService;
     }
 
-    public static void setCollisionService(CollisionService collisionService) {
+    public static void registerCollisionService(CollisionService collisionService) {
         ServiceLocator.collisionService = collisionService;
     }
 
@@ -43,7 +52,7 @@ public class ServiceLocator {
         return audioService;
     }
 
-    public static void setAudioService(AudioService audioService) {
+    public static void registerAudioService(AudioService audioService) {
         ServiceLocator.audioService = audioService;
     }
 }

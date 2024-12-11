@@ -1,12 +1,12 @@
-package com.example.demo;
+package com.example.demo.ui;
 
-import com.example.demo.service.GameLoopService;
+import com.example.demo.service.UpdateService;
 import com.example.demo.service.ServiceLocator;
 import com.example.demo.service.Updatable;
 import com.example.demo.util.ImageUtils;
 import javafx.scene.image.ImageView;
 
-import static com.example.demo.service.GameLoopService.MILLISECOND_DELAY;
+import static com.example.demo.service.UpdateService.MILLISECOND_DELAY;
 
 public class Background extends ImageView implements Updatable {
     private static final String IMAGE_NAME = "background.png";
@@ -14,12 +14,12 @@ public class Background extends ImageView implements Updatable {
     private static final int IMAGE_EXTRA_HEIGHT = 1024;
     private static final int REPEATING_TILE_HEIGHT = 512;
 
-    private final GameLoopService gameLoopService;
+    private final UpdateService updateService;
     private final double startingTranslateY;
     private final double endingTranslateY;
 
     public Background() {
-        this.gameLoopService = ServiceLocator.getGameLoopService();
+        this.updateService = ServiceLocator.getUpdateService();
         this.startingTranslateY = -IMAGE_EXTRA_HEIGHT;
         this.endingTranslateY = -REPEATING_TILE_HEIGHT;
 
@@ -30,7 +30,7 @@ public class Background extends ImageView implements Updatable {
     }
 
     private void initialize() {
-        gameLoopService.addToLoop(this);
+        updateService.addToLoop(this);
     }
 
     @Override

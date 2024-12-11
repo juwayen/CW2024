@@ -7,14 +7,14 @@ import javafx.util.Duration;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GameLoopService {
+public class UpdateService {
     public static final double MILLISECOND_DELAY = (double) 1000 / 60;
 
     private final List<Updatable> updatables;
     private final List<Updatable> updatablesToAdd;
     private final List<Updatable> updatablesToRemove;
 
-    public GameLoopService() {
+    public UpdateService() {
         this.updatables = new ArrayList<>();
         this.updatablesToAdd = new ArrayList<>();
         this.updatablesToRemove = new ArrayList<>();
@@ -23,11 +23,11 @@ public class GameLoopService {
     }
 
     private void initialize() {
-        KeyFrame gameLoop = new KeyFrame(Duration.millis(MILLISECOND_DELAY), event -> update());
+        KeyFrame updateLoop = new KeyFrame(Duration.millis(MILLISECOND_DELAY), event -> update());
 
         Timeline timeline = new Timeline();
         timeline.setCycleCount(Timeline.INDEFINITE);
-        timeline.getKeyFrames().add(gameLoop);
+        timeline.getKeyFrames().add(updateLoop);
         timeline.play();
     }
 

@@ -1,6 +1,5 @@
 package com.example.demo.factory;
 
-import com.example.demo.Controller;
 import com.example.demo.entity.plane.PlaneData;
 import com.example.demo.util.Vector;
 
@@ -15,12 +14,12 @@ public class VFormationFactory extends FormationFactory {
     private static final Vector POSSIBLE_POSITION_6 = new Vector(800.0, 128.0);
     private static final Vector POSSIBLE_POSITION_7 = new Vector(224.0, 128.0);
 
-    public VFormationFactory(Controller controller, PlaneData enemyPlaneData) {
-        super(controller, enemyPlaneData, 0.0);
+    public VFormationFactory(PlaneData enemyPlaneData) {
+        super(enemyPlaneData, 0.0);
     }
 
-    public VFormationFactory(Controller controller, PlaneData enemyPlaneData, double yOffset) {
-        super(controller, enemyPlaneData, yOffset);
+    public VFormationFactory(PlaneData enemyPlaneData, double yOffset) {
+        super(enemyPlaneData, yOffset);
     }
 
     @Override

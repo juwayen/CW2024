@@ -1,6 +1,5 @@
 package com.example.demo.entity.plane;
 
-import com.example.demo.Controller;
 import com.example.demo.entity.Entity;
 import com.example.demo.entity.state.*;
 import com.example.demo.service.AudioService;
@@ -15,6 +14,7 @@ import javafx.util.Duration;
 public abstract class Plane extends Entity {
 	private static final int FRAMES_PER_IMAGE = 4;
 
+	private final AudioService audioService;
 	private final PlaneData planeData;
 	private final Signal destroyed;
 	private final Timeline movingStraightTimeline;
@@ -30,6 +30,10 @@ public abstract class Plane extends Entity {
 	private int health;
 	private Vector oldPosition;
 	private Vector velocity;
+
+	protected PlaneData getPlaneData() {
+		return planeData;
+	}
 
 	public Signal getDestroyedSignal() {
 		return destroyed;
@@ -59,9 +63,10 @@ public abstract class Plane extends Entity {
 		return destroyedTimeline;
 	}
 
-	public Plane(Controller controller, PlaneData planeData, Vector initialPosition, int health) {
-		super(controller, planeData.getMovingStraightImages().get(0), initialPosition);
+	public Plane(PlaneData planeData) {
+		super(planeData.getMovingStraightImages().get(0), planeData.getInitialPosition());
 
+		this.audioService = ServiceLocator.getAudioService();
 		this.planeData = planeData;
 		this.destroyed = new Signal();
 		this.movingStraightTimeline = new Timeline();
@@ -74,7 +79,7 @@ public abstract class Plane extends Entity {
 		this.movingLeftState = new PlaneMovingLeftState();
 		this.destroyedState = new PlaneDestroyedState();
 
-		this.health = health;
+		this.health = planeData.getHealth();
 		this.oldPosition = new Vector();
 		this.velocity = new Vector();
 
@@ -129,7 +134,7 @@ public abstract class Plane extends Entity {
 	protected void updateFire() {
 		if (canFire()) {
 			fire();
-			ServiceLocator.getAudioService().playSound(AudioService.Sound.BULLET_FIRED);
+			audioService.playSound(AudioService.Sound.BULLET_FIRED);
 		}
 	}
 
@@ -162,7 +167,7 @@ public abstract class Plane extends Entity {
 		if (health <= 0) {
 			disableInteraction();
 			stateMachine.changeState(destroyedState);
-			ServiceLocator.getAudioService().playSound(AudioService.Sound.PLANE_DESTROYED);
+			audioService.playSound(AudioService.Sound.PLANE_DESTROYED);
 		}
 	}
 

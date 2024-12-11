@@ -1,6 +1,6 @@
 package com.example.demo.service;
 
-import com.example.demo.Background;
+import com.example.demo.ui.Background;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Scene;

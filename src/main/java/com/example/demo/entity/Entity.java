@@ -1,30 +1,29 @@
 package com.example.demo.entity;
 
-import com.example.demo.Controller;
 import com.example.demo.service.*;
 import com.example.demo.util.*;
 import javafx.geometry.Bounds;
 import javafx.scene.image.*;
 
-import static com.example.demo.service.GameLoopService.MILLISECOND_DELAY;
+import static com.example.demo.service.UpdateService.MILLISECOND_DELAY;
 
 public abstract class Entity extends ImageView implements Updatable, Collidable {
-	private final Controller controller;
-	private final Signal removed;
-	private final GameLoopService gameLoopService;
+	private final GameService gameService;
+	private final UpdateService updateService;
 	private final SceneService sceneService;
 	private final CollisionService collisionService;
+	private final Signal removed;
 
 	public Signal getRemovedSignal() {
 		return removed;
 	}
 
-	public Entity(Controller controller, Image image, Vector initialPos) {
-		this.controller = controller;
-		this.removed = new Signal();
-		this.gameLoopService = ServiceLocator.getGameLoopService();
+	public Entity(Image image, Vector initialPos) {
+		this.gameService = ServiceLocator.getGameService();
+		this.updateService = ServiceLocator.getUpdateService();
 		this.sceneService = ServiceLocator.getSceneService();
 		this.collisionService = ServiceLocator.getCollisionService();
+		this.removed = new Signal();
 
 		setImage(image);
 		setPosition(initialPos);
@@ -37,7 +36,7 @@ public abstract class Entity extends ImageView implements Updatable, Collidable 
 	}
 
 	private void connectSignals() {
-		controller.getSceneResetSignal().connect(this::onSceneReset);
+		gameService.getSceneResetSignal().connect(this::onSceneReset);
 	}
 
 	protected void onSceneReset() {
@@ -54,7 +53,7 @@ public abstract class Entity extends ImageView implements Updatable, Collidable 
 	}
 
 	public void addToScene() {
-		gameLoopService.addToLoop(this);
+		updateService.addToLoop(this);
 		collisionService.enableCollision(this);
 		sceneService.addNodeToMiddleLayer(this);
 	}
@@ -67,7 +66,7 @@ public abstract class Entity extends ImageView implements Updatable, Collidable 
 	}
 
 	protected void disableInteraction() {
-		gameLoopService.removeFromLoop(this);
+		updateService.removeFromLoop(this);
 		collisionService.disableCollision(this);
 	}
 

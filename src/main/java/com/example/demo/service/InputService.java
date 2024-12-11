@@ -25,8 +25,7 @@ public class InputService {
     }
 
     private void initialize() {
-        SceneService sceneService = ServiceLocator.getSceneService();
-        Scene scene = sceneService.getScene();
+        Scene scene = ServiceLocator.getSceneService().getScene();
 
         scene.setOnKeyPressed(event -> activeKeys.add(event.getCode()));
         scene.setOnKeyReleased(event -> activeKeys.remove(event.getCode()));

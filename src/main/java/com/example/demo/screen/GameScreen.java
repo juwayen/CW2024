@@ -1,6 +1,6 @@
 package com.example.demo.screen;
 
-import com.example.demo.service.GameLoopService;
+import com.example.demo.service.UpdateService;
 import com.example.demo.service.InputService;
 import com.example.demo.service.ServiceLocator;
 import com.example.demo.service.Updatable;
@@ -21,7 +21,7 @@ public class GameScreen extends StackPane implements Updatable {
     private static final double FONT_SIZE = 64;
     private static final double LABEL_MILLISECONDS_DELAY = 50;
 
-    private final GameLoopService gameLoopService;
+    private final UpdateService updateService;
     private final InputService inputService;
     private final String labelText;
     private final Signal continued;
@@ -37,13 +37,17 @@ public class GameScreen extends StackPane implements Updatable {
     }
 
     protected GameScreen(String labelText) {
-        this.gameLoopService = ServiceLocator.getGameLoopService();
+        this.updateService = ServiceLocator.getUpdateService();
         this.inputService = ServiceLocator.getInputService();
         this.labelText = labelText;
         this.continued = new Signal();
         this.pixelFont = Font.loadFont(getClass().getResourceAsStream(FONT_PATH), FONT_SIZE);
         this.label = new Label();
 
+        initialize();
+    }
+
+    private void initialize() {
         getChildren().add(label);
         setPrefSize(GAME_WIDTH, GAME_HEIGHT);
     }
@@ -72,7 +76,7 @@ public class GameScreen extends StackPane implements Updatable {
             timeline.getKeyFrames().add(keyFrame);
         }
 
-        timeline.setOnFinished(event -> gameLoopService.addToLoop(this));
+        timeline.setOnFinished(event -> updateService.addToLoop(this));
 
         timeline.play();
     }
@@ -81,7 +85,7 @@ public class GameScreen extends StackPane implements Updatable {
     public void update() {
         if (inputService.isAnyKeyActive()) {
             continued.emit();
-            gameLoopService.removeFromLoop(this);
+            updateService.removeFromLoop(this);
         }
     }
 }

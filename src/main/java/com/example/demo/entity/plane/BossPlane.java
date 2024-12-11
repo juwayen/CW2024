@@ -1,8 +1,5 @@
 package com.example.demo.entity.plane;
 
-import com.example.demo.Controller;
-import com.example.demo.entity.BossPlaneWingLeft;
-import com.example.demo.entity.BossPlaneWingRight;
 import com.example.demo.util.Vector;
 
 public class BossPlane extends EnemyPlane {
@@ -13,11 +10,11 @@ public class BossPlane extends EnemyPlane {
     private final BossPlaneWingLeft wingLeft;
     private final BossPlaneWingRight wingRight;
 
-    public BossPlane(Controller controller, PlaneData planeData) {
-        super(controller, planeData);
+    public BossPlane(PlaneData planeData) {
+        super(planeData);
 
-        this.wingLeft = new BossPlaneWingLeft(controller, planeData.getInitialPosition().add(WING_LEFT_OFFSET).getX(), planeData.getFinalPosition().add(WING_LEFT_OFFSET));
-        this.wingRight = new BossPlaneWingRight(controller, planeData.getInitialPosition().add(WING_RIGHT_OFFSET).getX(), planeData.getFinalPosition().add(WING_RIGHT_OFFSET));
+        this.wingLeft = new BossPlaneWingLeft(planeData.getInitialPosition().add(WING_LEFT_OFFSET).getX(), planeData.getFinalPosition().add(WING_LEFT_OFFSET));
+        this.wingRight = new BossPlaneWingRight(planeData.getInitialPosition().add(WING_RIGHT_OFFSET).getX(), planeData.getFinalPosition().add(WING_RIGHT_OFFSET));
 
         initialize();
     }

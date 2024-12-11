@@ -1,6 +1,5 @@
 package com.example.demo.entity.collectible;
 
-import com.example.demo.Controller;
 import com.example.demo.entity.Entity;
 import com.example.demo.entity.plane.PlayerPlane;
 import com.example.demo.service.AudioService;
@@ -9,16 +8,26 @@ import com.example.demo.service.ServiceLocator;
 import com.example.demo.util.Vector;
 import javafx.scene.image.Image;
 
-import static com.example.demo.service.GameLoopService.MILLISECOND_DELAY;
+import static com.example.demo.service.UpdateService.MILLISECOND_DELAY;
 
 public abstract class Collectible extends Entity {
     private static final double MAX_TIME_MILLISECONDS = 3000;
 
+    private final PlayerPlane player;
+    private final AudioService audioService;
+
     private boolean isActive;
     private double millisecondsSinceSpawned;
 
-    public Collectible(Controller controller, Image image) {
-        super(controller, image, new Vector());
+    protected PlayerPlane getPlayer() {
+        return player;
+    }
+
+    public Collectible(Image image) {
+        super(image, new Vector());
+
+        this.player = ServiceLocator.getGameService().getPlayer();
+        this.audioService = ServiceLocator.getAudioService();
 
         this.isActive = false;
         this.millisecondsSinceSpawned = 0;
@@ -42,7 +51,7 @@ public abstract class Collectible extends Entity {
 
         onCollected();
         despawn();
-        ServiceLocator.getAudioService().playSound(AudioService.Sound.COLLECTIBLE_COLLECTED);
+        audioService.playSound(AudioService.Sound.COLLECTIBLE_COLLECTED);
     }
 
     protected abstract void onCollected();

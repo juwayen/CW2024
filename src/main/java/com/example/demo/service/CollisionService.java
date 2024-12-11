@@ -17,8 +17,7 @@ public class CollisionService implements Updatable {
     }
 
     private void initialize() {
-        GameLoopService gameLoopService = ServiceLocator.getGameLoopService();
-        gameLoopService.addToLoop(this);
+        ServiceLocator.getUpdateService().addToLoop(this);
     }
 
     @Override

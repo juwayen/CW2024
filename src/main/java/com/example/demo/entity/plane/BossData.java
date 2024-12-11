@@ -4,7 +4,7 @@ import com.example.demo.entity.bullet.HeavyBulletConfig;
 import com.example.demo.util.ImageUtils;
 import com.example.demo.util.Vector;
 
-public class BossEnemyData extends PlaneData {
+public class BossData extends PlaneData {
     private static final String IMAGE_NAME = "boss_plane_body.png";
     private static final String DESTROYED_1_IMAGE_NAME = "boss_destroyed_1.png";
     private static final String DESTROYED_2_IMAGE_NAME = "boss_destroyed_2.png";
@@ -15,13 +15,13 @@ public class BossEnemyData extends PlaneData {
     private static final String DESTROYED_7_IMAGE_NAME = "boss_destroyed_7.png";
     private static final String DESTROYED_8_IMAGE_NAME = "boss_destroyed_8.png";
     private static final double INITIAL_POSITION_Y = -400.0;
-    private static final int HEALTH = 300;
+    private static final int HEALTH = 250;
     private static final double MIN_MILLISECONDS_PER_FIRE = 2500.0;
     private static final double MAX_MILLISECONDS_PER_FIRE = 5000.0;
     private static final double SPEED = 0.36;
     private static final Vector BULLET_OFFSET = new Vector(32.0, 400.0);
 
-    public BossEnemyData() {
+    public BossData() {
         super();
 
         this.addMovingStraightImage(ImageUtils.getImageFromName(IMAGE_NAME));

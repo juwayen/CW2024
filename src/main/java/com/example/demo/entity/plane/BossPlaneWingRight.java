@@ -1,12 +1,10 @@
-package com.example.demo.entity;
+package com.example.demo.entity.plane;
 
-import com.example.demo.Controller;
-import com.example.demo.entity.plane.EnemyPlane;
 import com.example.demo.util.Vector;
 
 public class BossPlaneWingRight extends EnemyPlane {
-    public BossPlaneWingRight(Controller controller, double initialX, Vector finalPosition) {
-        super(controller, new BossWingRightData(initialX, finalPosition));
+    public BossPlaneWingRight(double initialX, Vector finalPosition) {
+        super(new BossWingRightData(initialX, finalPosition));
 
         initialize();
     }

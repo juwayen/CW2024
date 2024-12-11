@@ -1,5 +1,6 @@
 package com.example.demo.entity.bullet;
 
+import com.example.demo.entity.plane.Plane;
 import com.example.demo.util.ImageUtils;
 import com.example.demo.util.Vector;
 

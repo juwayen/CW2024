@@ -7,8 +7,8 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 public class Main extends Application {
-	public static final int WINDOW_WIDTH = 1040;
-	public static final int WINDOW_HEIGHT = 1024;
+	public static final int STAGE_WIDTH = 1040;
+	public static final int STAGE_HEIGHT = 1024;
 	public static final int GAME_WIDTH = 1024;
 	public static final int GAME_HEIGHT = 985;
 
@@ -19,8 +19,7 @@ public class Main extends Application {
 		initializeStage(stage);
 		initializeServiceLocator(stage);
 
-		Controller controller = new Controller();
-		controller.launchGame();
+		ServiceLocator.getGameService().launchGame();
 	}
 
 	private void initializeStage(Stage stage) {
@@ -30,18 +29,19 @@ public class Main extends Application {
 
 		stage.setTitle(TITLE);
 		stage.setResizable(false);
-		stage.setWidth(WINDOW_WIDTH);
-		stage.setHeight(WINDOW_HEIGHT);
+		stage.setWidth(STAGE_WIDTH);
+		stage.setHeight(STAGE_HEIGHT);
 		stage.setScene(scene);
 		stage.show();
 	}
 
 	private void initializeServiceLocator(Stage stage) {
-		ServiceLocator.setGameLoopService(new GameLoopService());
-		ServiceLocator.setSceneService(new SceneService(stage.getScene()));
-		ServiceLocator.setInputService(new InputService());
-		ServiceLocator.setCollisionService(new CollisionService());
-		ServiceLocator.setAudioService(new AudioService());
+		ServiceLocator.registerUpdateService(new UpdateService());
+		ServiceLocator.registerSceneService(new SceneService(stage.getScene()));
+		ServiceLocator.registerInputService(new InputService());
+		ServiceLocator.registerCollisionService(new CollisionService());
+		ServiceLocator.registerAudioService(new AudioService());
+		ServiceLocator.registerGameService(new GameService());
 	}
 
 	public static void main(String[] args) {

@@ -9,7 +9,7 @@ import javafx.util.Duration;
 import java.util.List;
 import java.util.Objects;
 
-import static com.example.demo.service.GameLoopService.MILLISECOND_DELAY;
+import static com.example.demo.service.UpdateService.MILLISECOND_DELAY;
 
 public class ImageUtils {
     private static final String IMAGE_PATH = "/com/example/demo/images/";

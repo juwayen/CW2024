@@ -6,10 +6,9 @@ import com.example.demo.entity.collectible.PowerupCollectible;
 import com.example.demo.entity.plane.EnemyPlane;
 import com.example.demo.factory.FormationFactory;
 import com.example.demo.screen.GameScreen;
-import com.example.demo.service.GameLoopService;
+import com.example.demo.service.UpdateService;
 import com.example.demo.service.ServiceLocator;
 import com.example.demo.service.Updatable;
-import com.example.demo.Controller;
 import com.example.demo.util.Signal;
 import com.example.demo.entity.plane.PlayerPlane;
 import com.example.demo.util.Vector;
@@ -17,7 +16,7 @@ import com.example.demo.util.Vector;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.example.demo.service.GameLoopService.MILLISECOND_DELAY;
+import static com.example.demo.service.UpdateService.MILLISECOND_DELAY;
 
 public abstract class Level implements Updatable {
 	private static final int MILLISECONDS_PER_COLLECTIBLE_CHANCE = 5000;
@@ -25,21 +24,17 @@ public abstract class Level implements Updatable {
 	private static final Vector COLLECTIBLE_MIN_POSITION = new Vector(0.0, 492.5);
 	private static final Vector COLLECTIBLE_MAX_POSITION = new Vector(960.0, 921.0);
 
-	private final GameScreen levelEndScreen;
-	private final int killsToWin;
+	private final UpdateService updateService;
 	private final Signal levelWon;
 	private final Signal levelLost;
+	private final GameScreen levelEndScreen;
+	private final int killsToWin;
 	private final PlayerPlane player;
-	private final GameLoopService gameLoopService;
 	private final List<Collectible> collectiblePool;
 
 	private boolean isStopped;
 	private int enemiesKilled;
 	private double millisecondsSinceLastCollectibleChance;
-
-	public GameScreen getLevelEndScreen() {
-		return levelEndScreen;
-	}
 
 	public Signal getLevelWon() {
 		return levelWon;
@@ -49,20 +44,24 @@ public abstract class Level implements Updatable {
 		return levelLost;
 	}
 
+	public GameScreen getLevelEndScreen() {
+		return levelEndScreen;
+	}
+
 	protected PlayerPlane getPlayer() {
 		return player;
 	}
 
-	public Level(Controller controller, GameScreen levelEndScreen, int killsToWin) {
-		this.levelEndScreen = levelEndScreen;
-		this.killsToWin = killsToWin;
+	public Level(GameScreen levelEndScreen, int killsToWin) {
+		this.updateService = ServiceLocator.getUpdateService();
 		this.levelWon = new Signal();
 		this.levelLost = new Signal();
-		this.player = controller.getPlayer();
-		this.gameLoopService = ServiceLocator.getGameLoopService();
+		this.levelEndScreen = levelEndScreen;
+		this.killsToWin = killsToWin;
+		this.player = ServiceLocator.getGameService().getPlayer();
 		this.collectiblePool = new ArrayList<>();
-		this.collectiblePool.add(new HealthCollectible(controller));
-		this.collectiblePool.add(new PowerupCollectible(controller));
+		this.collectiblePool.add(new HealthCollectible());
+		this.collectiblePool.add(new PowerupCollectible());
 
 		this.isStopped = true;
 		this.enemiesKilled = 0;
@@ -124,7 +123,7 @@ public abstract class Level implements Updatable {
 
 		initializeFactories();
 
-		gameLoopService.addToLoop(this);
+		updateService.addToLoop(this);
 
 		getPlayer().getDestroyedSignal().connect(this::loseLevel);
 	}
@@ -148,6 +147,6 @@ public abstract class Level implements Updatable {
 	protected void stopLevel() {
 		isStopped = true;
 
-		gameLoopService.removeFromLoop(this);
+		updateService.removeFromLoop(this);
 	}
 }

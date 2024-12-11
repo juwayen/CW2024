@@ -1,6 +1,5 @@
 package com.example.demo.factory;
 
-import com.example.demo.Controller;
 import com.example.demo.entity.plane.EnemyPlane;
 import com.example.demo.entity.plane.PlaneData;
 import com.example.demo.util.Vector;
@@ -15,7 +14,6 @@ public abstract class FormationFactory implements Factory {
     private static final Vector ENEMY_MIN_POSITION = new Vector(64.0, 182.0);
     private static final Vector ENEMY_MAX_POSITION = new Vector(960.0, 428.5);
 
-    private final Controller controller;
     private final PlaneData enemyPlaneData;
     private final Vector offsetToBottomMiddle;
     private final List<Vector> possiblePositions;
@@ -32,8 +30,7 @@ public abstract class FormationFactory implements Factory {
         return totalEnemyCount;
     }
 
-    public FormationFactory(Controller controller, PlaneData enemyPlaneData, double yOffset) {
-        this.controller = controller;
+    public FormationFactory(PlaneData enemyPlaneData, double yOffset) {
         this.enemyPlaneData = enemyPlaneData;
         Image enemyImage = enemyPlaneData.getMovingStraightImages().get(0);
         this.offsetToBottomMiddle = new Vector(enemyImage.getWidth() / 2, enemyImage.getHeight() - yOffset);
@@ -61,7 +58,7 @@ public abstract class FormationFactory implements Factory {
         currentPlaneData.getInitialPosition().setX(initialX);
         currentPlaneData.setFinalPosition(finalPos.subtract(offsetToBottomMiddle));
 
-        EnemyPlane enemyPlane = new EnemyPlane(controller, currentPlaneData);
+        EnemyPlane enemyPlane = new EnemyPlane(currentPlaneData);
         enemyPlane.addToScene();
 
         currentEnemyCount++;

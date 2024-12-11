@@ -12,19 +12,19 @@ import java.util.List;
 public class BulletConfig implements Cloneable {
     private final List<Image> destroyedImages;
 
-    private Plane shooter;
-    private Vector direction;
     private Vector offset;
+    private Vector direction;
+    private Plane shooter;
     private Image image;
     private double speed;
     private int damage;
 
-    public Plane getShooter() {
-        return shooter;
+    public Vector getOffset() {
+        return offset;
     }
 
-    public void setShooter(Plane shooter) {
-        this.shooter = shooter;
+    public void setOffset(Vector offset) {
+        this.offset = offset;
     }
 
     public Vector getDirection() {
@@ -35,12 +35,12 @@ public class BulletConfig implements Cloneable {
         this.direction = direction;
     }
 
-    public Vector getOffset() {
-        return offset;
+    public Plane getShooter() {
+        return shooter;
     }
 
-    public void setOffset(Vector offset) {
-        this.offset = offset;
+    public void setShooter(Plane shooter) {
+        this.shooter = shooter;
     }
 
     public Image getImage() {
