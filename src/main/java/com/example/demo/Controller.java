@@ -8,6 +8,7 @@ import com.example.demo.screen.StartScreen;
 import com.example.demo.screen.WinScreen;
 import com.example.demo.service.*;
 import com.example.demo.ui.*;
+import com.example.demo.util.AudioUtils;
 import com.example.demo.util.Signal;
 
 import java.util.ArrayList;
@@ -15,6 +16,7 @@ import java.util.List;
 
 public class Controller {
 	private final SceneService sceneService;
+	private final AudioService audioService;
 	private final Signal sceneReset;
     private final StartScreen startScreen;
 	private final PlayerPlane player;
@@ -34,6 +36,7 @@ public class Controller {
 
     public Controller() {
 		this.sceneService = ServiceLocator.getSceneService();
+		this.audioService = ServiceLocator.getAudioService();
 		this.sceneReset = new Signal();
         this.startScreen = new StartScreen();
 		this.player = new PlayerPlane(this);
@@ -79,6 +82,7 @@ public class Controller {
 		player.addToScene();
 
 		sceneService.addNodeToTopLayer(userInterface);
+		audioService.startBackgroundMusic();
 
 		nextLevelIndex = 0;
 
@@ -125,6 +129,8 @@ public class Controller {
 
 		sceneService.clearMiddleLayer();
 		sceneService.addNodeToMiddleLayer(winScreen);
+		audioService.stopBackgroundMusic();
+		audioService.playSound(AudioService.Sound.GAME_WON);
 		winScreen.start();
 		stopGame();
 	}
@@ -148,5 +154,6 @@ public class Controller {
 	public void launchGame() {
 		sceneService.addNodeToMiddleLayer(startScreen);
 		startScreen.start();
+		audioService.startBackgroundMusic();
 	}
 }
