@@ -4,6 +4,9 @@ import com.example.demo.entity.bullet.SingleBulletConfig;
 import com.example.demo.util.ImageUtils;
 import com.example.demo.util.Vector;
 
+/**
+ * Represents the data for {@link PlayerPlane}, extending the {@link PlaneData} class.
+ */
 public class PlayerData extends PlaneData {
     private static final String MOVING_STRAIGHT_1_IMAGE_NAME = "player_plane_moving_straight_1.png";
     private static final String MOVING_STRAIGHT_2_IMAGE_NAME = "player_plane_moving_straight_2.png";
@@ -26,6 +29,9 @@ public class PlayerData extends PlaneData {
     private static final double SPEED = 0.96;
     private static final Vector BULLET_OFFSET = new Vector(52.0, 0.0);
 
+    /**
+     * Constructs a new {@link PlaneData} object with predefined data.
+     */
     public PlayerData() {
         super();
 

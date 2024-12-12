@@ -11,10 +11,16 @@ import com.example.demo.util.Vector;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.geometry.Bounds;
+import javafx.scene.image.ImageView;
 import javafx.util.Duration;
+
+import java.util.List;
 
 import static com.example.demo.Main.*;
 
+/**
+ * Represents a bullet in the game.
+ */
 public class Bullet extends Entity {
 	private static final int FRAMES_PER_IMAGE = 4;
 
@@ -29,14 +35,30 @@ public class Bullet extends Entity {
 	private final BulletMovingState movingState;
 	private final BulletDestroyedState destroyedState;
 
+	/**
+	 * Getter method for the moving animation {@link Timeline}.
+	 *
+	 * @return The moving animation {@link Timeline}.
+	 */
 	public Timeline getMovingTimeline() {
 		return movingTimeline;
 	}
 
+	/**
+	 * Getter method for the destroyed animation {@link Timeline}.
+	 *
+	 * @return The destroyed animation {@link Timeline}.
+	 */
 	public Timeline getDestroyedTimeline() {
 		return destroyedTimeline;
 	}
 
+	/**
+	 * Constructs a {@link Bullet} instance using the provided {@link BulletConfig}.
+	 * Initializes the animations.
+	 *
+	 * @param bulletConfig The {@link BulletConfig} object containing the properties.
+	 */
 	public Bullet(BulletConfig bulletConfig) {
 		super(bulletConfig.getImage(), bulletConfig.getInitialPosition());
 
@@ -51,13 +73,12 @@ public class Bullet extends Entity {
 		this.movingState = new BulletMovingState();
 		this.destroyedState = new BulletDestroyedState();
 
-		initialize();
-	}
-
-	private void initialize() {
 		initializeTimelines();
 	}
 
+	/**
+	 * Initializes the {@link Timeline} for the animations using {@link ImageUtils#addImagesToTimeline(Timeline, List, ImageView, int)}.
+	 */
 	private void initializeTimelines() {
 		ImageUtils.addImageToTimeline(movingTimeline, bulletConfig.getImage(),this);
 
@@ -75,6 +96,9 @@ public class Bullet extends Entity {
 		});
 	}
 
+	/**
+	 * Update method that invokes {@link #updatePosition()}, {@link #updateOutOfBoundsCheck()}, and {@link #updateState()}.
+	 */
 	@Override
 	public void update() {
 		updatePosition();
@@ -82,15 +106,27 @@ public class Bullet extends Entity {
 		updateState();
 	}
 
+	/**
+	 * Updates the position of the bullet by invoking the {@link Entity#move(Vector, double)} method.
+	 */
 	private void updatePosition() {
 		move(direction, speed);
 	}
 
+	/**
+	 * Checks if the bullet is out of bounds by invoking the {@link #isOutOfBounds()} method.
+	 * If the bullet is out of bounds, it removes the bullet from the scene by calling {@link #removeFromScene()}.
+	 */
 	private void updateOutOfBoundsCheck() {
 		if (isOutOfBounds())
 			removeFromScene();
 	}
 
+	/**
+	 * Checks if the current object is out of the bounds of the game area.
+	 *
+	 * @return true if the object is out of bounds, false otherwise.
+	 */
 	private boolean isOutOfBounds() {
 		Bounds bounds = getBoundsInParent();
 
@@ -100,10 +136,18 @@ public class Bullet extends Entity {
 				bounds.getMinY() > GAME_HEIGHT;
 	}
 
+	/**
+	 * Updates the current {@link com.example.demo.entity.state.EntityState} by transitioning to the {@link BulletMovingState}.
+	 */
 	private void updateState() {
 		stateMachine.changeState(movingState);
 	}
 
+	/**
+	 * If the colliding {@link Plane} belongs to the other faction (friendly or enemy), it takes damage, and the {@link Bullet} transitions to the {@link BulletDestroyedState}.
+	 *
+	 * @param collidable The other {@link Collidable} object involved in the collision.
+	 */
 	@Override
 	public void onCollision(Collidable collidable) {
 		if (!(collidable instanceof Plane plane))

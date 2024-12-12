@@ -4,6 +4,9 @@ import com.example.demo.entity.bullet.BasicBulletConfig;
 import com.example.demo.util.ImageUtils;
 import com.example.demo.util.Vector;
 
+/**
+ * Represents the data for an advanced enemy, extending the {@link PlaneData} class.
+ */
 public class AdvancedEnemyData extends PlaneData {
     private static final String MOVING_STRAIGHT_1_IMAGE_NAME = "advanced_enemy_plane_moving_straight_1.png";
     private static final String MOVING_STRAIGHT_2_IMAGE_NAME = "advanced_enemy_plane_moving_straight_2.png";
@@ -22,6 +25,9 @@ public class AdvancedEnemyData extends PlaneData {
     private static final double SPEED = 0.48;
     private static final Vector BULLET_OFFSET = new Vector(64.0, 88.0);
 
+    /**
+     * Constructs a new {@link AdvancedEnemyData} object with predefined data.
+     */
     public AdvancedEnemyData() {
         super();
 

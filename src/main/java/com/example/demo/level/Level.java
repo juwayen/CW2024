@@ -18,6 +18,9 @@ import java.util.List;
 
 import static com.example.demo.service.UpdateService.MILLISECOND_DELAY;
 
+/**
+ * Abstract base class for creating levels in the game.
+ */
 public abstract class Level implements Updatable {
 	private static final int MILLISECONDS_PER_COLLECTIBLE_CHANCE = 5000;
 	private static final double COLLECTIBLE_CHANCE = 0.75;
@@ -36,22 +39,48 @@ public abstract class Level implements Updatable {
 	private int enemiesKilled;
 	private double millisecondsSinceLastCollectibleChance;
 
+	/**
+	 * Getter method for the level won {@link Signal} associated with the event of winning the level.
+	 *
+	 * @return the level won {@link Signal} that is emitted when the level is won.
+	 */
 	public Signal getLevelWon() {
 		return levelWon;
 	}
 
+	/**
+	 * Getter method for the level lost {@link Signal} associated with the event of losing the level.
+	 *
+	 * @return the level lost {@link Signal} that is emitted when the level is lost.
+	 */
 	public Signal getLevelLost() {
 		return levelLost;
 	}
 
+	/**
+	 * Getter method for the screen that is displayed at the end of the level.
+	 *
+	 * @return The {@link GameScreen} instance representing the level end screen.
+	 */
 	public GameScreen getLevelEndScreen() {
 		return levelEndScreen;
 	}
 
+	/**
+	 * Getter method for the {@link PlayerPlane} for the current level.
+	 *
+	 * @return the {@link PlayerPlane} instance representing the player.
+	 */
 	protected PlayerPlane getPlayer() {
 		return player;
 	}
 
+	/**
+	 * Constructs a new {@link Level} instance.
+	 *
+	 * @param levelEndScreen The {@link GameScreen} instance that represents the screen displayed at the end of the level.
+	 * @param killsToWin The number of enemy kills required to win the level.
+	 */
 	public Level(GameScreen levelEndScreen, int killsToWin) {
 		this.updateService = ServiceLocator.getUpdateService();
 		this.levelWon = new Signal();
@@ -70,35 +99,28 @@ public abstract class Level implements Updatable {
 		initializeFactories();
 	}
 
+	/**
+	 * Initializes the necessary {@link FormationFactory}s for the specific {@link Level} implementation.
+	 */
 	protected abstract void initializeFactories();
 
+	/**
+	 * Update method that invokes {@link #spawnEnemyUnits()} and {@link #spawnCollectibles()}.
+	 */
 	@Override
 	public void update() {
 		spawnEnemyUnits();
 		spawnCollectibles();
 	}
 
+	/**
+	 * Triggers the spawning of enemy units.
+	 */
 	protected abstract void spawnEnemyUnits();
 
-	protected void spawnEnemyFromFactory(FormationFactory factory, int enemiesAtOnce, int maxEnemies) {
-		if (factory.getTotalEnemyCount() >= maxEnemies)
-			return;
-
-		if (factory.getCurrentEnemyCount() >= enemiesAtOnce)
-			return;
-
-		EnemyPlane enemyPlane = factory.create();
-
-		enemyPlane.getDestroyedSignal().connect(this::onEnemyPlaneDestroyed);
-	}
-
-	protected void onEnemyPlaneDestroyed() {
-		enemiesKilled++;
-
-		if (enemiesKilled >= killsToWin)
-			winLevel();
-	}
-
+	/**
+	 * Spawns a random {@link Collectible} item based on a predefined chance and time interval.
+	 */
 	private void spawnCollectibles() {
 		if (millisecondsSinceLastCollectibleChance < MILLISECONDS_PER_COLLECTIBLE_CHANCE) {
 			millisecondsSinceLastCollectibleChance += MILLISECOND_DELAY;
@@ -116,6 +138,65 @@ public abstract class Level implements Updatable {
 		millisecondsSinceLastCollectibleChance = 0;
 	}
 
+	/**
+	 * Spawns {@link EnemyPlane}s from a specified {@link FormationFactory}.
+	 * Connects the destroyed {@link Signal} of the created {@link EnemyPlane} to {@link #onEnemyPlaneDestroyed()};
+	 *
+	 * @param factory The {@link FormationFactory} instance used to create {@link EnemyPlane}s.
+	 * @param enemiesAtOnce The maximum number of {@link EnemyPlane}s that can be in the scene at once.
+	 * @param maxEnemies The maximum total number of {@link EnemyPlane}s allowed to exist at any point.
+	 */
+	protected void spawnEnemyFromFactory(FormationFactory factory, int enemiesAtOnce, int maxEnemies) {
+		if (factory.getTotalEnemyCount() >= maxEnemies)
+			return;
+
+		if (factory.getCurrentEnemyCount() >= enemiesAtOnce)
+			return;
+
+		EnemyPlane enemyPlane = factory.create();
+
+		enemyPlane.getDestroyedSignal().connect(this::onEnemyPlaneDestroyed);
+	}
+
+	/**
+	 * Handles the event of an {@link EnemyPlane} being destroyed.
+	 * If the kills to win threshold has been reached, it invokes {@link #winLevel()}.
+	 */
+	protected void onEnemyPlaneDestroyed() {
+		enemiesKilled++;
+
+		if (enemiesKilled >= killsToWin)
+			winLevel();
+	}
+
+	/**
+	 * Stops the level and performs necessary actions to handle the victory state.
+	 * Emits the level won {@link Signal}.
+	 */
+	protected void winLevel() {
+		if (isStopped)
+			return;
+
+		levelWon.emit();
+		stopLevel();
+	}
+
+	/**
+	 * Stops the level and performs necessary actions to handle the lost state.
+	 * Emits the level lost {@link Signal}.
+	 */
+	protected void loseLevel() {
+		if (isStopped)
+			return;
+
+		levelLost.emit();
+		stopLevel();
+	}
+
+	/**
+	 * Starts the level by performing the necessary initializations and setup.
+	 * Connects the destroyed {@link Signal} of the {@link PlayerPlane} to {@link #loseLevel()}.
+	 */
 	public void startLevel() {
 		isStopped = false;
 		enemiesKilled = 0;
@@ -128,22 +209,9 @@ public abstract class Level implements Updatable {
 		getPlayer().getDestroyedSignal().connect(this::loseLevel);
 	}
 
-	protected void winLevel() {
-		if (isStopped)
-			return;
-
-		levelWon.emit();
-		stopLevel();
-	}
-
-	protected void loseLevel() {
-		if (isStopped)
-			return;
-
-		levelLost.emit();
-		stopLevel();
-	}
-
+	/**
+	 * Stops the current level by marking it as stopped and unregistering it from the {@link UpdateService}.
+	 */
 	protected void stopLevel() {
 		isStopped = true;
 

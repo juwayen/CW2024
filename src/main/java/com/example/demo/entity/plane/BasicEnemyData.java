@@ -1,9 +1,13 @@
 package com.example.demo.entity.plane;
 
 import com.example.demo.entity.bullet.BasicBulletConfig;
+import com.example.demo.entity.bullet.BulletConfig;
 import com.example.demo.util.ImageUtils;
 import com.example.demo.util.Vector;
 
+/**
+ * Represents the data for a basic enemy, extending the {@link PlaneData} class.
+ */
 public class BasicEnemyData extends PlaneData {
     private static final String MOVING_STRAIGHT_1_IMAGE_NAME = "basic_enemy_plane_moving_straight_1.png";
     private static final String MOVING_STRAIGHT_2_IMAGE_NAME = "basic_enemy_plane_moving_straight_2.png";
@@ -22,6 +26,9 @@ public class BasicEnemyData extends PlaneData {
     private static final double SPEED = 0.48;
     private static final Vector BULLET_OFFSET = new Vector(48.0, 64.0);
 
+    /**
+     * Constructs a new {@link BasicEnemyData} object with predefined data.
+     */
     public BasicEnemyData() {
         super();
 

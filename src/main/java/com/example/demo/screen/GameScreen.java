@@ -16,6 +16,9 @@ import javafx.util.Duration;
 
 import static com.example.demo.Main.*;
 
+/**
+ * Represents a screen in the game that displays a centered label with animated text.
+ */
 public class GameScreen extends StackPane implements Updatable {
     private static final String FONT_PATH = "/com/example/demo/fonts/ArcadeClassic.ttf";
     private static final double FONT_SIZE = 64;
@@ -28,14 +31,29 @@ public class GameScreen extends StackPane implements Updatable {
     private final Font pixelFont;
     private final Label label;
 
+    /**
+     * Getter method for the continued {@link Signal}.
+     *
+     * @return The continued {@link Signal}.
+     */
     public Signal getContinuedSignal() {
         return continued;
     }
 
+    /**
+     * Getter method for the {@link Label} instance displayed on the game screen.
+     *
+     * @return The {@link Label} instance associated with this screen.
+     */
     protected Label getLabel() {
         return label;
     }
 
+    /**
+     * Constructs a new {@link GameScreen} instance with a specified label text.
+     *
+     * @param labelText The text to be displayed as the animated label on this screen.
+     */
     protected GameScreen(String labelText) {
         this.updateService = ServiceLocator.getUpdateService();
         this.inputService = ServiceLocator.getInputService();
@@ -44,14 +62,13 @@ public class GameScreen extends StackPane implements Updatable {
         this.pixelFont = Font.loadFont(getClass().getResourceAsStream(FONT_PATH), FONT_SIZE);
         this.label = new Label();
 
-        initialize();
-    }
-
-    private void initialize() {
         getChildren().add(label);
         setPrefSize(GAME_WIDTH, GAME_HEIGHT);
     }
 
+    /**
+     * Starts the game screen by initializing the label properties and invoking the {@link #animateText(Label)} method.
+     */
     public void start() {
         label.setText("");
 
@@ -62,6 +79,11 @@ public class GameScreen extends StackPane implements Updatable {
         animateText(label);
     }
 
+    /**
+     * Animates the text of the provided {@link Label} by progressively appending characters.
+     *
+     * @param label The {@link Label} to animate text for.
+     */
     private void animateText(Label label) {
         Timeline timeline = new Timeline();
 
@@ -81,6 +103,10 @@ public class GameScreen extends StackPane implements Updatable {
         timeline.play();
     }
 
+    /**
+     * Update method to check if the user pressed any key.
+     * Emits the continued {@link Signal} when any key is pressed.
+     */
     @Override
     public void update() {
         if (inputService.isAnyKeyActive()) {

@@ -4,6 +4,9 @@ import com.example.demo.entity.bullet.HeavyBulletConfig;
 import com.example.demo.util.ImageUtils;
 import com.example.demo.util.Vector;
 
+/**
+ * Represents the data for a boss enemy, extending the {@link PlaneData} class.
+ */
 public class BossData extends PlaneData {
     private static final String IMAGE_NAME = "boss_plane_body.png";
     private static final String DESTROYED_1_IMAGE_NAME = "boss_destroyed_1.png";
@@ -21,6 +24,9 @@ public class BossData extends PlaneData {
     private static final double SPEED = 0.36;
     private static final Vector BULLET_OFFSET = new Vector(32.0, 400.0);
 
+    /**
+     * Constructs a new {@link BossData} object with predefined data.
+     */
     public BossData() {
         super();
 

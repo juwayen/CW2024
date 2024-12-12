@@ -7,6 +7,9 @@ import com.example.demo.util.Vector;
 
 import static com.example.demo.service.UpdateService.MILLISECOND_DELAY;
 
+/**
+ * Represents an enemy plane in the game.
+ */
 public class EnemyPlane extends Plane {
     private final Vector finalPosition;
     private final Vector direction;
@@ -19,6 +22,11 @@ public class EnemyPlane extends Plane {
     private boolean hasReachedFinalPosition;
     private double millisecondsBeforeNextShot;
 
+    /**
+     * Constructs an instance of {@link EnemyPlane} using the provided {@link PlaneData}.
+     *
+     * @param planeData The {@link PlaneData} object containing the properties required for creating the {@link EnemyPlane}.
+     */
     public EnemyPlane(PlaneData planeData) {
         super(planeData);
 
@@ -36,14 +44,25 @@ public class EnemyPlane extends Plane {
         initializeBulletConfig();
     }
 
-    private void initializeBulletConfig() {
-        bulletConfig.setShooter(this);
-    }
-
+    /**
+     * Generates a random time interval within a certain range.
+     *
+     * @return A random {@code double} value representing the time interval in milliseconds.
+     */
     private double getRandomTime() {
         return Math.random() * (maxMillisecondsPerFire - minMillisecondsPerFire + 1) + minMillisecondsPerFire;
     }
 
+    /**
+     * Initializes the {@link BulletConfig} for the {@link EnemyPlane}.
+     */
+    private void initializeBulletConfig() {
+        bulletConfig.setShooter(this);
+    }
+
+    /**
+     * Updates the position of the {@link EnemyPlane} towards its final destination.
+     */
     @Override
     public void updatePosition() {
         if (hasReachedFinalPosition)
@@ -59,6 +78,9 @@ public class EnemyPlane extends Plane {
         }
     }
 
+    /**
+     * Determines whether the {@link EnemyPlane} is allowed to fire based on the elapsed time since the last shot.
+     */
     @Override
     public boolean canFire() {
         millisecondsBeforeNextShot -= MILLISECOND_DELAY;
@@ -66,6 +88,9 @@ public class EnemyPlane extends Plane {
         return millisecondsBeforeNextShot <= 0;
     }
 
+    /**
+     * Fires a {@link Bullet} from the current {@link EnemyPlane} towards the {@link PlayerPlane}.
+     */
     @Override
     public void fire() {
         Vector shootingPosition = getPosition().add(bulletConfig.getOffset());
@@ -78,6 +103,11 @@ public class EnemyPlane extends Plane {
         millisecondsBeforeNextShot = getRandomTime();
     }
 
+    /**
+     * Marks {@link EnemyPlane} instances as not friendly.
+     *
+     * @return {@code false}.
+     */
     @Override
     public boolean isFriendly() {
         return false;

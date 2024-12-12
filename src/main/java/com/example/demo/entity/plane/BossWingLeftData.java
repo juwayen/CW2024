@@ -4,6 +4,9 @@ import com.example.demo.entity.bullet.HeavyBulletConfig;
 import com.example.demo.util.ImageUtils;
 import com.example.demo.util.Vector;
 
+/**
+ * Represents the data for the left wing of the boss, extending the {@link PlaneData} class.
+ */
 public class BossWingLeftData extends PlaneData {
     private static final String MOVING_1_IMAGE_NAME = "boss_plane_wing_left_1.png";
     private static final String MOVING_2_IMAGE_NAME = "boss_plane_wing_left_2.png";
@@ -23,6 +26,9 @@ public class BossWingLeftData extends PlaneData {
     private static final double SPEED = 0.36;
     private static final Vector BULLET_OFFSET = new Vector(140.0, 132.0);
 
+    /**
+     * Constructs a new {@link BossWingLeftData} object with predefined data.
+     */
     public BossWingLeftData(double initialX, Vector finalPosition) {
         super();
 

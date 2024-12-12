@@ -1,9 +1,11 @@
 package com.example.demo.entity.bullet;
 
-import com.example.demo.entity.plane.Plane;
 import com.example.demo.util.ImageUtils;
 import com.example.demo.util.Vector;
 
+/**
+ * Represents the configuration for a basic bullet, extending the {@link BulletConfig} class.
+ */
 public class BasicBulletConfig extends BulletConfig {
 	private static final String IMAGE_NAME = "basic_bullet.png";
 	private static final String DESTROYED_1_IMAGE_NAME = "bullet_destroyed_1.png";
@@ -12,6 +14,11 @@ public class BasicBulletConfig extends BulletConfig {
 	private static final double SPEED = 0.96;
 	private static final int DAMAGE = 1;
 
+	/**
+	 * Constructs a new {@link BasicBulletConfig} object with the specified offset.
+	 *
+	 * @param offset The {@link Vector} representing the initial position offset.
+	 */
 	public BasicBulletConfig(Vector offset) {
 		super();
 
