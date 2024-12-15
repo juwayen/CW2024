@@ -21,7 +21,7 @@ public class AdvancedEnemyData extends PlaneData {
     private static final double INITIAL_POSITION_Y = -88.0;
     private static final int HEALTH = 10;
     private static final double MIN_MILLISECONDS_PER_FIRE = 1000.0;
-    private static final double MAX_MILLISECONDS_PER_FIRE = 3000.0;
+    private static final double MAX_MILLISECONDS_PER_FIRE = 2000.0;
     private static final double SPEED = 0.48;
     private static final Vector BULLET_OFFSET = new Vector(64.0, 88.0);
 

@@ -1,4 +1,4 @@
-package com.example.demo.ui;
+package com.example.demo.background;
 
 import com.example.demo.service.UpdateService;
 import com.example.demo.service.ServiceLocator;

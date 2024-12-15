@@ -1,7 +1,5 @@
 package com.example.demo.entity.plane;
 
-import com.example.demo.entity.Entity;
-import com.example.demo.entity.state.PlaneDestroyedState;
 import com.example.demo.util.Vector;
 
 /**
@@ -19,13 +17,13 @@ public class BossPlane extends EnemyPlane {
      * Constructs an instance of {@link BossPlane} based on the given {@link PlaneData}.
      * Instantiates {@link BossPlaneWingLeft} and {@link BossPlaneWingRight}.
      *
-     * @param planeData The {@link PlaneData} instance containing the initialization data.
+     * @param bossData The {@link BossData} instance containing the initialization data.
      */
-    public BossPlane(PlaneData planeData) {
-        super(planeData);
+    public BossPlane(BossData bossData) {
+        super(bossData);
 
-        this.wingLeft = new BossPlaneWingLeft(planeData.getInitialPosition().add(WING_LEFT_OFFSET).getX(), planeData.getFinalPosition().add(WING_LEFT_OFFSET));
-        this.wingRight = new BossPlaneWingRight(planeData.getInitialPosition().add(WING_RIGHT_OFFSET).getX(), planeData.getFinalPosition().add(WING_RIGHT_OFFSET));
+        this.wingLeft = new BossPlaneWingLeft(bossData.getInitialPosition().add(WING_LEFT_OFFSET).getX(), bossData.getFinalPosition().add(WING_LEFT_OFFSET));
+        this.wingRight = new BossPlaneWingRight(bossData.getInitialPosition().add(WING_RIGHT_OFFSET).getX(), bossData.getFinalPosition().add(WING_RIGHT_OFFSET));
 
         initializeWings();
     }

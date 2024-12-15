@@ -110,8 +110,12 @@ public class Vector {
      *
      * @param scalar The scalar value by which to divide the coordinates.
      * @return A new {@link Vector} with its x and y coordinates divided by the given scalar.
+     * @throws ArithmeticException if the scalar is zero.
      */
     public Vector divide(double scalar) {
+        if (scalar == 0)
+            throw new ArithmeticException("Cannot divide by zero");
+
         return new Vector(x / scalar, y / scalar);
     }
 

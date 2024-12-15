@@ -3,6 +3,7 @@ module com.example.demo {
     requires javafx.media;
 
     exports com.example.demo;
+    exports com.example.demo.background;
     exports com.example.demo.entity;
     exports com.example.demo.entity.bullet;
     exports com.example.demo.entity.collectible;
